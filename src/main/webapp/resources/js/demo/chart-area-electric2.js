@@ -28,7 +28,7 @@ function number_format(number, decimals, dec_point, thousands_sep) {
 }
 
 // Area Chart Example
-var ctx = document.getElementById("myAreaChart");
+var ctx = document.getElementById("myAreaChart2");
 var myLineChart = new Chart(ctx, {
   type: 'bar',
   data: {
@@ -77,7 +77,7 @@ var myLineChart = new Chart(ctx, {
           padding: 10,
           // Include a kW in the ticks
           callback: function(value, index, values) {
-            return number_format(value)+' kW';
+            return number_format(value)+' BTU';
           }
         },
         gridLines: {
@@ -109,7 +109,7 @@ var myLineChart = new Chart(ctx, {
       callbacks: {
         label: function(tooltipItem, chart) {
           var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
-          return datasetLabel +":"+ number_format(tooltipItem.yLabel)+" kW";
+          return datasetLabel +":"+ number_format(tooltipItem.yLabel)+" BTU";
         }
       }
     }

@@ -32,7 +32,7 @@ var ctx = document.getElementById("myAreaChart");
 var myLineChart = new Chart(ctx, {
   type: 'bar',
   data: {
-    labels: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+    labels: ["Thursday", "Friday", "Saturday", "Sunday", "Monday", "Tuesday", "Wednesday"],
     datasets: [{
       label: "Consumption",
       lineTension: 0.3,
@@ -44,7 +44,7 @@ var myLineChart = new Chart(ctx, {
       //HoverBorderColor: "rgba(0, 94, 0, 1)",
       //HitRadius: 10,
       //BorderWidth: 2,
-      data: [6000, 8000, 12000, 15500, 15000, 8000, 10000],
+      data: [0, 0, 0, 0, 0, 0, 0.1],
     }],
   },
   

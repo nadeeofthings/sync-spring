@@ -52,6 +52,16 @@
 		return i;
 	}
 </script>
+<style type="text/css">
+a.custom-card,
+a.custom-card:hover {
+  color: inherit;
+}
+.card:hover{
+transform:scale(1.05);
+
+}
+</style>
 </head>
 
 <body id="page-top" onload="startTime()" >
@@ -115,15 +125,15 @@
         <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
           <div class="bg-white py-2 collapse-inner rounded">
             <h6 class="collapse-header">Report Explorer:</h6>
-            <a class="collapse-item disabled" href="#"><i class="fas fa-fw fa-table"></i>&nbsp&nbspSummary Report</a>
-            <a class="collapse-item disabled" href="#"><i class="fas fa-fw fa-table"></i>&nbsp&nbspTenant Report</a>
+            <a class="collapse-item" href="utilities-color.html"><i class="fas fa-fw fa-table"></i>&nbsp&nbspSummary Report</a>
+            <a class="collapse-item" href="utilities-border.html"><i class="fas fa-fw fa-table"></i>&nbsp&nbspTenant Report</a>
           </div>
         </div>
       </li>
       
       <!-- Nav Item - Charts -->
       <li class="nav-item">
-        <a class="nav-link" href="#">
+        <a class="nav-link" href="">
           <i class="fas fa-fw fa-dollar-sign"></i>
           <span>Billing</span></a>
       </li>
@@ -132,14 +142,11 @@
 
       <!-- Divider -->
       <hr class="sidebar-divider">
-		
-
 
       <!-- Heading -->
       <div class="sidebar-heading">
         Settings
       </div>
-
 
       <!-- Nav Item - Pages Collapse Menu
       <li class="nav-item">
@@ -163,7 +170,7 @@
 
       <!-- Nav Item - Charts -->
       <li class="nav-item">
-        <a class="nav-link" href="#">
+        <a class="nav-link" href="">
           <i class="fas fa-fw fa-tools"></i>
           <span>System</span></a>
       </li>
@@ -200,12 +207,11 @@
             <i class="fa fa-bars"></i>
           </button>
           
-			<!-- Topbar Date/time -->
-          <div class="d-none d-sm-inline-block mr-auto ml-md-3 my-2 my-md-0 mw-100">
-        
+			<!-- Topbar date/time -->
+          <div class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100">
+            <div>
             <h1 id="dateTime" class="h3 mb-0 text-gray-800"></h1>
-            <!--<a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>-->
-
+          </div>
           </div>
        
 
@@ -214,7 +220,7 @@
 
             
 
-            <!-- Nav Item - Alerts -->
+                      <!-- Nav Item - Alerts -->
             <li class="nav-item dropdown no-arrow mx-1">
               <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <i class="fas fa-bell fa-lg"></i>
@@ -269,8 +275,8 @@
             <!-- Nav Item - User Information -->
             <li class="nav-item dropdown no-arrow">
               <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <span class="mr-2 d-none d-lg-inline text-gray-600 small">${pageContext.request.userPrincipal.name}</span>
-                <img class="img-profile rounded-circle" src="${contextPath}/resources/img/user.png">
+                <span class="mr-2 d-none d-lg-inline text-gray-600 small">User One</span>
+                <img class="img-profile rounded-circle" src="../img/user.png">
               </a>
               <!-- Dropdown - User Information -->
               <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
@@ -301,232 +307,101 @@
 
         <!-- Begin Page Content -->
         <div class="container-fluid">
-
+			<div class="row">
+			<div class="col-xl-2 col-md-6 mb-4">
           <!-- Page Heading -->
-          <div class="d-sm-flex align-items-center justify-content-between mb-4">
-            <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
-            <!--<a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>-->
+          <div class="d-sm-flex align-items-center mb-4">
+            <h1 class="h3 mb-0 text-gray-800">${id} floor</h1>
           </div>
-
+          </div>
+          <div class="col-xl-4 col-md-6 mb-4">
+           <div class="input-group">
+              <input type="text" class="form-control border-2" placeholder="Search for office" aria-label="Search" aria-describedby="basic-addon2">
+              <div class="input-group-append">
+                <button class="btn btn-primary" type="button">
+                  <i class="fas fa-search"></i>&nbspSearch
+                </button>
+              </div>
+            </div>
+		</div>
+		</div>
+		<c:choose>
+		  <c:when test="${id == 'Ground'}">
+	<!-- Content Row -->
+        <div class="row">
+            <!--2br apartment Card -->
+            <div class="col-xl-3 col-md-6 mb-4">
+              <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-gray-900 text-uppercase mb-1">Common Area</div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800">Common Area</div>
+                    </div>
+                    <div class="col-auto">
+                      <i class="fas fa-home fa-2x text-gray-300"></i>
+                    </div>
+                  </div>
+                  <a href="unit?id=0" class="stretched-link"></a>
+                </div>
+              </div>
+            </div>
+		</div>
+          
+		  </c:when>
+		  <c:otherwise>
+		    <%int room=01; for(int i=0;i<1;i++){ %>
           <!-- Content Row -->
         <div class="row">
-        <!-- Electricity Monthly consumption Card -->
+       		 <%for(int j=0;j<4;j++){%>
+            <%if(room % 9 != 0){%>
+            <!--2br apartment Card -->
             <div class="col-xl-3 col-md-6 mb-4">
-              <div class="card border-left-warning shadow h-100 py-2">
+              
+              <div class="card border-left-primary shadow h-100 py-2">
                 <div class="card-body">
                   <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
-                      <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Electricity Consumption<br>(Jan)</div>
-                      <div class="h5 mb-0 font-weight-bold text-gray-800">0 kWh</div>
+                      <div class="text-xs font-weight-bold text-gray-900 text-uppercase mb-1">${id} floor office Area</div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800">Office-0<%=room%></div>
                     </div>
                     <div class="col-auto">
-                      <i class="fas fa-plug fa-2x text-gray-300"></i>
+                      <i class="fas fa-home fa-2x text-gray-300"></i>
                     </div>
                   </div>
+                  <a href="unit?id=<%=room%>" class="stretched-link"></a>
+                </div>
+              </div>
+             
+            </div>
+			<%}else{%>
+           <!-- 3br apartment Card -->
+            <div class="col-xl-3 col-md-6 mb-4">
+              <div class="card border-left-warning zoom shadow h-100 py-2">
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-gray-900 text-uppercase mb-1">Commercial Area</div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800">EM-01</div>
+                    </div>
+                    <div class="col-auto">
+                      <i class="fas fa-home fa-2x text-gray-300"></i>
+                    </div>
+                  </div>
+                  <a href="apartment?no=<%=room%>" class="stretched-link"></a>
                 </div>
               </div>
             </div>
-            <!-- Electricity Monthly consumption Card -->
-            <div class="col-xl-3 col-md-6 mb-4">
-              <div class="card border-left-success shadow h-100 py-2">
-                <div class="card-body">
-                  <div class="row no-gutters align-items-center">
-                    <div class="col mr-2">
-                      <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Electricity Consumption<br>(Feb)</div>
-                      <div class="h5 mb-0 font-weight-bold text-gray-800">0 kWh</div>
-                    </div>
-                    <div class="col-auto">
-                      <i class="fas fa-plug fa-2x text-gray-300"></i>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-			<!-- Water Monthly consumption Card -->
-            <div class="col-xl-3 col-md-6 mb-4">
-              <div class="card border-left-warning shadow h-100 py-2">
-                <div class="card-body">
-                  <div class="row no-gutters align-items-center">
-                    <div class="col mr-2">
-                      <div class="text-xs font-weight-bold text-info text-uppercase mb-1">AC Consumption<br>(Jan)</div>
-                      <div class="h5 mb-0 font-weight-bold text-gray-800">0 BTU</div>
-                    </div>
-                    <div class="col-auto">
-                      <i class="fas fa-fan fa-2x text-gray-300"></i>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            
-            <!-- Water Monthly consumption Card -->
-            <div class="col-xl-3 col-md-6 mb-4">
-              <div class="card border-left-info shadow h-100 py-2">
-                <div class="card-body">
-                  <div class="row no-gutters align-items-center">
-                    <div class="col mr-2">
-                      <div class="text-xs font-weight-bold text-info text-uppercase mb-1">AC Consumption<br>(Feb)</div>
-                      <div class="h5 mb-0 font-weight-bold text-gray-800">0 BTU</div>
-                    </div>
-                    <div class="col-auto">
-                      <i class="fas fa-fan fa-2x text-gray-300"></i>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <!--<security:authorize access="hasRole('ROLE_SUPERADMIN')"> -->
-            <!--</security:authorize> -->
-            <!-- Gas Monthly consumption Card 
-            <div class="col-xl-3 col-md-6 mb-4">
-              <div class="card border-left-warning shadow h-100 py-2">
-                <div class="card-body">
-                  <div class="row no-gutters align-items-center">
-                    <div class="col mr-2">
-                      <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Gas Consumption<br>(June)</div>
-                      <div class="h5 mb-0 font-weight-bold text-gray-800">18,000 m<sup>3</sup></div>
-                    </div>
-                    <div class="col-auto">
-                      <i class="fas fa-burn fa-2x text-gray-300"></i>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div> -->
-            
-            
-            <!-- System Health 
-            <div class="col-xl-3 col-md-6 mb-4">
-              <div class="card border-left-info shadow h-100 py-2">
-                <div class="card-body">
-                  <div class="row no-gutters align-items-center">
-                    <div class="col mr-2">
-                      <div class="text-xs font-weight-bold text-info text-uppercase mb-1">System Health</div>
-                      <div class="row no-gutters align-items-center">
-                        <div class="col-auto">
-                          <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">99%</div>
-                        </div>
-                        <div class="col">
-                          <div class="progress progress-sm mr-2">
-                            <div class="progress-bar bg-info" role="progressbar" style="width: 99%" aria-valuenow="99" aria-valuemin="0" aria-valuemax="100"></div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="col-auto">
-                      <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div> -->
+            <%}room++;}%>
 			</div>
+			<%}%>
+		  </c:otherwise>
+		</c:choose>
+		
 			
 			
-			
-          <div class="row">
 
-            <!-- Area Chart -->
-            <div class="col-xl-8 col-lg-7">
-              <div class="card shadow mb-4">
-                <!-- Card Header - Dropdown -->
-                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                  <h6 class="m-0 font-weight-bold text-primary">Electric energy consumption</h6>
-                  <div class="dropdown no-arrow">
-                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                      <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
-                      <div class="dropdown-header">Task:</div>
-                      <a class="dropdown-item" href="#">Electric</a>
-                      <a class="dropdown-item" href="#">AirCon</a>
-                      <div class="dropdown-divider"></div>
-                      <a class="dropdown-item" href="#">Refresh</a>
-                    </div>
-                  </div>
-                </div>
-                <!-- Card Body -->
-                <div class="card-body">
-                  <div class="chart-area">
-                    <canvas id="myAreaChart"></canvas>
-                  </div>
-                </div>
-              </div>
-              <!-- End card body -->
-            </div>
-            <!-- /.Area Chart -->
-            
-             <!-- Pie Chart -->
-            <div class="col-xl-4 col-lg-5">
-              <div class="card shadow mb-4">
-                <!-- Card Header - Dropdown -->
-                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                  <h6 class="m-0 font-weight-bold text-primary">Electricity Usage (Sept)</h6>
-                  <div class="dropdown no-arrow">
-                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                      <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
-                      <div class="dropdown-header">Dropdown Header:</div>
-                      <a class="dropdown-item" href="#">Electricity Usage</a>
-                      <a class="dropdown-item" href="#">AirCon Usage</a>
-                      <div class="dropdown-divider"></div>
-                      <a class="dropdown-item" href="#">Change month</a>
-                    </div>
-                  </div>
-                </div>
-                <!-- Card Body -->
-                <div class="card-body">
-                  <div class="chart-pie pt-4 pb-2">
-                    <canvas id="myPieChart"></canvas>
-                  </div>
-                  <div class="mt-4 text-center small">
-                    <span class="mr-2">
-                      <i class="fas fa-circle text-primary"></i> 3F office 1
-                    </span>
-                    <span class="mr-2">
-                      <i class="fas fa-circle text-success"></i> 4F office 3
-                    </span>
-                    <span class="mr-2">
-                      <i class="fas fa-circle text-info"></i> 6F office 2
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <!-- Pie Chart -->
-            <!-- <div class="col-xl-4 col-lg-5">
-                          Project Card Example
-              <div class="card shadow mb-4">
-                <div class="card-header py-3">
-                  <h6 class="m-0 font-weight-bold text-primary">Summary</h6>
-                </div>
-                <div class="card-body">
-                  <h4 class="small font-weight-bold">Transformer load <span class="float-right">60%</span></h4>
-                  <div class="progress mb-4">
-                    <div class="progress-bar bg-danger" role="progressbar" style="width: 60%" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
-                  </div>
-                  <h4 class="small font-weight-bold">Generator load <span class="float-right">0%</span></h4>
-                  <div class="progress mb-4">
-                    <div class="progress-bar bg-warning" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
-                  </div>
-                  <h4 class="small font-weight-bold">Pump load <span class="float-right">60%</span></h4>
-                  <div class="progress mb-4">
-                    <div class="progress-bar" role="progressbar" style="width: 60%" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
-                  </div>
-                  <h4 class="small font-weight-bold">HVAC load <span class="float-right">80%</span></h4>
-                  <div class="progress mb-4">
-                    <div class="progress-bar bg-info" role="progressbar" style="width: 80%" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
-                  </div>
-                  <h4 class="small font-weight-bold">BMS free memory <span class="float-right">30%</span></h4>
-                  <div class="progress mb-4">
-                    <div class="progress-bar bg-success" role="progressbar" style="width: 30%" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100"></div>
-                  </div>
-                </div>
-              </div>
-            </div> -->
-            
-          </div>
+
 		
 
 
@@ -578,7 +453,6 @@
       </div>
     </div>
   </div>
-
   <!-- Bootstrap core JavaScript-->
   <script src="${contextPath}/resources/vendor/jquery/jquery.min.js"></script>
   <script src="${contextPath}/resources/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -592,9 +466,6 @@
   <!-- Page level plugins -->
   <script src="${contextPath}/resources/vendor/chart.js/Chart.min.js"></script>
 
-  <!-- Page level custom scripts -->
-  <script src="${contextPath}/resources/js/demo/chart-area-demo.js"></script>
-  <script src="${contextPath}/resources/js/demo/chart-pie-demo.js"></script>
 
 </body>
 

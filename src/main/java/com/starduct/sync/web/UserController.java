@@ -54,6 +54,23 @@ public class UserController {
 
         return "login";
     }
+    
+    @GetMapping("/property")
+    public String property(Model model, String id) {
+        if (id != null)
+            model.addAttribute("id", id);
+
+        return "levels";
+    }
+    
+    @GetMapping("/unit")
+    public String unit(Model model, String id) {
+        if (id != null)
+            model.addAttribute("id", id);
+        System.out.println("hahahaha");
+        return "apartment";
+    }
+
 
     @GetMapping({"/", "/dashboard"})
     public String welcome(Model model) {
