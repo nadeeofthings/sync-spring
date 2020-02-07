@@ -57,18 +57,27 @@ public class UserController {
     
     @GetMapping("/property")
     public String property(Model model, String id) {
-        if (id != null)
+        if (id != null) {
             model.addAttribute("id", id);
 
         return "levels";
+        }else {
+        	return "index";
+        }
+        
+        
+        
     }
     
     @GetMapping("/unit")
-    public String unit(Model model, String id) {
-        if (id != null)
+    public String unit(Model model, String id, String unit) {
+        if (id != null && unit != null) {
             model.addAttribute("id", id);
-        System.out.println("hahahaha");
+        	model.addAttribute("unit", unit);
         return "apartment";
+        }else {
+        return "index";
+        }
     }
 
 

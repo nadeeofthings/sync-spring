@@ -275,8 +275,8 @@ transform:scale(1.05);
             <!-- Nav Item - User Information -->
             <li class="nav-item dropdown no-arrow">
               <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <span class="mr-2 d-none d-lg-inline text-gray-600 small">User One</span>
-                <img class="img-profile rounded-circle" src="../img/user.png">
+                <span class="mr-2 d-none d-lg-inline text-gray-600 small">${pageContext.request.userPrincipal.name}</span>
+                <img class="img-profile rounded-circle" src="${contextPath}/resources/img/user.png">
               </a>
               <!-- Dropdown - User Information -->
               <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
@@ -342,7 +342,7 @@ transform:scale(1.05);
                       <i class="fas fa-home fa-2x text-gray-300"></i>
                     </div>
                   </div>
-                  <a href="unit?id=0" class="stretched-link"></a>
+                  <a href="unit?id=${id}&unit=1" class="stretched-link"></a>
                 </div>
               </div>
             </div>
@@ -369,7 +369,7 @@ transform:scale(1.05);
                       <i class="fas fa-home fa-2x text-gray-300"></i>
                     </div>
                   </div>
-                  <a href="unit?id=<%=room%>" class="stretched-link"></a>
+                  <a href="unit?id=${id}&unit=<%=room%>" class="stretched-link"></a>
                 </div>
               </div>
              

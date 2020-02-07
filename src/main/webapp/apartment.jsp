@@ -2,11 +2,12 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
 <c:set var="contextPath" value="${pageContext.request.contextPath}"/>
+<c:set var="absolutePath" value="${pageContext.request.localName}"/>
 
 <!DOCTYPE html>
 <html lang="en">
 <%
-int room = Integer.parseInt(request.getParameter("id"));
+int room = Integer.parseInt(request.getParameter("unit"));
 
 %>
 
@@ -28,6 +29,7 @@ int room = Integer.parseInt(request.getParameter("id"));
 
   <!-- Custom styles for this template-->
   <link href="${contextPath}/resources/css/sb-admin-2.css" rel="stylesheet">
+  <script src="${contextPath}/resources/js/jquery.min.js" type="text/javascript"></script>
 <script>
 	function startTime() {
 		var days = [ 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday',
@@ -57,6 +59,37 @@ int room = Integer.parseInt(request.getParameter("id"));
 		return i;
 	}
 </script>
+<script>
+            (function worker() {
+                $.ajax({
+                	type: "GET",
+                    url: 'http://localhost:8080/sync/rest/reading?id=${id}&unit=${unit}',
+                    dataType: 'json',
+                    success: function(data) {
+                       // $("#refresh").html(data);
+                       var idno = ${id};
+                       if(idno == "Ground"){
+                       document.getElementById("energyxxxxx").innerHTML = data[0].value+" "+data[0].ext;
+                       document.getElementById("btuxxxxx1").innerHTML = data[1].value+" "+data[1].ext;
+                       document.getElementById("btuxxxxx2").innerHTML = data[2].value+" "+data[2].ext;
+                       document.getElementById("btuxxxxx3").innerHTML = data[3].value+" "+data[3].ext;
+                       console.log(data[0].id);
+                       }else{
+                       document.getElementById("energyxxxxx").innerHTML = data[0].value+" "+data[0].ext;
+                       document.getElementById("btuxxxxx1").innerHTML = data[1].value+" "+data[1].ext;
+                           }
+                       
+                    },
+                    complete: function() {
+
+                        //alert("refresh");
+                        // 
+                        // Schedule the next request when the current one's complete
+                        setTimeout(worker, 5000);
+                    }
+                });
+            })();
+        </script>
 <style type="text/css">
 .card.zooming:hover{
 transform:scale(1.05);
@@ -73,7 +106,7 @@ transform:scale(1.05);
     <ul class="navbar-nav bg-gradient-iq sidebar sidebar-dark accordion" id="accordionSidebar">
 
       <!-- Sidebar - Brand -->
-      <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+      <a class="sidebar-brand d-flex align-items-center justify-content-center" href="${contextPath}/">
         <div class="sidebar-brand-icon ">
           <i class="fas fa-city"></i>
         </div>
@@ -85,7 +118,7 @@ transform:scale(1.05);
 
       <!-- Nav Item - Dashboard -->
       <li class="nav-item active">
-        <a class="nav-link" href="../index.html">
+        <a class="nav-link" href="${contextPath}/">
           <i class="fas fa-fw fa-tachometer-alt"></i>
           <span>Dashboard</span></a>
       </li>
@@ -275,8 +308,8 @@ transform:scale(1.05);
             <!-- Nav Item - User Information -->
             <li class="nav-item dropdown no-arrow">
               <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <span class="mr-2 d-none d-lg-inline text-gray-600 small">User One</span>
-                <img class="img-profile rounded-circle" src="../img/user.png">
+                <span class="mr-2 d-none d-lg-inline text-gray-600 small">${pageContext.request.userPrincipal.name}</span>
+                <img class="img-profile rounded-circle" src="${contextPath}/resources/img/user.png">
               </a>
               <!-- Dropdown - User Information -->
               <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
@@ -309,15 +342,84 @@ transform:scale(1.05);
         <div class="container-fluid">
 			<!-- Page Heading -->
           <div class="d-sm-flex align-items-center justify-content-between mb-4">
-          <%if(room == 0){%>
-           <h1 class="h3 mb-0 text-gray-800">Common Area</b></h1>
-          <%}else{ %>
-          <h1 class="h3 mb-0 text-gray-800">Office: <b>0<%=room %></b></h1>
-          <%} %>
-
+          <c:choose>
+		  	  <c:when test="${id == 'Ground'}">
+		  	  	<h1 class="h3 mb-0 text-gray-800">Common Area</b></h1>
+			  </c:when>
+			  <c:otherwise>
+			  <h1 class="h3 mb-0 text-gray-800">${id} Floor Office: <b>0<%=room %></b></h1>
+			  </c:otherwise>
+		  </c:choose>
             <!--<a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>-->
           </div>
-          <div class="row">
+          
+        <c:choose>
+			  <c:when test="${id == 'Ground'}">
+			  <div class="row">
+          <div class="col-xl-3 col-md-6 mb-4">
+          <div class="card zooming border-success shadow h-80 py-0">
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-gray-900 text-uppercase mb-1">Energy usage</div>
+                      <div id="energyxxxxx" class="h5 mb-0 font-weight-bold text-gray-800">kWh</div>
+                    </div>
+                    <div class="col-auto">
+                      <i class="fas fa-plug fa-2x text-gray-300"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+          </div>
+          <div class="col-xl-3 col-md-6 mb-4">
+          <div class="card zooming border-info shadow h-80 py-0">
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-gray-900 text-uppercase mb-1">AC 1 usage</div>
+                      <div id="btuxxxxx1" class="h5 mb-0 font-weight-bold text-gray-800">BTU</div>
+                    </div>
+                    <div class="col-auto">
+                      <i class="fas fa-fan fa-2x text-gray-300"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+          </div>
+          <div class="col-xl-3 col-md-6 mb-4">
+          <div class="card zooming border-info shadow h-80 py-0">
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-gray-900 text-uppercase mb-1">AC 2 usage</div>
+                      <div id="btuxxxxx2" class="h5 mb-0 font-weight-bold text-gray-800">BTU</div>
+                    </div>
+                    <div class="col-auto">
+                      <i class="fas fa-fan fa-2x text-gray-300"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+          </div>
+          <div class="col-xl-3 col-md-6 mb-4">
+          <div class="card zooming border-info shadow h-80 py-0">
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-gray-900 text-uppercase mb-1">AC 3 usage</div>
+                      <div id="btuxxxxx3" class="h5 mb-0 font-weight-bold text-gray-800">BTU</div>
+                    </div>
+                    <div class="col-auto">
+                      <i class="fas fa-fan fa-2x text-gray-300"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+          </div>
+          </div><!-- End row -->
+			  </c:when>
+			  <c:otherwise>
+			  <div class="row">
           <div class="col">
           </div>
           <div class="col-xl-3 col-md-6 mb-4">
@@ -326,7 +428,7 @@ transform:scale(1.05);
                   <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
                       <div class="text-xs font-weight-bold text-gray-900 text-uppercase mb-1">Energy usage</div>
-                      <div class="h5 mb-0 font-weight-bold text-gray-800"><%=0%> kWh</div>
+                      <div id="energyxxxxx" class="h5 mb-0 font-weight-bold text-gray-800">kWh</div>
                     </div>
                     <div class="col-auto">
                       <i class="fas fa-plug fa-2x text-gray-300"></i>
@@ -341,10 +443,10 @@ transform:scale(1.05);
                   <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
                       <div class="text-xs font-weight-bold text-gray-900 text-uppercase mb-1">AC usage</div>
-                      <div class="h5 mb-0 font-weight-bold text-gray-800"><%=0%> BTU</div>
+                      <div id="btuxxxxx1" class="h5 mb-0 font-weight-bold text-gray-800">BTU</div>
                     </div>
                     <div class="col-auto">
-                      <i class="fas fa-shower fa-2x text-gray-300"></i>
+                      <i class="fas fa-fan fa-2x text-gray-300"></i>
                     </div>
                   </div>
                 </div>
@@ -367,7 +469,11 @@ transform:scale(1.05);
           </div> --%>
           <div class="col">
           </div>
-          </div>
+          </div><!-- End row -->
+			  </c:otherwise>
+		</c:choose>
+          
+          
         </div>
         <!-- Begin tabs -->
         <div class="container">
@@ -512,6 +618,7 @@ transform:scale(1.05);
 
   <!-- Custom scripts for all pages-->
   <script src="${contextPath}/resources/js/sb-admin-2.min.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
 
   <!-- Page level plugins -->
   <script src="${contextPath}/resources/vendor/chart.js/Chart.min.js"></script>
