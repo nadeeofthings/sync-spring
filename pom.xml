@@ -69,6 +69,11 @@
 		    <groupId>org.springframework.security</groupId>
 		    <artifactId>spring-security-taglibs</artifactId>
 		</dependency>
+		<dependency>
+		    <groupId>de.re</groupId>
+		    <artifactId>easymodbus</artifactId>
+		    <version>1.0</version>
+		</dependency>
 	</dependencies>
 
 	<build>

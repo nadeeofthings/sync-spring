@@ -63,11 +63,11 @@ int room = Integer.parseInt(request.getParameter("unit"));
             (function worker() {
                 $.ajax({
                 	type: "GET",
-                    url: 'http://localhost:8080/sync/rest/reading?id=${id}&unit=${unit}',
+                    url: 'http://localhost:8080/tebbiq/rest/reading?id=${id}&unit=${unit}',
                     dataType: 'json',
                     success: function(data) {
                        // $("#refresh").html(data);
-                       var idno = ${id};
+                       var idno = "${id}";
                        if(idno == "Ground"){
                        document.getElementById("energyxxxxx").innerHTML = data[0].value+" "+data[0].ext;
                        document.getElementById("btuxxxxx1").innerHTML = data[1].value+" "+data[1].ext;
