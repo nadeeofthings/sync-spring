@@ -47,6 +47,12 @@ public class MeterService {
 	public List<Meter> byIdAndUnit(String id, String unit){
 		return meterRepository.findAllByIdAndUnit(id, unit);
 	}
+	
+
+	public List<Meter> byIdAndUnitAndExt(String id, String unit, String ext) {
+		return meterRepository.findAllByIdAndUnitAndExt(id, unit, ext);
+	}
+	
 	public void captureReadings() {
 
 		

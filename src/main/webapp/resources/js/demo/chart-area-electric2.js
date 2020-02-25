@@ -28,15 +28,18 @@ function number_format(number, decimals, dec_point, thousands_sep) {
 }
 
 // Area Chart Example
-var ctx = document.getElementById("myAreaChart2");
-var myLineChart = new Chart(ctx, {
-  type: 'bar',
+var ctx = document.getElementById("AirconChart");
+var airChart = new Chart(ctx, {
+  type: 'line',
   data: {
-    labels: ["Wednesday", "Thursday", "Friday", "Saturday", "Sunday", "Monday", "Tuesday"],
+    labels: [],
     datasets: [{
       label: "Consumption",
       lineTension: 0.3,
-      backgroundColor: ["rgba(58, 183, 104, 1)","rgba(58, 183, 104, 1)","rgba(58, 183, 104, 1)","rgba(58, 183, 104, 1)","rgba(58, 183, 104, 1)","rgba(58, 183, 104, 1)","rgba(58, 183, 104, 1)"],
+      fill: false,
+      borderWidth: 3,
+      borderColor: "rgba(78, 115, 223, 1)",
+      backgroundColor: "rgba(78, 115, 223, 1)",
       //borderColor: "rgba(0, 94, 0, 1)",
       //BorderColor: "rgba(78, 115, 223, 1)",
       HoverRadius: 3,
@@ -44,7 +47,7 @@ var myLineChart = new Chart(ctx, {
       //HoverBorderColor: "rgba(0, 94, 0, 1)",
       //HitRadius: 10,
       //BorderWidth: 2,
-      data: [0, 0, 0, 0, 0, 0, 0],
+      data: [],
     }],
   },
   
@@ -115,3 +118,28 @@ var myLineChart = new Chart(ctx, {
     }
   }
 });
+
+//logic to get new data
+var getAirconData = function(id,unit) {
+  $.ajax({
+    url: 'http://localhost:8080/tebbiq/rest/byId?ext=BTU&id='+id+'&unit='+unit,
+    success: function(data) {
+      // process your data to pull out what you plan to use to update the chart
+      // e.g. new label and a new data point
+    	data.forEach(function(object) {
+    		  // add new label and data point to chart's underlying data structures
+    		var days = [ 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday',
+				'Friday', 'Saturday' ];
+    		var newDate = new Date(object.timeStamp);
+    		var weekday = newDate.getDay();
+    		var options = { weekday: 'long'};
+    		
+    		airChart.data.labels.push(days[weekday]);
+    		airChart.data.datasets[0].data.push(object.value);
+        });
+      
+      // re-render the chart
+    	airChart.update();
+    }
+  });
+};

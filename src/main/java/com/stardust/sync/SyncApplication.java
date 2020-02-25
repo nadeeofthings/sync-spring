@@ -8,6 +8,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 
 @SpringBootApplication
+@Configuration
+@EnableScheduling
 public class SyncApplication {
 
 	public static void main(String[] args) {
@@ -15,7 +17,3 @@ public class SyncApplication {
 	}
 
 }
-
-@Configuration
-@EnableScheduling
-class SchedulingConfiguration {}

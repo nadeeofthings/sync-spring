@@ -30,6 +30,37 @@ int room = Integer.parseInt(request.getParameter("unit"));
   <!-- Custom styles for this template-->
   <link href="${contextPath}/resources/css/sb-admin-2.css" rel="stylesheet">
   <script src="${contextPath}/resources/js/jquery.min.js" type="text/javascript"></script>
+  
+  <script type="text/javascript">
+  $(document).ready(function() {
+	  var id = '${id}';
+	  var unit = '${unit}';
+	  $('#elecDataTable').DataTable( {
+		    ajax: {
+		        url: 'http://localhost:8080/tebbiq/rest/byId?ext=kWh&id=${id}&unit=${unit}',
+		        dataSrc: ''
+		    },
+		    columns: [
+	            { "data": "meter" },
+	            { "data": "timeStamp" },
+	            { "data": "value" }
+	        ]
+		} );
+	  $('#airconDataTable').DataTable( {
+		    ajax: {
+		        url: 'http://localhost:8080/tebbiq/rest/byId?ext=BTU&id=${id}&unit=${unit}',
+		        dataSrc: ''
+		    },
+		    columns: [
+	            { "data": "meter" },
+	            { "data": "timeStamp" },
+	            { "data": "value" }
+	        ]
+		} );
+	  getElecData(id,unit);
+	  getAirconData(id,unit);
+	} );
+  </script>
 <script>
 	function startTime() {
 		var days = [ 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday',
@@ -59,6 +90,7 @@ int room = Integer.parseInt(request.getParameter("unit"));
 		return i;
 	}
 </script>
+
 <script>
             (function worker() {
                 $.ajax({
@@ -481,81 +513,100 @@ transform:scale(1.05);
         <div class="col"></div>
         <div class="col-xl-10 col-md-6 mb-4">
         <div class="card border-primary shadow">
-			<ul class="nav nav-tabs ">
-				<li class="nav-item"><a class="nav-link active h5 mb-0 text-gray-900" data-toggle="tab" href="#Electricity">Electricity</a>
-				</li>
-				<li class="nav-item"><a class="nav-link h5 mb-0 text-gray-900" data-toggle="tab"  href="#Water">Air Con</a></li>
+			<ul class="nav nav-tabs" id="myTab" role="tablist">
+			  <li class="nav-item">
+			    <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Electricity</a>
+			  </li>
+			  <li class="nav-item">
+			    <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Air Conditioning</a>
+			  </li>
 			</ul>
-			<div class="tab-content">
-			    <div id="Electricity" class="tab-pane fade in show active">
-			      <div class="card">
-			      <div class="card-body">
-			      <h1 class="h4 mb-0 text-gray-800">Past week</h1>
-                  <div class="row no-gutters align-items-center">
-                    <!-- Chart Body -->
-                <div class="card-body">
-                  <div class="chart-area">
-                    <canvas id="myAreaChart"></canvas>
-                  </div>
-                </div>
-                  </div>
-                </div>
-                <hr></hr>
-                <div class="card-body">
-			      <h1 class="h4 mb-0 text-gray-800">Meter readings for last week</h1>
-                  <div class="row no-gutters align-items-center">
-                  <div class="table-responsive">
-                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                  <thead>
-                    <tr>
-                      <th>Office</th>
-                      <th>Timestamp</th>
-                      <th>Total kWh</th>
-                    </tr>
-                  </thead>
-                  <tfoot>
-                    <tr>
-                      <th>Apartment</th>
-                      <th>Timestamp</th>
-                      <th>Total kWh</th>
-                    </tr>
-                  </tfoot>
-                  <tbody>
-                    <%for(int i=0;i<0;i++){ %>
-                    <tr>
-                      <td><%=room %></td>
-                      <td>12<sup>th</sup> June 2020 00:00:00</td>
-                      <td>1000</td>
-                    </tr>
-                     <%} %>
-                    <tr>
-                      <td><%=room %></td>
-                      <td>05<sup>th</sup> Feb 2020 00:00:00</td>
-                      <td>0</td>
-                    </tr>
-                   
-                  </tbody>
-                </table>
-              </div>
-                  </div>
-                </div>
-			      </div>
-			    </div>
-			<div id="AirCon" class="tab-pane fade in">
-			      <div class="card">
-			      <div class="card-body">
-			      <h1 class="h4 mb-0 text-gray-800">Past week</h1>
-                  <div class="row no-gutters align-items-center">
-
-                  </div>
-                </div>
-                <hr></hr>
-                <div class="card-body">
-                </div>
-			      </div>
-			    </div>
-
-			  </div>
+			<div class="tab-content" id="myTabContent">
+			  <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+					<div class="card">
+					      <div class="card-body">
+					      <h1 class="h4 mb-0 text-gray-800">Past week</h1>
+		                  <div class="row no-gutters align-items-center">
+		                    <!-- Chart Body -->
+			                <div class="card-body">
+			                  <div class="chart-area">
+			                    <canvas id="ElecChart"></canvas>
+			                  </div>
+			                </div>
+		                  </div>
+		                </div>
+		                <hr></hr>
+		                <div class="card-body">
+			                	<h1 class="h4 mb-0 text-gray-800">Electricity meter readings</h1>
+			                	<div class="row no-gutters align-items-center">
+			                		<div class="table-responsive">
+			                			<table class="table table-bordered" id="elecDataTable" width="100%" cellspacing="0">
+						                  <thead>
+						                    <tr>
+						                      <th>Meter</th>
+						                      <th>Timestamp</th>
+						                      <th>Total kWh</th>
+						                    </tr>
+						                  </thead>
+						                  <tfoot>
+						                    <tr>
+						                      <th>Meter</th>
+						                      <th>Timestamp</th>
+						                      <th>Total kWh</th>
+						                    </tr>
+						                  </tfoot>
+						                  <tbody>
+						                   
+						                  </tbody>
+						                </table>
+			                		</div>
+			                	</div>	
+			                </div>
+	                </div>
+				</div>
+			  <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+					<div class="card">
+					      <div class="card-body">
+					      <h1 class="h4 mb-0 text-gray-800">Past week</h1>
+		                  <div class="row no-gutters align-items-center">
+			                    <!-- Chart Body -->
+			                <div class="card-body">
+			                  <div class="chart-area">
+			                    <canvas id="AirconChart"></canvas>
+			                  </div>
+			                </div>
+		                  </div>
+		                </div>
+		                <hr></hr>
+		                <div class="card-body">
+			                	<h1 class="h4 mb-0 text-gray-800">Air conditioner meter readings</h1>
+			                	<div class="row no-gutters align-items-center">
+			                		<div class="table-responsive">
+			                			<table class="table table-bordered" id="airconDataTable" width="100%" cellspacing="0">
+						                  <thead>
+						                    <tr>
+						                      <th>Meter</th>
+						                      <th>Timestamp</th>
+						                      <th>Total BTU</th>
+						                    </tr>
+						                  </thead>
+						                  <tfoot>
+						                    <tr>
+						                      <th>Meter</th>
+						                      <th>Timestamp</th>
+						                      <th>Total BTU</th>
+						                    </tr>
+						                  </tfoot>
+						                  <tbody>
+						                   
+						                  </tbody>
+						                </table>
+			                		</div>
+			                	</div>	
+			                </div>
+	                </div>
+				</div>
+			</div>
 		</div>
 		</div>
 		<div class="col"></div>

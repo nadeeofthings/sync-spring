@@ -165,8 +165,8 @@ public class UserRestController {
 	}
 	
 	@GetMapping(value = "rest/byId")
-    public List<Meter> getReadingsById(String id, String unit) {
-		return meterService.byIdAndUnit(id, unit);
+    public List<Meter> getReadingsById(String ext,String id, String unit) {
+		return meterService.byIdAndUnitAndExt(id, unit, ext);
 		
 	}
 	

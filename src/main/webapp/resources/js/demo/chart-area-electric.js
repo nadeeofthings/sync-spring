@@ -28,23 +28,26 @@ function number_format(number, decimals, dec_point, thousands_sep) {
 }
 
 // Area Chart Example
-var ctx = document.getElementById("myAreaChart");
-var myLineChart = new Chart(ctx, {
-  type: 'bar',
+var ctx = document.getElementById("ElecChart");
+var elecChart = new Chart(ctx, {
+  type: 'line',
   data: {
-    labels: ["Wednesday", "Thursday", "Friday", "Saturday", "Sunday", "Monday", "Tuesday"],
+    labels: [],
     datasets: [{
-      label: "Consumption",
-      lineTension: 0.3,
-      backgroundColor: ["rgba(58, 183, 104, 1)","rgba(58, 183, 104, 1)","rgba(58, 183, 104, 1)","rgba(58, 183, 104, 1)","rgba(58, 183, 104, 1)","rgba(58, 183, 104, 1)","rgba(58, 183, 104, 1)"],
-      //borderColor: "rgba(0, 94, 0, 1)",
+    	label: "Consumption",
+        lineTension: 0.3,
+        fill: false,
+        borderWidth: 3,
+        borderColor: "rgba(28, 200, 138, 1)",
+        backgroundColor: "rgba(28, 200, 138, 1)",
+        //borderColor: "rgba(0, 94, 0, 1)",
       //BorderColor: "rgba(78, 115, 223, 1)",
       HoverRadius: 3,
       //HoverBackgroundColor: ["rgba(0, 94, 0, 1)","rgba(200, 115, 223, 1)","rgba(78, 115, 223, 0.05)","rgba(0, 0, 255, 0,1)","rgba(78, 115, 223, 0.05)","rgba(78, 115, 223, 0.05)","rgba(78, 115, 223, 0.05)"],
       //HoverBorderColor: "rgba(0, 94, 0, 1)",
       //HitRadius: 10,
       //BorderWidth: 2,
-      data: [0, 0, 0, 0, 0, 0, 0],
+      data: [],
     }],
   },
   
@@ -77,7 +80,7 @@ var myLineChart = new Chart(ctx, {
           padding: 10,
           // Include a kW in the ticks
           callback: function(value, index, values) {
-            return number_format(value)+' kW';
+            return number_format(value)+' kWh';
           }
         },
         gridLines: {
@@ -109,9 +112,34 @@ var myLineChart = new Chart(ctx, {
       callbacks: {
         label: function(tooltipItem, chart) {
           var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
-          return datasetLabel +":"+ number_format(tooltipItem.yLabel)+" kW";
+          return datasetLabel +":"+ number_format(tooltipItem.yLabel)+" kWh";
         }
       }
     }
   }
 });
+
+//logic to get new data
+var getElecData = function(id,unit) {
+  $.ajax({
+    url: 'http://localhost:8080/tebbiq/rest/byId?ext=kWh&id='+id+'&unit='+unit,
+    success: function(data) {
+      // process your data to pull out what you plan to use to update the chart
+      // e.g. new label and a new data point
+    	data.forEach(function(object) {
+    	      // add new label and data point to chart's underlying data structures
+    		var days = [ 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday',
+				'Friday', 'Saturday' ];
+    		var newDate = new Date(object.timeStamp);
+    		var weekday = newDate.getDay();
+    		var options = { weekday: 'long'};
+    		
+    		elecChart.data.labels.push(days[weekday]);
+    		elecChart.data.datasets[0].data.push(object.value);
+        });
+      
+      // re-render the chart
+    	elecChart.update();
+    }
+  });
+};

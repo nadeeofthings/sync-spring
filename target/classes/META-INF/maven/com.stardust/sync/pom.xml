@@ -82,7 +82,7 @@
 			<plugin>
 			<configuration>
 				<executable>true</executable>
-				<mainClass>com.starduct.sync.SyncApplication</mainClass>
+				<mainClass>com.stardust.sync.SyncApplication</mainClass>
 			</configuration>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>

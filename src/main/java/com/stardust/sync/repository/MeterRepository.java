@@ -9,4 +9,6 @@ import com.stardust.sync.model.Meter;
 public interface MeterRepository extends JpaRepository<Meter, String> {
   
 	List<Meter> findAllByIdAndUnit(String id, String unit);
+
+	List<Meter> findAllByIdAndUnitAndExt(String id, String unit, String ext);
 }
