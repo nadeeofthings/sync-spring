@@ -28,6 +28,7 @@ import com.stardust.sync.repository.ConfigRepository;
 import com.stardust.sync.repository.MeterRepository;
 import com.stardust.sync.repository.RoleRepository;
 import com.stardust.sync.repository.UserRepository;
+import com.stardust.sync.service.MeterService;
 import com.stardust.sync.service.UserService;
 
 
@@ -51,6 +52,9 @@ public class InitialdataLoader implements ApplicationListener<ContextRefreshedEv
 	@Autowired
     private UserService userService;
 	
+	@Autowired
+    private MeterService meterService;
+	
 	@Override
 	public void onApplicationEvent(ContextRefreshedEvent event) {
 		if(alreadySetup)
@@ -65,6 +69,48 @@ public class InitialdataLoader implements ApplicationListener<ContextRefreshedEv
 		 * 
 		 * configRepository.saveAll(configs);
 		 */
+		//meterService.capturePeakReadings();
+		
+		Constants.meters.add(new Meter("Ground", "1", 1, 0, "kWh", new Date(), false));
+		Constants.meters.add(new Meter("Ground", "1", 2, 0, "BTU", new Date(), false));
+		Constants.meters.add(new Meter("Ground", "1", 3, 0, "BTU", new Date(), false));
+		Constants.meters.add(new Meter("Ground", "1", 4, 0, "BTU", new Date(), false));
+		
+		Constants.meters.add(new Meter("3rd", "1", 1, 0, "kWh", new Date(), false));
+		Constants.meters.add(new Meter("3rd", "1", 2, 0, "BTU", new Date(), false));
+		Constants.meters.add(new Meter("3rd", "2", 1, 0, "kWh", new Date(), false));
+		Constants.meters.add(new Meter("3rd", "2", 2, 0, "BTU", new Date(), false));
+		Constants.meters.add(new Meter("3rd", "3", 1, 0, "kWh", new Date(), false));
+		Constants.meters.add(new Meter("3rd", "3", 2, 0, "BTU", new Date(), false));
+		Constants.meters.add(new Meter("3rd", "4", 1, 0, "kWh", new Date(), false));
+		Constants.meters.add(new Meter("3rd", "4", 2, 0, "BTU", new Date(), false));
+
+		Constants.meters.add(new Meter("4th", "1", 1, 0, "kWh", new Date(), false));
+		Constants.meters.add(new Meter("4th", "1", 2, 0, "BTU", new Date(), false));
+		Constants.meters.add(new Meter("4th", "2", 1, 0, "kWh", new Date(), false));
+		Constants.meters.add(new Meter("4th", "2", 2, 0, "BTU", new Date(), false));
+		Constants.meters.add(new Meter("4th", "3", 1, 0, "kWh", new Date(), false));
+		Constants.meters.add(new Meter("4th", "3", 2, 0, "BTU", new Date(), false));
+		Constants.meters.add(new Meter("4th", "4", 1, 0, "kWh", new Date(), false));
+		Constants.meters.add(new Meter("4th", "4", 2, 0, "BTU", new Date(), false));
+		
+		Constants.meters.add(new Meter("5th", "1", 1, 0, "kWh", new Date(), false));
+		Constants.meters.add(new Meter("5th", "1", 2, 0, "BTU", new Date(), false));
+		Constants.meters.add(new Meter("5th", "2", 1, 0, "kWh", new Date(), false));
+		Constants.meters.add(new Meter("5th", "2", 2, 0, "BTU", new Date(), false));
+		Constants.meters.add(new Meter("5th", "3", 1, 0, "kWh", new Date(), false));
+		Constants.meters.add(new Meter("5th", "3", 2, 0, "BTU", new Date(), false));
+		Constants.meters.add(new Meter("5th", "4", 1, 0, "kWh", new Date(), false));
+		Constants.meters.add(new Meter("5th", "4", 2, 0, "BTU", new Date(), false));
+		
+		Constants.meters.add(new Meter("6th", "1", 1, 0, "kWh", new Date(), false));
+		Constants.meters.add(new Meter("6th", "1", 2, 0, "BTU", new Date(), false));
+		Constants.meters.add(new Meter("6th", "2", 1, 0, "kWh", new Date(), false));
+		Constants.meters.add(new Meter("6th", "2", 2, 0, "BTU", new Date(), false));
+		Constants.meters.add(new Meter("6th", "3", 1, 0, "kWh", new Date(), false));
+		Constants.meters.add(new Meter("6th", "3", 2, 0, "BTU", new Date(), false));
+		Constants.meters.add(new Meter("6th", "4", 1, 0, "kWh", new Date(), false));
+		Constants.meters.add(new Meter("6th", "4", 2, 0, "BTU", new Date(), false));
 		
 		createRoleIfNotFound("ROLE_SUPERADMIN");
 		createRoleIfNotFound("ROLE_ADMIN");
@@ -79,7 +125,6 @@ public class InitialdataLoader implements ApplicationListener<ContextRefreshedEv
     @Transactional
     private Role createRoleIfNotFound(
       String name) {
-  
         Role role = roleRepository.findByName(name);
         if (role == null) {
             role = new Role();

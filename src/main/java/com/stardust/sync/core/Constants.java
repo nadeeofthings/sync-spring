@@ -1,5 +1,10 @@
 package com.stardust.sync.core;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import com.stardust.sync.model.Meter;
+
 public class Constants {
 
     public static final String  CONFIG_KEY_REFRESH_RATE_CONFIG  = "ConfigRefreshRate";
@@ -24,5 +29,9 @@ public class Constants {
 	public static final int S2 = 1630;
 	public static final int S3 = 1632;
 	public static final int S4 = 1634;
+	
+	public static ArrayList<Meter> meters = new ArrayList<Meter>();
+	
+	
 
 }

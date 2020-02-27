@@ -1,6 +1,15 @@
 // Set new default font family and font color to mimic Bootstrap's default styling
 Chart.defaults.global.defaultFontFamily = 'Nunito', '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
 Chart.defaults.global.defaultFontColor = '#858796';
+window.chartColors = {
+		red: 'rgb(255, 99, 132)',
+		orange: 'rgb(255, 159, 64)',
+		yellow: 'rgb(255, 205, 86)',
+		green: 'rgb(75, 192, 192)',
+		blue: 'rgb(54, 162, 235)',
+		purple: 'rgb(153, 102, 255)',
+		grey: 'rgb(201, 203, 207)'
+	};
 
 function number_format(number, decimals, dec_point, thousands_sep) {
   // *     example: number_format(1234.56, 2, ',', ' ');
@@ -34,12 +43,12 @@ var airChart = new Chart(ctx, {
   data: {
     labels: [],
     datasets: [{
-      label: "Consumption",
+      label: "AC 1",
       lineTension: 0.3,
       fill: false,
       borderWidth: 3,
-      borderColor: "rgba(78, 115, 223, 1)",
-      backgroundColor: "rgba(78, 115, 223, 1)",
+      borderColor: window.chartColors.blue,
+      backgroundColor: window.chartColors.blue,
       //borderColor: "rgba(0, 94, 0, 1)",
       //BorderColor: "rgba(78, 115, 223, 1)",
       HoverRadius: 3,
@@ -48,8 +57,40 @@ var airChart = new Chart(ctx, {
       //HitRadius: 10,
       //BorderWidth: 2,
       data: [],
-    }],
+    },{
+        label: "AC 2",
+        lineTension: 0.3,
+        fill: false,
+        borderWidth: 3,
+        borderColor: window.chartColors.purple,
+        backgroundColor: window.chartColors.purple,
+        //borderColor: "rgba(0, 94, 0, 1)",
+        //BorderColor: "rgba(78, 115, 223, 1)",
+        HoverRadius: 3,
+        //HoverBackgroundColor: ["rgba(0, 94, 0, 1)","rgba(200, 115, 223, 1)","rgba(78, 115, 223, 0.05)","rgba(0, 0, 255, 0,1)","rgba(78, 115, 223, 0.05)","rgba(78, 115, 223, 0.05)","rgba(78, 115, 223, 0.05)"],
+        //HoverBorderColor: "rgba(0, 94, 0, 1)",
+        //HitRadius: 10,
+        //BorderWidth: 2,
+        data: [],
+      },{
+          label: "AC 3",
+          lineTension: 0.3,
+          fill: false,
+          borderWidth: 3,
+          borderColor: window.chartColors.red,
+          backgroundColor: window.chartColors.red,
+          //borderColor: "rgba(0, 94, 0, 1)",
+          //BorderColor: "rgba(78, 115, 223, 1)",
+          HoverRadius: 3,
+          //HoverBackgroundColor: ["rgba(0, 94, 0, 1)","rgba(200, 115, 223, 1)","rgba(78, 115, 223, 0.05)","rgba(0, 0, 255, 0,1)","rgba(78, 115, 223, 0.05)","rgba(78, 115, 223, 0.05)","rgba(78, 115, 223, 0.05)"],
+          //HoverBorderColor: "rgba(0, 94, 0, 1)",
+          //HitRadius: 10,
+          //BorderWidth: 2,
+          data: [],
+        }],
   },
+  
+  
   
   options: {
     maintainAspectRatio: false,
@@ -112,7 +153,7 @@ var airChart = new Chart(ctx, {
       callbacks: {
         label: function(tooltipItem, chart) {
           var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
-          return datasetLabel +":"+ number_format(tooltipItem.yLabel)+" BTU";
+          return datasetLabel +": "+ number_format(tooltipItem.yLabel)+" BTU";
         }
       }
     }
@@ -122,7 +163,7 @@ var airChart = new Chart(ctx, {
 //logic to get new data
 var getAirconData = function(id,unit) {
   $.ajax({
-    url: 'http://localhost:8080/tebbiq/rest/byId?ext=BTU&id='+id+'&unit='+unit,
+	  url: 'http://localhost:8080/tebbiq/rest/byMeterId?ext=BTU&id='+id+'&unit='+unit+'&meter=2',
     success: function(data) {
       // process your data to pull out what you plan to use to update the chart
       // e.g. new label and a new data point
@@ -134,8 +175,48 @@ var getAirconData = function(id,unit) {
     		var weekday = newDate.getDay();
     		var options = { weekday: 'long'};
     		
-    		airChart.data.labels.push(days[weekday]);
-    		airChart.data.datasets[0].data.push(object.value);
+    		airChart.data.labels.unshift(days[weekday]);
+    		airChart.data.datasets[0].data.unshift(object.value);
+        });
+      
+      // re-render the chart
+    	airChart.update();
+    }
+  });
+  $.ajax({
+	  url: 'http://localhost:8080/tebbiq/rest/byMeterId?ext=BTU&id='+id+'&unit='+unit+'&meter=3',
+    success: function(data) {
+      // process your data to pull out what you plan to use to update the chart
+      // e.g. new label and a new data point
+    	data.forEach(function(object) {
+    		  // add new label and data point to chart's underlying data structures
+    		var days = [ 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday',
+				'Friday', 'Saturday' ];
+    		var newDate = new Date(object.timeStamp);
+    		var weekday = newDate.getDay();
+    		var options = { weekday: 'long'};
+    		
+    		airChart.data.datasets[1].data.unshift(object.value);
+        });
+      
+      // re-render the chart
+    	airChart.update();
+    }
+  });
+  $.ajax({
+	  url: 'http://localhost:8080/tebbiq/rest/byMeterId?ext=BTU&id='+id+'&unit='+unit+'&meter=4',
+    success: function(data) {
+      // process your data to pull out what you plan to use to update the chart
+      // e.g. new label and a new data point
+    	data.forEach(function(object) {
+    		  // add new label and data point to chart's underlying data structures
+    		var days = [ 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday',
+				'Friday', 'Saturday' ];
+    		var newDate = new Date(object.timeStamp);
+    		var weekday = newDate.getDay();
+    		var options = { weekday: 'long'};
+    		
+    		airChart.data.datasets[2].data.unshift(object.value);
         });
       
       // re-render the chart

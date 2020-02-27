@@ -72,7 +72,7 @@ public class SchedulerService implements SchedulingConfigurer {
             public void run() {
                 // Do not put @Scheduled annotation above this method, we don't need it anymore.
                 LOG.info("Peak time capture");
-                meterService.captureReadings();
+                meterService.capturePeakReadings();
             }
         }, new Trigger() {
             @Override
@@ -103,7 +103,7 @@ public class SchedulerService implements SchedulingConfigurer {
             public void run() {
             	// Do not put @Scheduled annotation above this method, we don't need it anymore.
                 LOG.info("Peak time end capture");
-                meterService.captureReadings();
+                meterService.capturePeakReadings();
             }
         }, new Trigger() {
             @Override

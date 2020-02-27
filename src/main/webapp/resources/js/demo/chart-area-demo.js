@@ -2,6 +2,19 @@
 Chart.defaults.global.defaultFontFamily = 'Nunito', '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
 Chart.defaults.global.defaultFontColor = '#858796';
 
+const monthNames = ["January", "February", "March", "April", "May", "June",
+	  "July", "August", "September", "October", "November", "December"
+	];
+window.chartColors = {
+		red: 'rgb(255, 99, 132)',
+		orange: 'rgb(255, 159, 64)',
+		yellow: 'rgb(255, 205, 86)',
+		green: 'rgb(75, 192, 192)',
+		blue: 'rgb(54, 162, 235)',
+		purple: 'rgb(153, 102, 255)',
+		grey: 'rgb(201, 203, 207)'
+	};
+
 function number_format(number, decimals, dec_point, thousands_sep) {
   // *     example: number_format(1234.56, 2, ',', ' ');
   // *     return: '1 234,56'
@@ -29,89 +42,188 @@ function number_format(number, decimals, dec_point, thousands_sep) {
 
 // Area Chart Example
 var ctx = document.getElementById("myAreaChart");
-var myLineChart = new Chart(ctx, {
-  type: 'bar',
-  data: {
-    labels: ["Thursday", "Friday", "Saturday", "Sunday", "Monday", "Tuesday", "Wednesday"],
-    datasets: [{
-      label: "Consumption",
-      lineTension: 0.3,
-      backgroundColor: ["rgba(78, 115, 223, 1)","rgba(78, 115, 223, 1)","rgba(78, 115, 223, 1)","rgba(78, 115, 223, 1)","rgba(78, 115, 223, 1)","rgba(78, 115, 223, 1)","rgba(78, 115, 223, 1)"],
-      //borderColor: "rgba(0, 94, 0, 1)",
-      //BorderColor: "rgba(78, 115, 223, 1)",
-      HoverRadius: 3,
-      //HoverBackgroundColor: ["rgba(0, 94, 0, 1)","rgba(200, 115, 223, 1)","rgba(78, 115, 223, 0.05)","rgba(0, 0, 255, 0,1)","rgba(78, 115, 223, 0.05)","rgba(78, 115, 223, 0.05)","rgba(78, 115, 223, 0.05)"],
-      //HoverBorderColor: "rgba(0, 94, 0, 1)",
-      //HitRadius: 10,
-      //BorderWidth: 2,
-      data: [0, 0, 0, 0, 0, 0, 0.1],
-    }],
-  },
-  
-  options: {
-    maintainAspectRatio: false,
-    layout: {
-      padding: {
-        left: 10,
-        right: 25,
-        top: 25,
-        bottom: 0
-      }
-    },
-    scales: {
-      xAxes: [{
-        time: {
-          unit: 'date'
-        },
-        gridLines: {
-          display: false,
-          drawBorder: false
-        },
-        ticks: {
-          maxTicksLimit: 7
-        }
-      }],
-      yAxes: [{
-        ticks: {
-          maxTicksLimit: 5,
-          padding: 10,
-          // Include a kW in the ticks
-          callback: function(value, index, values) {
-            return number_format(value)+' kW';
-          }
-        },
-        gridLines: {
-          color: "rgb(234, 236, 244)",
-          zeroLineColor: "rgb(234, 236, 244)",
-          drawBorder: false,
-          borderDash: [2],
-          zeroLineBorderDash: [2]
-        }
-      }],
-    },
-    legend: {
-      display: false
-    },
-    tooltips: {
-      backgroundColor: "rgb(255,255,255)",
-      bodyFontColor: "#858796",
-      titleMarginBottom: 10,
-      titleFontColor: '#6e707e',
-      titleFontSize: 14,
-      borderColor: '#dddfeb',
-      borderWidth: 1,
-      xPadding: 15,
-      yPadding: 15,
-      displayColors: false,
-      intersect: false,
-      mode: 'index',
-      caretPadding: 10,
-      callbacks: {
-        label: function(tooltipItem, chart) {
-          var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
-          return datasetLabel +":"+ number_format(tooltipItem.yLabel)+" kW";
-        }
-      }
+var elecChart = new Chart(ctx, {
+	  type: 'line',
+	  data: {
+	    labels: [],
+	    datasets: [{
+	    	label: "Electricity",
+	        lineTension: 0.3,
+	        fill: false,
+	        borderWidth: 3,
+	        borderColor:  window.chartColors.green,
+	        backgroundColor:  window.chartColors.green,
+	        //borderColor: "rgba(0, 94, 0, 1)",
+	      //BorderColor: "rgba(78, 115, 223, 1)",
+	      HoverRadius: 3,
+	      //HoverBackgroundColor: ["rgba(0, 94, 0, 1)","rgba(200, 115, 223, 1)","rgba(78, 115, 223, 0.05)","rgba(0, 0, 255, 0,1)","rgba(78, 115, 223, 0.05)","rgba(78, 115, 223, 0.05)","rgba(78, 115, 223, 0.05)"],
+	      //HoverBorderColor: "rgba(0, 94, 0, 1)",
+	      //HitRadius: 10,
+	      //BorderWidth: 2,
+	      data: [],
+	    },{
+	    	label: "AirCon",
+	        lineTension: 0.3,
+	        fill: false,
+	        borderWidth: 3,
+	        borderColor:  window.chartColors.blue,
+	        backgroundColor:  window.chartColors.blue,
+	        //borderColor: "rgba(0, 94, 0, 1)",
+	      //BorderColor: "rgba(78, 115, 223, 1)",
+	      HoverRadius: 3,
+	      //HoverBackgroundColor: ["rgba(0, 94, 0, 1)","rgba(200, 115, 223, 1)","rgba(78, 115, 223, 0.05)","rgba(0, 0, 255, 0,1)","rgba(78, 115, 223, 0.05)","rgba(78, 115, 223, 0.05)","rgba(78, 115, 223, 0.05)"],
+	      //HoverBorderColor: "rgba(0, 94, 0, 1)",
+	      //HitRadius: 10,
+	      //BorderWidth: 2,
+	      data: [],
+	    }],
+	  },
+	  
+	  options: {
+	    maintainAspectRatio: false,
+	    layout: {
+	      padding: {
+	        left: 10,
+	        right: 25,
+	        top: 25,
+	        bottom: 0
+	      }
+	    },
+	    scales: {
+	      xAxes: [{
+	        time: {
+	          unit: 'date'
+	        },
+	        gridLines: {
+	          display: false,
+	          drawBorder: false
+	        },
+	        ticks: {
+	          maxTicksLimit: 7
+	        }
+	      }],
+	      yAxes: [{
+	        ticks: {
+	          maxTicksLimit: 5,
+	          padding: 10,
+	          // Include a kW in the ticks
+	          callback: function(value, index, values) {
+	            return number_format(value)+' kWh';
+	          }
+	        },
+	        gridLines: {
+	          color: "rgb(234, 236, 244)",
+	          zeroLineColor: "rgb(234, 236, 244)",
+	          drawBorder: false,
+	          borderDash: [2],
+	          zeroLineBorderDash: [2]
+	        }
+	      }],
+	    },
+	    legend: {
+	      display: false
+	    },
+	    tooltips: {
+	      backgroundColor: "rgb(255,255,255)",
+	      bodyFontColor: "#858796",
+	      titleMarginBottom: 10,
+	      titleFontColor: '#6e707e',
+	      titleFontSize: 14,
+	      borderColor: '#dddfeb',
+	      borderWidth: 1,
+	      xPadding: 15,
+	      yPadding: 15,
+	      displayColors: false,
+	      intersect: false,
+	      mode: 'index',
+	      caretPadding: 10,
+	      callbacks: {
+	        label: function(tooltipItem, chart) {
+	          var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
+	          return datasetLabel +": "+ number_format(tooltipItem.yLabel)+" kWh";
+	        }
+	      }
+	    }
+	  }
+	});
+
+//logic to get new data
+var getPrevData = function() {
+  $.ajax({
+    url: 'http://localhost:8080/tebbiq/rest/prevMonthTotal',
+    success: function(data) {
+      // process your data to pull out what you plan to use to update the chart
+      // e.g. new label and a new data point
+    	var totalKWH = 0.0;
+    	var totalBTU = 0.0;
+       for(var i =0; i<data.length; i++){
+    	   if(data[i].ext == "kWh"){
+    		   totalKWH += data[i].value;
+    	   }else{
+    		   totalBTU += data[i].value;
+    	   }
+       }
+       
+        var newDate = new Date(data[0].timeStamp);
+		var month = monthNames[newDate.getMonth()];
+       document.getElementById("prevElecMonth").innerHTML = "Electricity Consumption<br>("+month+")";
+
+       document.getElementById("prevElecMonthValue").innerHTML = totalKWH+" kWh";
+       document.getElementById("prevAirMonth").innerHTML = "Electricity Consumption<br>("+month+")";
+       document.getElementById("prevAirMonthValue").innerHTML = totalBTU+" BTU";
+
+       elecChart.data.labels.push(month);
+	   elecChart.data.datasets[0].data.push(totalKWH);
+	   elecChart.data.datasets[1].data.push(totalBTU);
+
+	   
+	   
+	   elecChart.update();
+       //currElecMonth
+       //currElecMonthValue
+       //prevAirMonth
+       //prevAirMonthValue
+      // currAirMonth
+       //currAirMonthValue
     }
-  }
-});
+  });
+};
+
+//logic to get new data
+var getCurrData = function() {
+  $.ajax({
+    url: 'http://localhost:8080/tebbiq/rest/currMonthTotal',
+    success: function(data) {
+      // process your data to pull out what you plan to use to update the chart
+      // e.g. new label and a new data point
+    	var totalKWH = 0.0;
+    	var totalBTU = 0.0;
+       for(var i =0; i<data.length; i++){
+    	   if(data[i].ext == "kWh"){
+    		   totalKWH += data[i].value;
+    	   }else{
+    		   totalBTU += data[i].value;
+    	   }
+       }
+       
+        var newDate = new Date(data[0].timeStamp);
+		var month = monthNames[newDate.getMonth()];
+       document.getElementById("currElecMonth").innerHTML = "Electricity Consumption<br>("+month+")";
+       document.getElementById("currElecMonthValue").innerHTML = totalKWH+" kWh";
+       
+       document.getElementById("currAirMonth").innerHTML = "Electricity Consumption<br>("+month+")";
+       document.getElementById("currAirMonthValue").innerHTML = totalBTU+" BTU";
+       elecChart.data.labels.push(month);
+	   elecChart.data.datasets[0].data.push(totalKWH);
+	   elecChart.data.datasets[1].data.push(totalBTU);
+	   
+	   elecChart.update();
+       //currElecMonth
+       //currElecMonthValue
+       //prevAirMonth
+       //prevAirMonthValue
+      // currAirMonth
+       //currAirMonthValue
+    }
+  });
+};

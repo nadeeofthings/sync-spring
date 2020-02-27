@@ -2,6 +2,16 @@
 Chart.defaults.global.defaultFontFamily = 'Nunito', '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
 Chart.defaults.global.defaultFontColor = '#858796';
 
+window.chartColors = {
+		red: 'rgb(255, 99, 132)',
+		orange: 'rgb(255, 159, 64)',
+		yellow: 'rgb(255, 205, 86)',
+		green: 'rgb(75, 192, 192)',
+		blue: 'rgb(54, 162, 235)',
+		purple: 'rgb(153, 102, 255)',
+		grey: 'rgb(201, 203, 207)'
+	};
+
 function number_format(number, decimals, dec_point, thousands_sep) {
   // *     example: number_format(1234.56, 2, ',', ' ');
   // *     return: '1 234,56'
@@ -34,12 +44,12 @@ var elecChart = new Chart(ctx, {
   data: {
     labels: [],
     datasets: [{
-    	label: "Consumption",
+    	label: "Meter 1",
         lineTension: 0.3,
         fill: false,
         borderWidth: 3,
-        borderColor: "rgba(28, 200, 138, 1)",
-        backgroundColor: "rgba(28, 200, 138, 1)",
+        borderColor:  window.chartColors.green,
+        backgroundColor:  window.chartColors.green,
         //borderColor: "rgba(0, 94, 0, 1)",
       //BorderColor: "rgba(78, 115, 223, 1)",
       HoverRadius: 3,
@@ -112,7 +122,7 @@ var elecChart = new Chart(ctx, {
       callbacks: {
         label: function(tooltipItem, chart) {
           var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
-          return datasetLabel +":"+ number_format(tooltipItem.yLabel)+" kWh";
+          return datasetLabel +": "+ number_format(tooltipItem.yLabel)+" kWh";
         }
       }
     }
@@ -122,7 +132,7 @@ var elecChart = new Chart(ctx, {
 //logic to get new data
 var getElecData = function(id,unit) {
   $.ajax({
-    url: 'http://localhost:8080/tebbiq/rest/byId?ext=kWh&id='+id+'&unit='+unit,
+    url: 'http://localhost:8080/tebbiq/rest/byMeterId?ext=kWh&id='+id+'&unit='+unit+'&meter=1',
     success: function(data) {
       // process your data to pull out what you plan to use to update the chart
       // e.g. new label and a new data point
@@ -134,11 +144,11 @@ var getElecData = function(id,unit) {
     		var weekday = newDate.getDay();
     		var options = { weekday: 'long'};
     		
-    		elecChart.data.labels.push(days[weekday]);
-    		elecChart.data.datasets[0].data.push(object.value);
+    		elecChart.data.labels.unshift(days[weekday]);
+    		elecChart.data.datasets[0].data.unshift(object.value);
         });
       
-      // re-render the chart
+        //re-render the chart
     	elecChart.update();
     }
   });

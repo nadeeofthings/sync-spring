@@ -19,6 +19,7 @@ com\stardust\sync\service\SecurityServiceImpl.class
 com\stardust\sync\timekeeper\SchedulerService$3.class
 com\stardust\sync\repository\ConfigRepository.class
 com\stardust\sync\service\SecurityService.class
+com\stardust\sync\util\GeneratePdfReport.class
 com\stardust\sync\service\UserService.class
 com\stardust\sync\SyncApplication.class
 com\stardust\sync\service\ConfigurationService.class

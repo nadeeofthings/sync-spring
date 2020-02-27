@@ -22,10 +22,12 @@ public class Meter {
     
     private String ext;
     
+    private boolean peak;
+    
      
     public Meter() {}
     
-	public Meter(String id, String unit, int meter, double value, String ext, Date timeStamp) {
+	public Meter(String id, String unit, int meter, double value, String ext, Date timeStamp, boolean peak) {
 		super();
 		this.id = id;
 		this.unit = unit;
@@ -33,6 +35,17 @@ public class Meter {
 		this.value = value;
 		this.ext = ext;
 		this.timeStamp = timeStamp;
+		this.peak = peak;
+	}
+	
+	
+
+	public boolean isPeak() {
+		return peak;
+	}
+
+	public void setPeak(boolean peak) {
+		this.peak = peak;
 	}
 
 	public int getMeter() {

@@ -23,6 +23,7 @@
 
   <!-- Custom styles for this template-->
   <link href="${contextPath}/resources/css/sb-admin-2.css" rel="stylesheet">
+    <script src="${contextPath}/resources/vendor/jquery/jquery.min.js"></script>
 <script>
 	function startTime() {
 		var days = [ 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday',
@@ -51,6 +52,18 @@
 		; // add zero in front of numbers < 10
 		return i;
 	}
+
+</script>
+<script type="text/javascript">
+// A $( document ).ready() block.
+$( document ).ready(function() {
+    console.log( "ready!" );
+    getPrevData();
+    getCurrData();
+    setTimeout(function() {location.reload();}, 180000);
+});
+
+
 </script>
 </head>
 
@@ -123,7 +136,7 @@
       
       <!-- Nav Item - Charts -->
       <li class="nav-item">
-        <a class="nav-link" href="#">
+        <a class="nav-link" href="${contextPath}/billing">
           <i class="fas fa-fw fa-dollar-sign"></i>
           <span>Billing</span></a>
       </li>
@@ -316,8 +329,8 @@
                 <div class="card-body">
                   <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
-                      <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Electricity Consumption<br>(Jan)</div>
-                      <div class="h5 mb-0 font-weight-bold text-gray-800">0 kWh</div>
+                      <div id="prevElecMonth" class="text-xs font-weight-bold text-success text-uppercase mb-1"></div>
+                      <div id="prevElecMonthValue" class="h5 mb-0 font-weight-bold text-gray-800"></div>
                     </div>
                     <div class="col-auto">
                       <i class="fas fa-plug fa-2x text-gray-300"></i>
@@ -332,8 +345,8 @@
                 <div class="card-body">
                   <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
-                      <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Electricity Consumption<br>(Feb)</div>
-                      <div class="h5 mb-0 font-weight-bold text-gray-800">0 kWh</div>
+                      <div id="currElecMonth" class="text-xs font-weight-bold text-success text-uppercase mb-1"></div>
+                      <div id="currElecMonthValue" class="h5 mb-0 font-weight-bold text-gray-800"></div>
                     </div>
                     <div class="col-auto">
                       <i class="fas fa-plug fa-2x text-gray-300"></i>
@@ -348,8 +361,8 @@
                 <div class="card-body">
                   <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
-                      <div class="text-xs font-weight-bold text-info text-uppercase mb-1">AC Consumption<br>(Jan)</div>
-                      <div class="h5 mb-0 font-weight-bold text-gray-800">0 BTU</div>
+                      <div id="prevAirMonth" class="text-xs font-weight-bold text-info text-uppercase mb-1"></div>
+                      <div id="prevAirMonthValue" class="h5 mb-0 font-weight-bold text-gray-800"></div>
                     </div>
                     <div class="col-auto">
                       <i class="fas fa-fan fa-2x text-gray-300"></i>
@@ -365,8 +378,8 @@
                 <div class="card-body">
                   <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
-                      <div class="text-xs font-weight-bold text-info text-uppercase mb-1">AC Consumption<br>(Feb)</div>
-                      <div class="h5 mb-0 font-weight-bold text-gray-800">0 BTU</div>
+                      <div id="currAirMonth" class="text-xs font-weight-bold text-info text-uppercase mb-1"></div>
+                      <div id="currAirMonthValue" class="h5 mb-0 font-weight-bold text-gray-800"></div>
                     </div>
                     <div class="col-auto">
                       <i class="fas fa-fan fa-2x text-gray-300"></i>
@@ -482,13 +495,7 @@
                   </div>
                   <div class="mt-4 text-center small">
                     <span class="mr-2">
-                      <i class="fas fa-circle text-primary"></i> 3F office 1
-                    </span>
-                    <span class="mr-2">
-                      <i class="fas fa-circle text-success"></i> 4F office 3
-                    </span>
-                    <span class="mr-2">
-                      <i class="fas fa-circle text-info"></i> 6F office 2
+                      <i class="fas fa-circle text-primary"></i> Ground Floor
                     </span>
                   </div>
                 </div>

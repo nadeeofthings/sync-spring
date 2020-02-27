@@ -14,7 +14,9 @@ import de.re.easymodbus.modbusclient.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 public class UserRestController {
@@ -130,14 +132,14 @@ public class UserRestController {
 			}
        
        if (id.contentEquals("Ground")) {
-    	   meters.add(new Meter(id,unit,1,getValue(address),"kWh", new Date()));
-     	   meters.add(new Meter(id,unit,2,getValue(address+1),"BTU", new Date()));
-     	   meters.add(new Meter(id,unit,3,getValue(address+2),"BTU", new Date()));
-     	   meters.add(new Meter(id,unit,4,getValue(address+3),"BTU", new Date()));
+    	   meters.add(new Meter(id,unit,1,getValue(address),"kWh", new Date(),false));
+     	   meters.add(new Meter(id,unit,2,getValue(address+1),"BTU", new Date(),false));
+     	   meters.add(new Meter(id,unit,3,getValue(address+2),"BTU", new Date(),false));
+     	   meters.add(new Meter(id,unit,4,getValue(address+3),"BTU", new Date(),false));
     	   
        }else {
-    	   meters.add(new Meter(id,unit,1,getValue(address),"kWh", new Date()));
-     	   meters.add(new Meter(id,unit,2,getValue(address+1),"BTU", new Date()));
+    	   meters.add(new Meter(id,unit,1,getValue(address),"kWh", new Date(),false));
+     	   meters.add(new Meter(id,unit,2,getValue(address+1),"BTU", new Date(),false));
        }
        
        //meters.add(getValue(id, unit));
@@ -170,6 +172,32 @@ public class UserRestController {
 		
 	}
 	
+	@GetMapping(value = "rest/byMeterId")
+    public List<Meter> getReadingsByMeterId(String ext,String id, String unit, int meter) {
+		return meterService.byIdAndUnitAndExtAndMeter(id, unit, ext, meter);
+		
+	}
+	
+	@GetMapping(value = "rest/totalbyExt")
+    public Map<String, Double> getTotalByExt(String ext,String start, String end) {
+    	Date startDate = new java.util.Date(Long.parseLong(start)*1000L); 
+		Date endDate = new java.util.Date(Long.parseLong(end)*1000L); 
+		return meterService.byExtBetweenStartAndEnd(ext, startDate, endDate);
+		
+		
+	}
+	
+	@GetMapping(value = "rest/prevMonthTotal")
+    public List<Meter> getPrevMonthTotal() {
+		return meterService.totalPrevMonth();
+		
+	}
+	
+	@GetMapping(value = "rest/currMonthTotal")
+    public List<Meter> getCurrMonthTotal() {
+		return meterService.totalCurrMonth();
+		
+	}
+	
+	 
 }
-
-

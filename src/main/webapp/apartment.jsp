@@ -38,24 +38,42 @@ int room = Integer.parseInt(request.getParameter("unit"));
 	  $('#elecDataTable').DataTable( {
 		    ajax: {
 		        url: 'http://localhost:8080/tebbiq/rest/byId?ext=kWh&id=${id}&unit=${unit}',
-		        dataSrc: ''
+		        dataSrc: function ( json ) {
+		            for ( var i=0, ien=json.length ; i<ien ; i++ ) {
+			            json[i].meter= 'Meter '+json[i].meter;
+			            var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour:'numeric', minute:'numeric', second:'numeric' };
+			            var newDate = new Date(json[i].timeStamp);
+		                json[i].timeStamp= newDate.toLocaleDateString("en-US", options);
+		              }
+		              return json;
+		            }
 		    },
 		    columns: [
 	            { "data": "meter" },
 	            { "data": "timeStamp" },
 	            { "data": "value" }
-	        ]
+	        ],
+		    order: [[ 1, "desc" ]]
 		} );
 	  $('#airconDataTable').DataTable( {
 		    ajax: {
 		        url: 'http://localhost:8080/tebbiq/rest/byId?ext=BTU&id=${id}&unit=${unit}',
-		        dataSrc: ''
+		        dataSrc:  function ( json ) {
+		            for ( var i=0, ien=json.length ; i<ien ; i++ ) {
+			            json[i].meter= 'Meter '+(json[i].meter-1);
+			            var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour:'numeric', minute:'numeric', second:'numeric' };
+			            var newDate = new Date(json[i].timeStamp);
+		                json[i].timeStamp= newDate.toLocaleDateString("en-US", options);
+		              }
+		              return json;
+		            }
 		    },
 		    columns: [
 	            { "data": "meter" },
 	            { "data": "timeStamp" },
 	            { "data": "value" }
-	        ]
+	        ],
+		    order: [[ 1, "desc" ]]
 		} );
 	  getElecData(id,unit);
 	  getAirconData(id,unit);
@@ -198,7 +216,7 @@ transform:scale(1.05);
       
       <!-- Nav Item - Charts -->
       <li class="nav-item">
-        <a class="nav-link" href="">
+        <a class="nav-link" href="${contextPath}/billing">
           <i class="fas fa-fw fa-dollar-sign"></i>
           <span>Billing</span></a>
       </li>
