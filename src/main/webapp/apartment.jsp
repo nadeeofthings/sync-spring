@@ -208,8 +208,8 @@ transform:scale(1.05);
         <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
           <div class="bg-white py-2 collapse-inner rounded">
             <h6 class="collapse-header">Report Explorer:</h6>
-            <a class="collapse-item" href="utilities-color.html"><i class="fas fa-fw fa-table"></i>&nbsp&nbspSummary Report</a>
-            <a class="collapse-item" href="utilities-border.html"><i class="fas fa-fw fa-table"></i>&nbsp&nbspTenant Report</a>
+            <a class="collapse-item" href="${contextPath}/reports?summery"><i class="fas fa-fw fa-table"></i>&nbsp&nbspSummary Report</a>
+            <a class="collapse-item" href="${contextPath}/reports?Tenent"><i class="fas fa-fw fa-table"></i>&nbsp&nbspTenant Report</a>
           </div>
         </div>
       </li>
