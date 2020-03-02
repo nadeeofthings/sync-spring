@@ -41,6 +41,7 @@ int room = Integer.parseInt(request.getParameter("unit"));
 		        dataSrc: function ( json ) {
 		            for ( var i=0, ien=json.length ; i<ien ; i++ ) {
 			            json[i].meter= 'Meter '+json[i].meter;
+			            json[i].value=number_format(json[i].value,2,".",",");
 			            var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour:'numeric', minute:'numeric', second:'numeric' };
 			            var newDate = new Date(json[i].timeStamp);
 		                json[i].timeStamp= newDate.toLocaleDateString("en-US", options);
@@ -61,6 +62,7 @@ int room = Integer.parseInt(request.getParameter("unit"));
 		        dataSrc:  function ( json ) {
 		            for ( var i=0, ien=json.length ; i<ien ; i++ ) {
 			            json[i].meter= 'Meter '+(json[i].meter-1);
+			            json[i].value=number_format(json[i].value,2,".",",");
 			            var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour:'numeric', minute:'numeric', second:'numeric' };
 			            var newDate = new Date(json[i].timeStamp);
 		                json[i].timeStamp= newDate.toLocaleDateString("en-US", options);
@@ -119,14 +121,14 @@ int room = Integer.parseInt(request.getParameter("unit"));
                        // $("#refresh").html(data);
                        var idno = "${id}";
                        if(idno == "Ground"){
-                       document.getElementById("energyxxxxx").innerHTML = data[0].value+" "+data[0].ext;
-                       document.getElementById("btuxxxxx1").innerHTML = data[1].value+" "+data[1].ext;
-                       document.getElementById("btuxxxxx2").innerHTML = data[2].value+" "+data[2].ext;
-                       document.getElementById("btuxxxxx3").innerHTML = data[3].value+" "+data[3].ext;
+                       document.getElementById("energyxxxxx").innerHTML = number_format(data[0].value,2,".",",")+" "+data[0].ext;
+                       document.getElementById("btuxxxxx1").innerHTML = number_format(data[1].value,2,".",",")+" "+data[1].ext;
+                       document.getElementById("btuxxxxx2").innerHTML = number_format(data[2].value,2,".",",")+" "+data[2].ext;
+                       document.getElementById("btuxxxxx3").innerHTML = number_format(data[3].value,2,".",",")+" "+data[3].ext;
                        console.log(data[0].id);
                        }else{
-                       document.getElementById("energyxxxxx").innerHTML = data[0].value+" "+data[0].ext;
-                       document.getElementById("btuxxxxx1").innerHTML = data[1].value+" "+data[1].ext;
+                       document.getElementById("energyxxxxx").innerHTML = number_format(data[0].value,2,".",",")+" "+data[0].ext;
+                       document.getElementById("btuxxxxx1").innerHTML = number_format(data[1].value,2,".",",")+" "+data[1].ext;
                            }
                        
                     },

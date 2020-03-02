@@ -349,7 +349,8 @@ transform:scale(1.05);
 									<div class="col-md-6">
 										<div class="input-group mb-3">
 										  <select class="custom-select" id="EFL">
-										    <option selected value="3rd">Third</option>
+										    <option selected value="Ground">Ground</option>
+										    <option value="3rd">Third</option>
 										    <option value="4th">Fourth</option>
 										    <option value="5th">Fifth</option>
 										    <option value="6th">Sixth</option>
@@ -479,7 +480,8 @@ transform:scale(1.05);
 									<div class="col-md-6">
 										<div class="input-group mb-3">
 										  <select class="custom-select" id="AFL">
-										    <option selected value="3rd">Third</option>
+										    <option selected value="Ground">Ground</option>
+										    <option value="3rd">Third</option>
 										    <option value="4th">Fourth</option>
 										    <option value="5th">Fifth</option>
 										    <option value="6th">Sixth</option>
@@ -507,10 +509,10 @@ transform:scale(1.05);
 											 <label class="input-group-text" for="inputGroupSelect01">Peak Rate</label>
 										  </div>
 										  <select class="custom-select" id="ARO">
-										    <option selected value="20">20</option>
-										    <option value="25">25</option>
-										    <option value="30">30</option>
-										    <option value="35">35</option>
+										    <option selected value="0.020">0.020</option>
+										    <option value="0.025">0.025</option>
+										    <option value="0.030">0.030</option>
+										    <option value="0.035">0.035</option>
 										  </select>
 										</div>
 										 
@@ -567,10 +569,10 @@ transform:scale(1.05);
 											 <label class="input-group-text" for="inputGroupSelect01">Offpeak Rate</label>
 										  </div>
 										  <select class="custom-select" id="ARP">
-										    <option selected value="20">20</option>
-										    <option value="25">25</option>
-										    <option value="30">30</option>
-										    <option value="35">35</option>
+										    <option selected value="0.020">0.020</option>
+										    <option value="0.025">0.025</option>
+										    <option value="0.030">0.030</option>
+										    <option value="0.035">0.035</option>
 										  </select>
 										</div>
 										 

@@ -168,9 +168,9 @@ var getPrevData = function() {
 		var month = monthNames[newDate.getMonth()];
        document.getElementById("prevElecMonth").innerHTML = "Electricity Consumption<br>("+month+")";
 
-       document.getElementById("prevElecMonthValue").innerHTML = totalKWH+" kWh";
-       document.getElementById("prevAirMonth").innerHTML = "Electricity Consumption<br>("+month+")";
-       document.getElementById("prevAirMonthValue").innerHTML = totalBTU+" BTU";
+       document.getElementById("prevElecMonthValue").innerHTML = number_format(totalKWH,2,".",",")+" kWh";
+       document.getElementById("prevAirMonth").innerHTML = "AC Consumption<br>("+month+")";
+       document.getElementById("prevAirMonthValue").innerHTML = number_format(totalBTU,2,".",",")+" BTU";
 
        elecChart.data.labels.push(month);
 	   elecChart.data.datasets[0].data.push(totalKWH);
@@ -209,10 +209,10 @@ var getCurrData = function() {
         var newDate = new Date(data[0].timeStamp);
 		var month = monthNames[newDate.getMonth()];
        document.getElementById("currElecMonth").innerHTML = "Electricity Consumption<br>("+month+")";
-       document.getElementById("currElecMonthValue").innerHTML = totalKWH+" kWh";
+       document.getElementById("currElecMonthValue").innerHTML = number_format(totalKWH,2,".",",")+" kWh";
        
-       document.getElementById("currAirMonth").innerHTML = "Electricity Consumption<br>("+month+")";
-       document.getElementById("currAirMonthValue").innerHTML = totalBTU+" BTU";
+       document.getElementById("currAirMonth").innerHTML = "AC Consumption<br>("+month+")";
+       document.getElementById("currAirMonthValue").innerHTML = number_format(totalBTU,2,".",",")+" BTU";
        elecChart.data.labels.push(month);
 	   elecChart.data.datasets[0].data.push(totalKWH);
 	   elecChart.data.datasets[1].data.push(totalBTU);

@@ -33,6 +33,9 @@ public class UserController {
 
     @Autowired
     private UserValidator userValidator;
+    
+    @Autowired
+    private GeneratePdfReport generatePdfReport;
 
     @GetMapping("/registration")
     public String registration(Model model) {
@@ -107,12 +110,11 @@ public class UserController {
             produces = MediaType.APPLICATION_PDF_VALUE)
     public ResponseEntity<InputStreamResource> electricalR(String efl , String efr , String ero , String epp ,
     		String edi , String eof , String eto , String erp , String epe ) {
-    	System.out.println(efl);
     	if(efl == null || efr== null || ero == null || epp == null || edi == null 
     			|| eof == null || eto == null || erp == null || epe == null)
     		return null;
     	
-    	ByteArrayInputStream bis = GeneratePdfReport.electricalR(efl, efr, ero, epp, edi, eof, eto, erp, epe);
+    	ByteArrayInputStream bis = generatePdfReport.electricalR(efl, efr, ero, epp, edi, eof, eto, erp, epe);
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Disposition", "inline; filename=electricityBill.pdf");
@@ -133,7 +135,7 @@ public class UserController {
     			|| aof == null || ato == null || arp == null || ape == null)
     		return null;
     	
-        ByteArrayInputStream bis = GeneratePdfReport.airconR(afl, afr, aro, app, adi, aof, ato, arp, ape);
+        ByteArrayInputStream bis = generatePdfReport.airconR(afl, afr, aro, app, adi, aof, ato, arp, ape);
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Disposition", "inline; filename=acBill.pdf");

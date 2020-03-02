@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -73,6 +74,46 @@ public class MeterService {
 		
 	}
 	
+
+	public Meter totalUseageOfAUnit(String id, String unit, String ext, int meter, Date start, Date end) {
+		Meter out;
+		Meter firstMeterList = meterRepository.findTopByIdAndUnitAndExtAndMeterAndTimeStampBetweenOrderByTimeStampAsc(
+				id,unit, ext, meter, start, end);
+		Meter lastMeterList = meterRepository.findTopByIdAndUnitAndExtAndMeterAndTimeStampBetweenOrderByTimeStampDesc(
+				id,unit, ext, meter, start, end);
+		
+			if(firstMeterList!=null && lastMeterList!=null) {
+				out = new Meter(id, unit, meter, lastMeterList.getValue()-firstMeterList.getValue(), ext, start, false);		
+
+			}else {
+				out = new Meter(id, unit, meter, 0.0, ext, start, false);		
+			}
+		return out;
+	} 
+	
+	public Meter peakUseageOfAUnit(String id, String unit, String ext, int meter, Date start, Date end) {
+		double total=0;
+	    long diffInMillies = Math.abs(end.getTime() - start.getTime());
+	    long diff = TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
+	    Date currDate = start;
+	    Date nextDate = new Date(currDate.getTime() + (1000 * 60 * 60 * 24));
+	    for(int i=0;i<diff;i++) {
+	    	Meter firstMeterList = meterRepository.findTopByIdAndUnitAndExtAndMeterAndTimeStampBetweenOrderByTimeStampAsc(
+					id,unit, ext, meter, currDate, nextDate);
+			Meter lastMeterList = meterRepository.findTopByIdAndUnitAndExtAndMeterAndTimeStampBetweenOrderByTimeStampDesc(
+					id,unit, ext, meter, currDate, nextDate);
+			
+				if(firstMeterList!=null && lastMeterList!=null) {
+					total+=(lastMeterList.getValue()-firstMeterList.getValue());
+				}
+				
+	    	currDate = nextDate; 
+	    	nextDate = new Date(currDate.getTime() + (1000 * 60 * 60 * 24));
+	    }
+	    
+		return new Meter(id, unit, meter, total, ext, start, false);
+	} 
+	
 	
 	public List<Meter> totalPrevMonth() {
 		List<Meter> meters = new ArrayList<Meter>();
@@ -91,9 +132,11 @@ public class MeterService {
 
 		Date firstDateOfPreviousMonth = cal.getTime();
 		
+		cal = Calendar.getInstance();
 		cal.set(Calendar.HOUR, 23);
 		cal.set(Calendar.MINUTE, 59);
 		cal.set(Calendar.SECOND, 59);
+		cal.add(Calendar.MONTH, -1);
 		// set actual maximum date of previous month
 		cal.set(Calendar.DATE,cal.getActualMaximum(Calendar.DAY_OF_MONTH));
 		//read it
@@ -142,6 +185,8 @@ public class MeterService {
 
 		Date firstDayOfThisMonth = cal.getTime(); 
 		
+		cal = Calendar.getInstance();
+		cal.setTime(new Date());
 		cal.set(Calendar.HOUR, 23);
 		cal.set(Calendar.MINUTE, 59);
 		cal.set(Calendar.SECOND, 59);
