@@ -9,8 +9,8 @@ window.chartColors = {
 		red: 'rgb(255, 99, 132)',
 		orange: 'rgb(255, 159, 64)',
 		yellow: 'rgb(255, 205, 86)',
-		green: 'rgb(75, 192, 192)',
-		blue: 'rgb(54, 162, 235)',
+		green: '#1CC88A',
+		blue: '#4E73DF',
 		purple: 'rgb(153, 102, 255)',
 		grey: 'rgb(201, 203, 207)'
 	};
@@ -40,6 +40,26 @@ function number_format(number, decimals, dec_point, thousands_sep) {
   return s.join(dec);
 }
 
+$(document).ready(function() {
+	$("#start").datepicker({
+		format: "dd/mm/yyyy",
+		todayBtn: "linked",
+	    clearBtn: true,
+	    orientation: "bottom auto",
+	    autoclose: true,
+	    todayHighlight: true
+		});
+	$("#start").datepicker('setDate', new Date());
+	getPrevData();
+	getCurrData();
+	getElecData($("#start")[0].value,$("#limit")[0].value);
+	getTopUnitDataKWH();
+	getTopUnitDataBTU();
+});
+
+var launch = function() {
+	getElecData($("#start")[0].value,$("#limit")[0].value);
+}
 // Area Chart Example
 var ctx = document.getElementById("myAreaChart");
 var elecChart = new Chart(ctx, {
@@ -48,6 +68,7 @@ var elecChart = new Chart(ctx, {
 	    labels: [],
 	    datasets: [{
 	    	label: "Electricity",
+	    	customtooltiptitle: [],
 	        lineTension: 0.3,
 	        fill: false,
 	        borderWidth: 3,
@@ -63,6 +84,7 @@ var elecChart = new Chart(ctx, {
 	      data: [],
 	    },{
 	    	label: "AirCon",
+	    	customtooltiptitle: [],
 	        lineTension: 0.3,
 	        fill: false,
 	        borderWidth: 3,
@@ -121,7 +143,7 @@ var elecChart = new Chart(ctx, {
 	      }],
 	    },
 	    legend: {
-	      display: false
+	      display: true
 	    },
 	    tooltips: {
 	      backgroundColor: "rgb(255,255,255)",
@@ -138,16 +160,86 @@ var elecChart = new Chart(ctx, {
 	      mode: 'index',
 	      caretPadding: 10,
 	      callbacks: {
-	        label: function(tooltipItem, chart) {
-	          var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
-	          return datasetLabel +": "+ number_format(tooltipItem.yLabel)+" kWh";
-	        }
+	    	  title: function(tooltipItem, chart) {
+	              var customtitle = chart.datasets[tooltipItem[0].datasetIndex].customtooltiptitle[tooltipItem[0].index];
+	      		return customtitle;
+	            },
+	          label: function(tooltipItem, chart) {
+	            var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
+	            return datasetLabel +": "+ number_format(tooltipItem.yLabel)+" kWh";
+	          }
 	      }
 	    }
 	  }
 	});
 
 //logic to get new data
+var getElecData = function(date,limit) {
+	var date = moment(date, "DD/MM/YYYY");
+	var timestamp = date.unix();
+	
+	//clean everything before adding new data
+	elecChart.data.datasets[0].customtooltiptitle = [];
+	elecChart.data.labels = [];
+	elecChart.data.datasets[0].data = [];
+	elecChart.data.datasets[1].data = [];
+	
+  $.ajax({
+    url: 'http://localhost:8080/tebbiq/rest/buildingDailyUsage?ext=kWh&limit='+limit+'&start='+timestamp+'',
+    success: function(data) {
+      // process your data to pull out what you plan to use to update the chart
+      // e.g. new label and a new data point
+    	data.forEach(function(object) {
+    	      // add new label and data point to chart's underlying data structures
+    		var days = [ 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday',
+				'Friday', 'Saturday' ];
+    		var newDate = new Date(object.timeStamp);
+    		var weekday = newDate.getDay();
+    		var options = { weekday: 'long'};
+    		
+    		
+    		elecChart.data.datasets[0].customtooltiptitle.unshift(moment(newDate).format("dddd, MMMM Do YYYY"));
+    		elecChart.data.labels.unshift(moment(newDate).format("DD/MM"));
+    		elecChart.data.datasets[0].data.unshift(object.value);
+        });
+    }
+  });
+  $.ajax({
+	    url: 'http://localhost:8080/tebbiq/rest/buildingDailyUsage?ext=BTU&limit='+limit+'&start='+timestamp+'',
+	    success: function(data) {
+	      // process your data to pull out what you plan to use to update the chart
+	      // e.g. new label and a new data point
+	    	data.forEach(function(object) {
+	    	      // add new label and data point to chart's underlying data structures
+	    		var days = [ 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday',
+					'Friday', 'Saturday' ];
+	    		var newDate = new Date(object.timeStamp);
+	    		var weekday = newDate.getDay();
+	    		var options = { weekday: 'long'};
+	    		
+	    		
+	    		elecChart.data.datasets[1].customtooltiptitle.unshift(moment(newDate).format("dddd, MMMM Do YYYY"));
+	    		elecChart.data.datasets[1].data.unshift(object.value*0.000293071);
+	        });
+	      
+	        //re-render the chart
+	    	elecChart.update();
+	    }
+	  });
+};
+
+var getAirconData = function(date,limit) {
+	var date = moment(date, "DD/MM/YYYY");
+	var timestamp = date.unix();
+	
+	//clean everything before adding new data
+	//elecChart.data.datasets[0].customtooltiptitle = [];
+	//elecChart.data.labels = [];
+	//elecChart.data.datasets[0].data = [];
+	//elecChart.data.datasets[1].data = [];
+	
+  
+};
 var getPrevData = function() {
   $.ajax({
     url: 'http://localhost:8080/tebbiq/rest/prevMonthTotal',
@@ -172,13 +264,6 @@ var getPrevData = function() {
        document.getElementById("prevAirMonth").innerHTML = "AC Consumption<br>("+month+")";
        document.getElementById("prevAirMonthValue").innerHTML = number_format(totalBTU,2,".",",")+" BTU";
 
-       elecChart.data.labels.push(month);
-	   elecChart.data.datasets[0].data.push(totalKWH);
-	   elecChart.data.datasets[1].data.push(totalBTU);
-
-	   
-	   
-	   elecChart.update();
        //currElecMonth
        //currElecMonthValue
        //prevAirMonth
@@ -213,11 +298,7 @@ var getCurrData = function() {
        
        document.getElementById("currAirMonth").innerHTML = "AC Consumption<br>("+month+")";
        document.getElementById("currAirMonthValue").innerHTML = number_format(totalBTU,2,".",",")+" BTU";
-       elecChart.data.labels.push(month);
-	   elecChart.data.datasets[0].data.push(totalKWH);
-	   elecChart.data.datasets[1].data.push(totalBTU);
-	   
-	   elecChart.update();
+
        //currElecMonth
        //currElecMonthValue
        //prevAirMonth

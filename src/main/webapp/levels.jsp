@@ -20,9 +20,12 @@
   <!-- Custom fonts for this template-->
   <link href="${contextPath}/resources/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
   <link href="${contextPath}/resources/vendor/googleFonts/googleFonts.css" rel="stylesheet">
+  
 
   <!-- Custom styles for this template-->
   <link href="${contextPath}/resources/css/sb-admin-2.css" rel="stylesheet">
+  <link rel="stylesheet" href="${contextPath}/resources/Modules/iziToast/css/iziToast.min.css">
+<script src="${contextPath}/resources/Modules/iziToast/js/iziToast.min.js" type="text/javascript"></script>
 <script>
 	function startTime() {
 		var days = [ 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday',
@@ -51,6 +54,9 @@
 		; // add zero in front of numbers < 10
 		return i;
 	}
+</script>
+<script type="text/javascript">
+	var contextPath = "${contextPath}";
 </script>
 <style type="text/css">
 a.custom-card,
@@ -125,8 +131,9 @@ transform:scale(1.05);
         <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
           <div class="bg-white py-2 collapse-inner rounded">
             <h6 class="collapse-header">Report Explorer:</h6>
-            <a class="collapse-item" href="${contextPath}/reports?summery"><i class="fas fa-fw fa-table"></i>&nbsp&nbspSummary Report</a>
-            <a class="collapse-item" href="${contextPath}/reports?Tenent"><i class="fas fa-fw fa-table"></i>&nbsp&nbspTenant Report</a>
+            <a class="collapse-item" href="${contextPath}/reports?id=dailyuseage"><i class="fas fa-fw fa-table"></i>&nbsp&nbspDaily usage</a>
+            <a class="collapse-item" href="${contextPath}/reports?id=customeruseage"><i class="fas fa-fw fa-table"></i>&nbsp&nbspTenant summary</a>
+            <a class="collapse-item" href="${contextPath}/reports?id=facilityuseage"><i class="fas fa-fw fa-table"></i>&nbsp&nbspFacility summary</a>
           </div>
         </div>
       </li>
@@ -137,50 +144,19 @@ transform:scale(1.05);
           <i class="fas fa-fw fa-dollar-sign"></i>
           <span>Billing</span></a>
       </li>
-      
-      
+      <security:authorize access="hasRole('ROLE_SUPERADMIN')">
+						
 
-      <!-- Divider -->
-      <hr class="sidebar-divider">
-
-      <!-- Heading -->
-      <div class="sidebar-heading">
-        Settings
-      </div>
-
-      <!-- Nav Item - Pages Collapse Menu
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="true" aria-controls="collapsePages">
-          <i class="fas fa-fw fa-folder"></i>
-          <span>Pages</span>
-        </a>
-        <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
-          <div class="bg-white py-2 collapse-inner rounded">
-            <h6 class="collapse-header">Login Screens:</h6>
-            <a class="collapse-item" href="login.html">Login</a>
-            <a class="collapse-item" href="register.html">Register</a>
-            <a class="collapse-item" href="forgot-password.html">Forgot Password</a>
-            <div class="collapse-divider"></div>
-            <h6 class="collapse-header">Other Pages:</h6>
-            <a class="collapse-item" href="404.html">404 Page</a>
-            <a class="collapse-item" href="blank.html">Blank Page</a>
-          </div>
-        </div>
-      </li>-->
-
-      <!-- Nav Item - Charts -->
-      <li class="nav-item">
-        <a class="nav-link" href="">
-          <i class="fas fa-fw fa-tools"></i>
-          <span>System</span></a>
-      </li>
-
-      <!-- Nav Item - Tables
-      <li class="nav-item">
-        <a class="nav-link" href="tables.html">
-          <i class="fas fa-fw fa-table"></i>
-          <span>Tables</span></a>
-      </li> -->
+				<!-- Divider -->
+				<hr class="sidebar-divider">
+	
+				<!-- Heading -->
+				<div class="sidebar-heading">Settings</div>
+				<!-- Nav Item - Settings -->
+				<li class="nav-item"><a class="nav-link" href="#"> <i
+						class="fas fa-fw fa-tools"></i> <span>System</span></a></li>
+					
+			</security:authorize>
 
       <!-- Divider -->
       <hr class="sidebar-divider d-none d-md-block">
@@ -220,54 +196,22 @@ transform:scale(1.05);
 
             
 
-                      <!-- Nav Item - Alerts -->
-            <li class="nav-item dropdown no-arrow mx-1">
-              <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <i class="fas fa-bell fa-lg"></i>
-                <!-- Counter - Alerts -->
-                <!--<span class="badge badge-danger badge-counter ">1+</span>-->
-              </a>
-              <!-- Dropdown - Alerts -->
-              <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="alertsDropdown">
-                <h6 class="dropdown-header">
-                  Alerts Center
-                </h6>
-                <!-- <a class="dropdown-item d-flex align-items-center" href="#">
-                  <div class="mr-3">
-                    <div class="icon-circle bg-success">
-                      <i class="fas fa-thumbs-up text-white"></i>
-                    </div>
-                  </div>
-                  <div>
-                    <div class="small text-gray-500">June 12, 2019</div>
-                    <span class="font-weight-bold">Recovered from CEB loss! GEN 1 stopped.</span>
-                  </div>
-                </a> -->
-                <!-- <a class="dropdown-item d-flex align-items-center" href="#">
-                  <div class="mr-3">
-                    <div class="icon-circle bg-info">
-                      <i class="fas fa-check-circle text-white"></i>
-                    </div>
-                  </div>
-                  <div>
-                    <div class="small text-gray-500">June 12, 2019</div>
-                    GEN 1 started!
-                  </div>
-                </a> -->
-                <a class="dropdown-item d-flex align-items-center" href="#">
-                  <div class="mr-3">
-                    <div class="icon-circle bg-success">
-                      <i class="fas fa-exclamation-triangle text-white"></i>
-                    </div>
-                  </div>
-                  <div>
-                    <div class="small text-gray-500">February 05, 2020</div>
-                    No alerts to display
-                  </div>
-                </a>
-                <a class="dropdown-item text-center small text-gray-500" href="#">Show All Alerts</a>
-              </div>
-            </li>
+            <!-- Nav Item - Alerts -->
+						<li id="alertsDropdown" class="nav-item dropdown no-arrow mx-1"><a
+							class="nav-link dropdown-toggle" href="#" 
+							role="button" data-toggle="dropdown" aria-haspopup="true"
+							aria-expanded="false"> <i class="fas fa-bell fa-lg"></i> 
+							<!-- Counter - Alerts -->
+							<span id='alertCount' class="badge badge-danger badge-counter "></span>
+						</a> <!-- Dropdown - Alerts -->
+							<div  class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="alertsDropdown">
+								<h6 class="dropdown-header">Alerts Center</h6>
+								<span id=alertElements>
+
+								</span>
+								<a class="dropdown-item text-center small text-gray-500"
+									href="${contextPath}/alerts">Show All Alerts</a>
+							</div></li>
 				
 
             <div class="topbar-divider d-none d-sm-block"></div>
@@ -335,8 +279,8 @@ transform:scale(1.05);
                 <div class="card-body">
                   <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
-                      <div class="text-xs font-weight-bold text-gray-900 text-uppercase mb-1">Common Area</div>
-                      <div class="h5 mb-0 font-weight-bold text-gray-800">Common Area</div>
+                      <div class="text-xs font-weight-bold text-gray-900 text-uppercase mb-1">Com Area</div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800">Commercial Area</div>
                     </div>
                     <div class="col-auto">
                       <i class="fas fa-home fa-2x text-gray-300"></i>
@@ -453,19 +397,30 @@ transform:scale(1.05);
       </div>
     </div>
   </div>
-  <!-- Bootstrap core JavaScript-->
-  <script src="${contextPath}/resources/vendor/jquery/jquery.min.js"></script>
-  <script src="${contextPath}/resources/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+	<!-- Bootstrap core JavaScript-->
+	<script src="${contextPath}/resources/vendor/jquery/jquery.min.js"></script>
+	<script
+		src="${contextPath}/resources/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
-  <!-- Core plugin JavaScript-->
-  <script src="${contextPath}/resources/vendor/jquery-easing/jquery.easing.min.js"></script>
+	<!-- Core plugin JavaScript-->
+	<script
+		src="${contextPath}/resources/vendor/jquery-easing/jquery.easing.min.js"></script>
+			<script src="${contextPath}/resources/js/bootstrap-datepicker.min.js"></script>
 
-  <!-- Custom scripts for all pages-->
-  <script src="${contextPath}/resources/js/sb-admin-2.min.js"></script>
+	<!-- Custom scripts for all pages-->
+	<script src="${contextPath}/resources/js/sb-admin-2.min.js"></script>
 
-  <!-- Page level plugins -->
-  <script src="${contextPath}/resources/vendor/chart.js/Chart.min.js"></script>
+	<!-- Page level plugins -->
+	<script src="${contextPath}/resources/vendor/chart.js/Chart.min.js"></script>
+	<script
+		src="${contextPath}/resources/vendor/datatables/jquery.dataTables.min.js"></script>
+		<script src="${contextPath}/resources/vendor/moment/moment.min.js"></script>
+	<script src="${contextPath}/resources/vendor/moment/datetime-moment.js"></script>
 
+	<!-- Page level custom scripts -->
+	<script src="${contextPath}/resources/js/sockjs/sockjs.min.js"></script>
+    <script src="${contextPath}/resources/js/stompjs/stomp.min.js"></script>
+    <script src="${contextPath}/resources/js/WebSock.js"></script>
 
 </body>
 

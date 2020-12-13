@@ -26,12 +26,12 @@ import java.util.Calendar;
 import java.util.Date;
 
 @Service
-public class GeneratePdfReport {
+public class GeneratePdfBill {
 	
 	@Autowired
 	MeterService meterService;
 
-    private static final Logger logger = LoggerFactory.getLogger(GeneratePdfReport.class);
+    private static final Logger logger = LoggerFactory.getLogger(GeneratePdfBill.class);
     private static final String esrc = "c:/sync/elec.pdf";
     private static final String asrc = "c:/sync/aircon.pdf";
     
@@ -67,12 +67,25 @@ public class GeneratePdfReport {
             double offpeak_current_bill = offpeak_useage*Double.parseDouble(ero);
             double peak_current_bill = peakUseageOfAUnit.getValue()*Double.parseDouble(erp);
             double total_current_bill = offpeak_current_bill+peak_current_bill;
-    		//customer
-            canvas.beginText().setFontAndSize(
-    				PdfFontFactory.createFont(FontConstants.HELVETICA), 9) 
-    						.moveText(106, 701)
-    						.showText("Office "+eof) 
-    						.endText();
+            double balance_fwd = 0.0-Double.parseDouble(epp);
+            double current_balance = balance_fwd+total_current_bill;
+            double discount = (current_balance*Double.parseDouble(edi))/100;
+            
+            if(efl.equals("Ground")) {
+	    		//customer
+	            canvas.beginText().setFontAndSize(
+	    				PdfFontFactory.createFont(FontConstants.HELVETICA), 9) 
+	    						.moveText(106, 701)
+	    						.showText("KWH Meter "+eof) 
+	    						.endText();
+            }else {
+            	//customer
+	            canvas.beginText().setFontAndSize(
+	    				PdfFontFactory.createFont(FontConstants.HELVETICA), 9) 
+	    						.moveText(106, 701)
+	    						.showText("Office "+eof) 
+	    						.endText();
+            }
           //block
             canvas.beginText().setFontAndSize(
     				PdfFontFactory.createFont(FontConstants.HELVETICA), 9) 
@@ -129,7 +142,7 @@ public class GeneratePdfReport {
             canvas.beginText().setFontAndSize(
     				PdfFontFactory.createFont(FontConstants.HELVETICA), 9) 
     						.moveText(250, 598)
-    						.showText("0.00 LKR") 
+    						.showText(df2.format(total_current_bill)+" LKR") 
     						.endText();
           //Current bill
             canvas.beginText().setFontAndSize(
@@ -142,7 +155,7 @@ public class GeneratePdfReport {
             canvas.beginText().setFontAndSize(
     				PdfFontFactory.createFont(FontConstants.HELVETICA), 9) 
     						.moveText(435, 598)
-    						.showText(df2.format(total_current_bill)+" LKR") 
+    						.showText(df2.format(current_balance)+" LKR") 
     						.endText();
             //Peak
             //Prev reading
@@ -252,7 +265,7 @@ public class GeneratePdfReport {
               canvas.beginText().setFontAndSize(
       				PdfFontFactory.createFont(FontConstants.HELVETICA_BOLD), 9) 
       						.moveText(405, 344)
-      						.showText(df2.format(total_current_bill)+" LKR") 
+      						.showText(df2.format(current_balance)+" LKR") 
       						.endText();
             
             //Penalty
@@ -266,14 +279,14 @@ public class GeneratePdfReport {
               canvas.beginText().setFontAndSize(
       				PdfFontFactory.createFont(FontConstants.HELVETICA), 9) 
       						.moveText(405, 317)
-      						.showText("0.00 LKR") 
+      						.showText(df2.format(discount)+" LKR") 
       						.endText();
               
               //Total payable
               canvas.beginText().setFontAndSize(
       				PdfFontFactory.createFont(FontConstants.HELVETICA_BOLD), 9) 
       						.moveText(405, 303)
-      						.showText(df2.format(total_current_bill)+" LKR") 
+      						.showText(df2.format(current_balance-discount)+" LKR") 
       						.endText();
               
             //Due on
@@ -287,7 +300,7 @@ public class GeneratePdfReport {
               canvas.beginText().setFontAndSize(
       				PdfFontFactory.createFont(FontConstants.HELVETICA_BOLD), 12) 
       						.moveText(360, 207)
-      						.showText(df2.format(total_current_bill)+" LKR") 
+      						.showText(df2.format(current_balance-discount)+" LKR") 
       						.endText();
               
               
@@ -327,21 +340,43 @@ public class GeneratePdfReport {
     		
     		cal.add(Calendar.MONTH, 2);
     		
+    		Meter totalUseageOfAUnit;
+    		Meter peakUseageOfAUnit;
+    		 
+            if(afl.equals("Ground")) {
+	             totalUseageOfAUnit = meterService.totalUseageOfAUnit(afl, "1", "BTU", Integer.parseInt(aof), fromDate, toDate);
+	            
+	             peakUseageOfAUnit = meterService.peakUseageOfAUnit(afl, "1" , "BTU", Integer.parseInt(aof), fromDate, toDate);
+	        }else {
+            	 totalUseageOfAUnit = meterService.totalUseageOfAUnit(afl, aof, "BTU", 2, fromDate, toDate);
+                
+                 peakUseageOfAUnit = meterService.peakUseageOfAUnit(afl, aof, "BTU", 2, fromDate, toDate);
+            }
             
-            Meter totalUseageOfAUnit = meterService.totalUseageOfAUnit(afl, aof, "BTU", 2, fromDate, toDate);
-            
-            Meter peakUseageOfAUnit = meterService.peakUseageOfAUnit(afl, aof, "BTU", 2, fromDate, toDate);
             
             double offpeak_useage = totalUseageOfAUnit.getValue()-peakUseageOfAUnit.getValue();
             double offpeak_current_bill = offpeak_useage*Double.parseDouble(aro);
             double peak_current_bill = peakUseageOfAUnit.getValue()*Double.parseDouble(arp);
             double total_current_bill = offpeak_current_bill+peak_current_bill;
-    		//customer
-            canvas.beginText().setFontAndSize(
-    				PdfFontFactory.createFont(FontConstants.HELVETICA), 9) 
-    						.moveText(106, 701)
-    						.showText("Office "+aof) 
-    						.endText();
+            double balance_fwd = 0.0-Double.parseDouble(app);
+            double current_balance = balance_fwd+total_current_bill;
+            double discount = (current_balance*Double.parseDouble(adi))/100;
+    		
+            if(afl.equals("Ground")) {
+            	//customer
+                canvas.beginText().setFontAndSize(
+        				PdfFontFactory.createFont(FontConstants.HELVETICA), 9) 
+        						.moveText(106, 701)
+        						.showText("BTU Meter "+aof) 
+        						.endText();
+            }else {
+            	//customer
+                canvas.beginText().setFontAndSize(
+        				PdfFontFactory.createFont(FontConstants.HELVETICA), 9) 
+        						.moveText(106, 701)
+        						.showText("Office "+aof) 
+        						.endText();
+            }
           //block
             canvas.beginText().setFontAndSize(
     				PdfFontFactory.createFont(FontConstants.HELVETICA), 9) 
@@ -398,7 +433,7 @@ public class GeneratePdfReport {
             canvas.beginText().setFontAndSize(
     				PdfFontFactory.createFont(FontConstants.HELVETICA), 9) 
     						.moveText(250, 598)
-    						.showText("0.00 LKR") 
+    						.showText(df2.format(balance_fwd)+" LKR") 
     						.endText();
           //Current bill
             canvas.beginText().setFontAndSize(
@@ -411,7 +446,7 @@ public class GeneratePdfReport {
             canvas.beginText().setFontAndSize(
     				PdfFontFactory.createFont(FontConstants.HELVETICA), 9) 
     						.moveText(435, 598)
-    						.showText(df2.format(total_current_bill)+" LKR") 
+    						.showText(df2.format(current_balance)+" LKR") 
     						.endText();
             //Peak
             //Prev reading
@@ -521,7 +556,7 @@ public class GeneratePdfReport {
               canvas.beginText().setFontAndSize(
       				PdfFontFactory.createFont(FontConstants.HELVETICA_BOLD), 9) 
       						.moveText(405, 344)
-      						.showText(df2.format(total_current_bill)+" LKR") 
+      						.showText(df2.format(current_balance)+" LKR") 
       						.endText();
             
             //Penalty
@@ -535,14 +570,14 @@ public class GeneratePdfReport {
               canvas.beginText().setFontAndSize(
       				PdfFontFactory.createFont(FontConstants.HELVETICA), 9) 
       						.moveText(405, 317)
-      						.showText("0.00 LKR") 
+      						.showText(df2.format(discount)+" LKR") 
       						.endText();
               
               //Total payable
               canvas.beginText().setFontAndSize(
       				PdfFontFactory.createFont(FontConstants.HELVETICA_BOLD), 9) 
       						.moveText(405, 303)
-      						.showText(df2.format(total_current_bill)+" LKR") 
+      						.showText(df2.format(current_balance-discount)+" LKR") 
       						.endText();
               
             //Due on
@@ -556,11 +591,9 @@ public class GeneratePdfReport {
               canvas.beginText().setFontAndSize(
       				PdfFontFactory.createFont(FontConstants.HELVETICA_BOLD), 12) 
       						.moveText(360, 207)
-      						.showText(df2.format(total_current_bill)+" LKR") 
+      						.showText(df2.format(current_balance-discount)+" LKR") 
       						.endText();
-              
-              
-    		pdfDoc.close();
+              pdfDoc.close();
 
     		} catch (FileNotFoundException e) {
     			// TODO Auto-generated catch block

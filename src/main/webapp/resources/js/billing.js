@@ -76,7 +76,7 @@ $(document).ready(function(){
 			var ETO = $('#ETO').val();
 			var ERP = $('#ERP').val();
 			var EPE = $('#EPE').val();
-		window.location = contextPath+"/report/generateElec?efl="+EFL+"&efr="+EFR+"&ero="+ERO+"&epp="+EPP+"&edi="+EDI+"&eof="+EOF+"&eto="+ETO+"&erp="+ERP+"&epe="+EPE;
+		window.open(contextPath+"/billing/generateElec?efl="+EFL+"&efr="+EFR+"&ero="+ERO+"&epp="+EPP+"&edi="+EDI+"&eof="+EOF+"&eto="+ETO+"&erp="+ERP+"&epe="+EPE);
 		}
 	
 		});
@@ -129,8 +129,65 @@ $(document).ready(function(){
 			var ATO = $('#ATO').val();
 			var ARP = $('#ARP').val();
 			var APE = $('#APE').val();
-		window.location = contextPath+"/report/generateAC?afl="+AFL+"&afr="+AFR+"&aro="+ARO+"&app="+APP+"&adi="+ADI+"&aof="+AOF+"&ato="+ATO+"&arp="+ARP+"&ape="+APE;
+			window.open(contextPath+"/billing/generateAC?afl="+AFL+"&afr="+AFR+"&aro="+ARO+"&app="+APP+"&adi="+ADI+"&aof="+AOF+"&ato="+ATO+"&arp="+ARP+"&ape="+APE);
 		}
 	
 		});
+	
+	$("#EFL").change(function () {
+        if($('#EFL').val()=="Ground"){
+        	var gOptions = {"KWH 1": "1"};
+        	$('#EOFL').html('Meter');
+        	var $el = $("#EOF");
+        	$el.empty(); // remove old options
+        	$.each(gOptions, function(key,value) {
+        	  $el.append($("<option></option>")
+        	     .attr("value", value).text(key));
+        	});
+        	
+		}else{
+			var oOptions = {"One": "1",
+      			  "Two": "2",
+    			  "Three": "3",
+    			  "Four": "4"
+    			};
+			$('#EOFL').html('Office');
+			var $el = $("#EOF");
+        	$el.empty(); // remove old options
+        	$.each(oOptions, function(key,value) {
+        	  $el.append($("<option></option>")
+        	     .attr("value", value).text(key));
+        	});
+		}
+    });
+	
+	$("#AFL").change(function () {
+        if($('#AFL').val()=="Ground"){
+        	var gOptions = {"BTU 1": "2",
+    			  "BTU 2": "3",
+    			  "BTU 3": "4"};
+        	$('#AOFL').html('Meter');
+        	var $el = $("#AOF");
+        	$el.empty(); // remove old options
+        	$.each(gOptions, function(key,value) {
+        	  $el.append($("<option></option>")
+        	     .attr("value", value).text(key));
+        	});
+        	
+		}else{
+			var oOptions = {"One": "1",
+      			  "Two": "2",
+    			  "Three": "3",
+    			  "Four": "4"
+    			};
+			$('#AOFL').html('Office');
+			var $el = $("#AOF");
+        	$el.empty(); // remove old options
+        	$.each(oOptions, function(key,value) {
+        	  $el.append($("<option></option>")
+        	     .attr("value", value).text(key));
+        	});
+		}
+    });
+	
 });

@@ -5,8 +5,8 @@ window.chartColors = {
 		red: 'rgb(255, 99, 132)',
 		orange: 'rgb(255, 159, 64)',
 		yellow: 'rgb(255, 205, 86)',
-		green: 'rgb(75, 192, 192)',
-		blue: 'rgb(54, 162, 235)',
+		green: '#1CC88A',
+		blue: '#4E73DF',
 		purple: 'rgb(153, 102, 255)',
 		grey: 'rgb(201, 203, 207)'
 	};
@@ -44,6 +44,7 @@ var airChart = new Chart(ctx, {
     labels: [],
     datasets: [{
       label: "AC 1",
+      customtooltiptitle: [],
       lineTension: 0.3,
       fill: false,
       borderWidth: 3,
@@ -59,6 +60,7 @@ var airChart = new Chart(ctx, {
       data: [],
     },{
         label: "AC 2",
+        customtooltiptitle: [],
         lineTension: 0.3,
         fill: false,
         borderWidth: 3,
@@ -74,6 +76,7 @@ var airChart = new Chart(ctx, {
         data: [],
       },{
           label: "AC 3",
+          customtooltiptitle: [],
           lineTension: 0.3,
           fill: false,
           borderWidth: 3,
@@ -151,6 +154,10 @@ var airChart = new Chart(ctx, {
       mode: 'index',
       caretPadding: 10,
       callbacks: {
+    	  title: function(tooltipItem, chart) {
+              var customtitle = chart.datasets[tooltipItem[0].datasetIndex].customtooltiptitle[tooltipItem[0].index];
+      		return customtitle;
+            },
         label: function(tooltipItem, chart) {
           var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
           return datasetLabel +": "+ number_format(tooltipItem.yLabel)+" BTU";
@@ -161,9 +168,19 @@ var airChart = new Chart(ctx, {
 });
 
 //logic to get new data
-var getAirconData = function(id,unit) {
+var getAirconData = function(id,unit,limit,date) {
+	var date = moment(date, "DD/MM/YYYY");
+	var timestamp = date.unix();
+	
+	//clean everything before adding new data
+	airChart.data.datasets[0].customtooltiptitle = [];
+	airChart.data.labels = [];
+	airChart.data.datasets[0].data = [];
+	airChart.data.datasets[1].data = [];
+	airChart.data.datasets[2].data = [];
+	
   $.ajax({
-	  url: 'http://localhost:8080/tebbiq/rest/byMeterId?ext=BTU&id='+id+'&unit='+unit+'&meter=2',
+	  url: 'http://localhost:8080/tebbiq/rest/unitDailyUsage?ext=BTU&limit='+limit+'&id='+id+'&unit='+unit+'&meter=2&start='+timestamp+'',
     success: function(data) {
       // process your data to pull out what you plan to use to update the chart
       // e.g. new label and a new data point
@@ -175,16 +192,17 @@ var getAirconData = function(id,unit) {
     		var weekday = newDate.getDay();
     		var options = { weekday: 'long'};
     		
-    		airChart.data.labels.unshift(days[weekday]);
+    		airChart.data.datasets[0].customtooltiptitle.unshift(moment(newDate).format("dddd, MMMM Do YYYY"));
+    		airChart.data.labels.unshift(moment(newDate).format("DD/MM"));
     		airChart.data.datasets[0].data.unshift(object.value);
         });
-      
-      // re-render the chart
+    	 // re-render the chart
     	airChart.update();
     }
   });
+  if(id=="Ground"){
   $.ajax({
-	  url: 'http://localhost:8080/tebbiq/rest/byMeterId?ext=BTU&id='+id+'&unit='+unit+'&meter=3',
+	  url: 'http://localhost:8080/tebbiq/rest/unitDailyUsage?ext=BTU&limit='+limit+'&id='+id+'&unit='+unit+'&meter=3&start='+timestamp+'',
     success: function(data) {
       // process your data to pull out what you plan to use to update the chart
       // e.g. new label and a new data point
@@ -196,15 +214,15 @@ var getAirconData = function(id,unit) {
     		var weekday = newDate.getDay();
     		var options = { weekday: 'long'};
     		
+    		airChart.data.datasets[1].customtooltiptitle.unshift(moment(newDate).format("dddd, MMMM Do YYYY"));
     		airChart.data.datasets[1].data.unshift(object.value);
         });
-      
-      // re-render the chart
+    	 // re-render the chart
     	airChart.update();
     }
   });
   $.ajax({
-	  url: 'http://localhost:8080/tebbiq/rest/byMeterId?ext=BTU&id='+id+'&unit='+unit+'&meter=4',
+	  url: 'http://localhost:8080/tebbiq/rest/unitDailyUsage?ext=BTU&limit='+limit+'&id='+id+'&unit='+unit+'&meter=4&start='+timestamp+'',
     success: function(data) {
       // process your data to pull out what you plan to use to update the chart
       // e.g. new label and a new data point
@@ -216,11 +234,14 @@ var getAirconData = function(id,unit) {
     		var weekday = newDate.getDay();
     		var options = { weekday: 'long'};
     		
+    		airChart.data.datasets[2].customtooltiptitle.unshift(moment(newDate).format("dddd, MMMM Do YYYY"));
     		airChart.data.datasets[2].data.unshift(object.value);
         });
-      
-      // re-render the chart
+    	 // re-render the chart
     	airChart.update();
     }
   });
+  }
+  // re-render the chart
+	airChart.update();
 };

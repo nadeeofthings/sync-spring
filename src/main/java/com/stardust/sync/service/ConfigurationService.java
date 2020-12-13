@@ -24,8 +24,9 @@ import com.stardust.sync.repository.ConfigRepository;
 public class ConfigurationService {
 
     private static final Logger         LOGGER  = LoggerFactory.getLogger(ConfigurationService.class);
-
-    ConfigRepository                    configRepository;
+    
+    @Autowired
+    private ConfigRepository            configRepository;
 
     private Map<String, Configuration>  configurationList;
 
@@ -60,7 +61,9 @@ public class ConfigurationService {
     }
 
     public Configuration getConfiguration(String key) {
-        return configurationList.get(key);
+       System.out.println(configurationList.get(key));
+    	
+    	return configurationList.get(key);
     }
 
     /**
@@ -75,8 +78,16 @@ public class ConfigurationService {
                 }
             }
             if (!exists) {
+            		switch (mandatoryConfig){
+            				case Constants.CONFIG_KEY_REFRESH_RATE_CONFIG:
+            					configurationList.put(Constants.CONFIG_KEY_REFRESH_RATE_CONFIG, new Configuration(Constants.CONFIG_KEY_REFRESH_RATE_CONFIG,Constants.CONFIG_KEY_REFRESH_RATE_CONFIG_DEFAULT));
+            				case Constants.CONFIG_KEY_PEAK_START_CONFIG:
+            					configurationList.put(Constants.CONFIG_KEY_PEAK_START_CONFIG, new Configuration(Constants.CONFIG_KEY_PEAK_START_CONFIG,Constants.CONFIG_KEY_PEAK_START_CONFIG_DEFAULT));
+            				case Constants.CONFIG_KEY_PEAK_END_CONFIG:
+            					configurationList.put(Constants.CONFIG_KEY_PEAK_END_CONFIG, new Configuration(Constants.CONFIG_KEY_PEAK_END_CONFIG,Constants.CONFIG_KEY_PEAK_END_CONFIG_DEFAULT));
+            		}
                 String errorLog = String.format("A mandatory Configuration parameter is not found in DB: %s", mandatoryConfig);
-                LOGGER.error(errorLog);
+                LOGGER.warn(errorLog);
             }
         }
 

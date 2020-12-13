@@ -7,7 +7,7 @@ import javax.persistence.*;
 @Entity
 @IdClass(UnitId.class)
 @Table(name = "meter")
-public class Meter {
+public class Meter implements Comparable {
 
     @Id
     private String id;
@@ -94,6 +94,14 @@ public class Meter {
 
 	public void setExt(String ext) {
 		this.ext = ext;
+	}
+
+	@Override
+	public int compareTo(Object o) {
+		// TODO Auto-generated method stub
+		 int compareage=(int) ((Meter)o).getValue();
+	        /* For Ascending order*/
+	     return (int) (compareage-this.value);
 	} 
 
 

@@ -6,8 +6,8 @@ window.chartColors = {
 		red: 'rgb(255, 99, 132)',
 		orange: 'rgb(255, 159, 64)',
 		yellow: 'rgb(255, 205, 86)',
-		green: 'rgb(75, 192, 192)',
-		blue: 'rgb(54, 162, 235)',
+		green: '#1CC88A',
+		blue: '#4E73DF',
 		purple: 'rgb(153, 102, 255)',
 		grey: 'rgb(201, 203, 207)'
 	};
@@ -45,6 +45,7 @@ var elecChart = new Chart(ctx, {
     labels: [],
     datasets: [{
     	label: "Meter 1",
+    	customtooltiptitle: [],
         lineTension: 0.3,
         fill: false,
         borderWidth: 3,
@@ -120,6 +121,10 @@ var elecChart = new Chart(ctx, {
       mode: 'index',
       caretPadding: 10,
       callbacks: {
+    	title: function(tooltipItem, chart) {
+            var customtitle = chart.datasets[tooltipItem[0].datasetIndex].customtooltiptitle[tooltipItem[0].index];
+    		return customtitle;
+          },
         label: function(tooltipItem, chart) {
           var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
           return datasetLabel +": "+ number_format(tooltipItem.yLabel)+" kWh";
@@ -130,9 +135,17 @@ var elecChart = new Chart(ctx, {
 });
 
 //logic to get new data
-var getElecData = function(id,unit) {
+var getElecData = function(id,unit,limit,date) {
+	var date = moment(date, "DD/MM/YYYY");
+	var timestamp = date.unix();
+	
+	//clean everything before adding new data
+	elecChart.data.datasets[0].customtooltiptitle = [];
+	elecChart.data.labels = [];
+	elecChart.data.datasets[0].data = [];
+	
   $.ajax({
-    url: 'http://localhost:8080/tebbiq/rest/byMeterId?ext=kWh&id='+id+'&unit='+unit+'&meter=1',
+    url: 'http://localhost:8080/tebbiq/rest/unitDailyUsage?ext=kWh&limit='+limit+'&id='+id+'&unit='+unit+'&meter=1&start='+timestamp+'',
     success: function(data) {
       // process your data to pull out what you plan to use to update the chart
       // e.g. new label and a new data point
@@ -144,7 +157,9 @@ var getElecData = function(id,unit) {
     		var weekday = newDate.getDay();
     		var options = { weekday: 'long'};
     		
-    		elecChart.data.labels.unshift(days[weekday]);
+    		
+    		elecChart.data.datasets[0].customtooltiptitle.unshift(moment(newDate).format("dddd, MMMM Do YYYY"));
+    		elecChart.data.labels.unshift(moment(newDate).format("DD/MM"));
     		elecChart.data.datasets[0].data.unshift(object.value);
         });
       

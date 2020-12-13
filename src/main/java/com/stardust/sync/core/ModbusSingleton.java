@@ -7,7 +7,7 @@ import de.re.easymodbus.modbusclient.ModbusClient;
 
 public class ModbusSingleton {
 	
-	private static String address = "127.0.0.1";
+	private static String address = "192.168.1.10";
 	private static int port = 502;
 	private static ModbusClient modbusClient = null;
 	

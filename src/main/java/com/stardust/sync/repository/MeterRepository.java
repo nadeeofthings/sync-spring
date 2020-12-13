@@ -15,9 +15,21 @@ public interface MeterRepository extends JpaRepository<Meter, String> {
 	
 	List<Meter> findAllByIdAndUnitAndExtAndMeterOrderByTimeStampDesc(String id, String unit, String ext, int meter);
 	
+	List<Meter> findAllByIdAndUnitAndExtAndMeterOrderByTimeStampAsc(String id, String unit, String ext, int meter);
+	
+	List<Meter> findTop28ByIdAndUnitAndExtAndMeterOrderByTimeStampDesc(String id, String unit, String ext, int meter);
+	
+	List<Meter> findAllByIdAndUnitAndExtAndMeterAndTimeStampBetweenOrderByTimeStampAsc(String id, String unit, String ext, int meter, Date start, Date end);
+	
 	List<Meter> findAllByExtAndTimeStampBetweenOrderByTimeStampDesc(String ext, Date start, Date end);
+	
+	List<Meter> findAllByExtAndTimeStampBetweenOrderByTimeStampAsc(String ext, Date start, Date end);
+	
+	Meter findTopByIdAndUnitAndExtAndMeterOrderByTimeStampDesc(String id, String unit, String ext, int meter);
 	
 	Meter findTopByIdAndUnitAndExtAndMeterAndTimeStampBetweenOrderByTimeStampAsc(String id, String unit, String ext, int meter, Date start, Date end);
 	
 	Meter findTopByIdAndUnitAndExtAndMeterAndTimeStampBetweenOrderByTimeStampDesc(String id, String unit, String ext, int meter, Date start, Date end);
+
+	
 }

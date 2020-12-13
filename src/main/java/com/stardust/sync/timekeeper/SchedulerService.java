@@ -22,20 +22,26 @@ import org.springframework.scheduling.config.ScheduledTaskRegistrar;
 import org.springframework.stereotype.Service;
 
 import com.stardust.sync.core.Constants;
+import com.stardust.sync.model.Alert;
+import com.stardust.sync.service.AlertService;
 import com.stardust.sync.service.ConfigurationService;
 import com.stardust.sync.service.MeterService;
+import com.stardust.sync.service.NotificationDispatcherService;
 import com.stardust.sync.service.UserService;
 
 @Service
 public class SchedulerService implements SchedulingConfigurer {
 	
 	private static final Logger LOG = LoggerFactory.getLogger(SchedulerService.class);
-
+	private boolean freshRun = true;
     @Autowired
     ConfigurationService configurationService;
     
     @Autowired
     private MeterService meterService;
+    
+    @Autowired
+    private AlertService alertService;
    
     @Bean
     public TaskScheduler poolScheduler() {
@@ -53,7 +59,10 @@ public class SchedulerService implements SchedulingConfigurer {
             @Override
             public void run() {
                 // Do not put @Scheduled annotation above this method, we don't need it anymore.
+            	freshRun = true;
                 configurationService.loadConfigurations();
+            	alertService.success("Meter readings recorded successfully");
+                
             }
         }, new Trigger() {
             @Override
@@ -71,8 +80,12 @@ public class SchedulerService implements SchedulingConfigurer {
             @Override
             public void run() {
                 // Do not put @Scheduled annotation above this method, we don't need it anymore.
-                LOG.info("Peak time capture");
-                meterService.capturePeakReadings();
+            	if(freshRun) {
+	            	LOG.info("Peak time capture");
+	            	meterService.capturePeakReadings();
+	            	alertService.success("Meter readings recorded successfully");
+	            	freshRun=false;
+	            }
             }
         }, new Trigger() {
             @Override
@@ -102,8 +115,12 @@ public class SchedulerService implements SchedulingConfigurer {
             @Override
             public void run() {
             	// Do not put @Scheduled annotation above this method, we don't need it anymore.
-                LOG.info("Peak time end capture");
-                meterService.capturePeakReadings();
+                if(freshRun) {
+	            	LOG.info("Peak time end capture");
+	                meterService.capturePeakReadings();
+	            	alertService.success("Meter readings recorded successfully");
+	                freshRun=false;
+                }
             }
         }, new Trigger() {
             @Override
