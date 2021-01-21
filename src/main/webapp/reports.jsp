@@ -42,36 +42,6 @@
 <script src="${contextPath}/resources/js/reports.js"
 	type="text/javascript"></script>
 
-<script>
-	function startTime() {
-		var days = [ 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday',
-				'Friday', 'Saturday' ];
-		var months = [ 'January', 'February', 'March', 'April', 'May', 'June',
-				'July', 'August', 'September', 'October', 'November',
-				'December' ];
-
-		var today = new Date();
-		var day = days[today.getDay()];
-		var month = months[today.getMonth()];
-		var year = today.getFullYear();
-		var h = today.getHours();
-		var m = today.getMinutes();
-		var s = today.getSeconds();
-		m = checkTime(m);
-		s = checkTime(s);
-		document.getElementById('dateTime').innerHTML = day + ", " + month
-				+ " " + year + " - " + h + ":" + m + ":" + s;
-		var t = setTimeout(startTime, 500);
-	}
-	function checkTime(i) {
-		if (i < 10) {
-			i = "0" + i
-		}
-		; // add zero in front of numbers < 10
-		return i;
-	}
-</script>
-
 <script type="text/javascript">
 	var contextPath = "${contextPath}";
 </script>
@@ -155,13 +125,13 @@
 						<h6 class="collapse-header">Report Explorer:</h6>
 						<a class="collapse-item"
 							href="${contextPath}/reports?id=dailyuseage"><i
-							class="fas fa-fw fa-table"></i>&nbsp&nbspDaily usage</a> <a
+							class="fas fa-fw fa-table"></i>&nbsp&nbspDaily Usage</a> <a
 							class="collapse-item"
 							href="${contextPath}/reports?id=customeruseage"><i
-							class="fas fa-fw fa-table"></i>&nbsp&nbspTenant summary</a> <a
+							class="fas fa-fw fa-table"></i>&nbsp&nbspTenant Summary</a> <a
 							class="collapse-item"
 							href="${contextPath}/reports?id=facilityuseage"><i
-							class="fas fa-fw fa-table"></i>&nbsp&nbspFacility summary</a>
+							class="fas fa-fw fa-table"></i>&nbsp&nbspFacility Summary</a>
 					</div>
 				</div></li>
 
@@ -170,18 +140,18 @@
 				href="${contextPath}/billing"> <i
 					class="fas fa-fw fa-dollar-sign"></i> <span>Billing</span></a></li>
 
-			<security:authorize access="hasRole('ROLE_SUPERADMIN')">
-
+			<security:authorize access="hasAnyRole('ROLE_SUPERADMIN', 'ROLE_ADMIN')">
+						
 
 				<!-- Divider -->
 				<hr class="sidebar-divider">
-
+	
 				<!-- Heading -->
-				<div class="sidebar-heading">Settings</div>
+				<div class="sidebar-heading">System</div>
 				<!-- Nav Item - Settings -->
-				<li class="nav-item"><a class="nav-link" href="#"> <i
-						class="fas fa-fw fa-tools"></i> <span>System</span></a></li>
-
+				<li class="nav-item"><a class="nav-link" href="${contextPath}/settings"> <i
+						class="fas fa-fw fa-tools"></i> <span>Settings</span></a></li>
+					
 			</security:authorize>
 
 			<!-- Divider -->
@@ -251,8 +221,7 @@
 							role="button" data-toggle="dropdown" aria-haspopup="true"
 							aria-expanded="false"> <span
 								class="mr-2 d-none d-lg-inline text-gray-600 small">${pageContext.request.userPrincipal.name}</span>
-								<img class="img-profile rounded-circle"
-								src="${contextPath}/resources/img/user.png">
+								<div id="avatar"></div>
 						</a> <!-- Dropdown - User Information -->
 							<div
 								class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
@@ -289,14 +258,14 @@
 								class="d-sm-flex align-items-center justify-content-between mb-4">
 								<c:choose>
 									<c:when test="${param.id == 'dailyuseage'}">
-										<h1 class="h3 mb-0 text-gray-800">Facility daily usage
-											reports</h1>
+										<h1 class="h3 mb-0 text-gray-800">Facility Daily Usage
+											Reports</h1>
 									</c:when>
 									<c:when test="${param.id == 'customeruseage'}">
-										<h1 class="h3 mb-0 text-gray-800">Tenant summary report</h1>
+										<h1 class="h3 mb-0 text-gray-800">Tenant Summary Report</h1>
 									</c:when>
 									<c:when test="${param.id == 'facilityuseage'}">
-										<h1 class="h3 mb-0 text-gray-800">Facility summary report</h1>
+										<h1 class="h3 mb-0 text-gray-800">Facility Summary Report</h1>
 									</c:when>
 									<c:otherwise>
 										<script>
@@ -331,8 +300,8 @@
 													role="tabpanel" aria-labelledby="home-tab">
 													<div class="card">
 														<div class="card-body">
-															<h1 class="h6 mb-0 text-gray-800">Facility daily
-																usage wizard (Max 7 days)</h1>
+															<h1 class="h6 mb-0 text-gray-800">Facility Daily
+																Usage Wizard (Max 7 days)</h1>
 															<hr></hr>
 															<div class="row no-gutters align-items-center">
 																<div class="container-fluid">
@@ -376,7 +345,7 @@
 																	</div>
 																	<button id="EDR" type="button"
 																		class="btn btn-success btn-block">Generate
-																		report</button>
+																		Report</button>
 																</div>
 															</div>
 														</div>
@@ -386,8 +355,8 @@
 													aria-labelledby="profile-tab">
 													<div class="card">
 														<div class="card-body">
-															<h1 class="h6 mb-0 text-gray-800">Facility daily
-																usage wizard (Max 7 days)</h1>
+															<h1 class="h6 mb-0 text-gray-800">Facility Daily
+																Usage Wizard (Max 7 days)</h1>
 															<hr></hr>
 															<div class="row no-gutters align-items-center">
 																<div class="container-fluid">
@@ -431,7 +400,7 @@
 																	</div>
 																	<button id="ADR" type="button"
 																		class="btn btn-primary btn-block">Generate
-																		report</button>
+																		Report</button>
 																</div>
 															</div>
 														</div>
@@ -466,7 +435,7 @@
 													role="tabpanel" aria-labelledby="home-tab">
 													<div class="card">
 														<div class="card-body">
-															<h1 class="h6 mb-0 text-gray-800">Tenant summary report wizard (Max 3 months)</h1>
+															<h1 class="h6 mb-0 text-gray-800">Tenant Summary Report Wizard (Max 3 months)</h1>
 															<hr></hr>
 															<div class="row no-gutters align-items-center">
 																<div class="container-fluid">
@@ -475,7 +444,7 @@
 																			<div class="input-group mb-3">
 																				<select class="custom-select" id="EFL">
 																					<option selected value="Ground">Commercial
-																						area</option>
+																						Area</option>
 																					<option value="3rd">Third</option>
 																					<option value="4th">Fourth</option>
 																					<option value="5th">Fifth</option>
@@ -533,7 +502,7 @@
 																	</div>
 																	<button id="ETS" type="button"
 																		class="btn btn-success btn-block">Generate
-																		report</button>
+																		Report</button>
 																</div>
 															</div>
 														</div>
@@ -543,7 +512,7 @@
 													aria-labelledby="profile-tab">
 													<div class="card">
 														<div class="card-body">
-															<h1 class="h6 mb-0 text-gray-800">Tenant summary report wizard (Max 3 months)</h1>
+															<h1 class="h6 mb-0 text-gray-800">Tenant Summary Report Wizard (Max 3 months)</h1>
 															<hr></hr>
 															<div class="row no-gutters align-items-center">
 																<div class="container-fluid">
@@ -552,7 +521,7 @@
 																			<div class="input-group mb-3">
 																				<select class="custom-select" id="AFL">
 																					<option selected value="Ground">Commercial
-																						area</option>
+																						Area</option>
 																					<option value="3rd">Third</option>
 																					<option value="4th">Fourth</option>
 																					<option value="5th">Fifth</option>
@@ -612,7 +581,7 @@
 																	</div>
 																	<button id="ATS" type="button"
 																		class="btn btn-primary btn-block">Generate
-																		report</button>
+																		Report</button>
 																</div>
 															</div>
 														</div>
@@ -635,8 +604,8 @@
 										<div class="card border-primary shadow">
 													<div class="card">
 														<div class="card-body">
-															<h1 class="h6 mb-0 text-gray-800">Facility daily
-																usage wizard (Max 31 days)</h1>
+															<h1 class="h6 mb-0 text-gray-800">Facility Daily
+																Usage Wizard (Max 31 days)</h1>
 															<hr></hr>
 															<div class="row no-gutters align-items-center">
 																<div class="container-fluid">
@@ -680,7 +649,7 @@
 																	</div>
 																	<button id="FSR" type="button"
 																		class="btn btn-warning btn-block">Generate
-																		report</button>
+																		Report</button>
 																</div>
 															</div>
 														</div>

@@ -145,7 +145,8 @@ var getElecData = function(id,unit,limit,date) {
 	elecChart.data.datasets[0].data = [];
 	
   $.ajax({
-    url: 'http://localhost:8080/tebbiq/rest/unitDailyUsage?ext=kWh&limit='+limit+'&id='+id+'&unit='+unit+'&meter=1&start='+timestamp+'',
+    url:  contextPath+'/rest/unitDailyUsage?ext=kWh&limit='+limit+'&id='+id+'&unit='+unit+'&meter=1&start='+timestamp+'',
+    dataType: 'json',
     success: function(data) {
       // process your data to pull out what you plan to use to update the chart
       // e.g. new label and a new data point
@@ -165,6 +166,9 @@ var getElecData = function(id,unit,limit,date) {
       
         //re-render the chart
     	elecChart.update();
+    },
+    error: function(jqXHR, exception) {
+        window.location.href = contextPath;
     }
   });
 };

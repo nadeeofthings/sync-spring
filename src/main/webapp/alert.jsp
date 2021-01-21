@@ -39,35 +39,6 @@
 <script type="text/javascript">
 var contextPath = "${contextPath}";
 </script>
-<script>
-	function startTime() {
-		var days = [ 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday',
-				'Friday', 'Saturday' ];
-		var months = [ 'January', 'February', 'March', 'April', 'May', 'June',
-				'July', 'August', 'September', 'October', 'November',
-				'December' ];
-
-		var today = new Date();
-		var day = days[today.getDay()];
-		var month = months[today.getMonth()];
-		var year = today.getFullYear();
-		var h = today.getHours();
-		var m = today.getMinutes();
-		var s = today.getSeconds();
-		m = checkTime(m);
-		s = checkTime(s);
-		document.getElementById('dateTime').innerHTML = day + ", " + month
-				+ " " + year + " - " + h + ":" + m + ":" + s;
-		var t = setTimeout(startTime, 500);
-	}
-	function checkTime(i) {
-		if (i < 10) {
-			i = "0" + i
-		}
-		; // add zero in front of numbers < 10
-		return i;
-	}
-</script>
 <!-- Custom styles for this template-->
 <link href="${contextPath}/resources/css/sb-admin-2.css"
 	rel="stylesheet">
@@ -156,17 +127,17 @@ var contextPath = "${contextPath}";
 				href="${contextPath}/billing"> <i
 					class="fas fa-fw fa-dollar-sign"></i> <span>Billing</span></a></li>
 
-			<security:authorize access="hasRole('ROLE_SUPERADMIN')">
+			<security:authorize access="hasAnyRole('ROLE_SUPERADMIN', 'ROLE_ADMIN')">
 						
 
 				<!-- Divider -->
 				<hr class="sidebar-divider">
 	
 				<!-- Heading -->
-				<div class="sidebar-heading">Settings</div>
+				<div class="sidebar-heading">System</div>
 				<!-- Nav Item - Settings -->
-				<li class="nav-item"><a class="nav-link" href="#"> <i
-						class="fas fa-fw fa-tools"></i> <span>System</span></a></li>
+				<li class="nav-item"><a class="nav-link" href="${contextPath}/settings"> <i
+						class="fas fa-fw fa-tools"></i> <span>Settings</span></a></li>
 					
 			</security:authorize>
 
@@ -237,8 +208,7 @@ var contextPath = "${contextPath}";
 							role="button" data-toggle="dropdown" aria-haspopup="true"
 							aria-expanded="false"> <span
 								class="mr-2 d-none d-lg-inline text-gray-600 small">${pageContext.request.userPrincipal.name}</span>
-								<img class="img-profile rounded-circle"
-								src="${contextPath}/resources/img/user.png">
+								<div id="avatar"></div>
 						</a> <!-- Dropdown - User Information -->
 							<div
 								class="dropdown-menu dropdown-menu-right shadow animated--grow-in"

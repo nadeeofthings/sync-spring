@@ -1,6 +1,10 @@
 package com.stardust.sync.model;
 
 import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -12,10 +16,19 @@ public class Role {
 
     private String name;
 
-    @ManyToMany(mappedBy = "roles")
-    private Set<User> users;
+    @OneToMany(mappedBy = "role")
+    private List<User> users;
+    
+    public Role() {}
+    
+    
 
-    public Long getId() {
+    public Role(String name) {
+		super();
+		this.name = name;
+	}
+
+	public Long getId() {
         return id;
     }
 
@@ -29,13 +42,5 @@ public class Role {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public Set<User> getUsers() {
-        return users;
-    }
-
-    public void setUsers(Set<User> users) {
-        this.users = users;
     }
 }

@@ -129,9 +129,9 @@
 					aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
 					<div class="bg-white py-2 collapse-inner rounded">
 						<h6 class="collapse-header">Report Explorer:</h6>
-            <a class="collapse-item" href="${contextPath}/reports?id=dailyuseage"><i class="fas fa-fw fa-table"></i>&nbsp&nbspDaily usage</a>
-            <a class="collapse-item" href="${contextPath}/reports?id=customeruseage"><i class="fas fa-fw fa-table"></i>&nbsp&nbspTenant summary</a>
-            <a class="collapse-item" href="${contextPath}/reports?id=facilityuseage"><i class="fas fa-fw fa-table"></i>&nbsp&nbspFacility summary</a>
+            <a class="collapse-item" href="${contextPath}/reports?id=dailyuseage"><i class="fas fa-fw fa-table"></i>&nbsp&nbspDaily Usage</a>
+            <a class="collapse-item" href="${contextPath}/reports?id=customeruseage"><i class="fas fa-fw fa-table"></i>&nbsp&nbspTenant Summary</a>
+            <a class="collapse-item" href="${contextPath}/reports?id=facilityuseage"><i class="fas fa-fw fa-table"></i>&nbsp&nbspFacility Summary</a>
 					</div>
 				</div></li>
 
@@ -140,17 +140,17 @@
 				href="${contextPath}/billing"> <i
 					class="fas fa-fw fa-dollar-sign"></i> <span>Billing</span></a></li>
 
-			<security:authorize access="hasRole('ROLE_SUPERADMIN')">
+			<security:authorize access="hasAnyRole('ROLE_SUPERADMIN', 'ROLE_ADMIN')">
 						
 
 				<!-- Divider -->
 				<hr class="sidebar-divider">
 	
 				<!-- Heading -->
-				<div class="sidebar-heading">Settings</div>
+				<div class="sidebar-heading">System</div>
 				<!-- Nav Item - Settings -->
-				<li class="nav-item"><a class="nav-link" href="#"> <i
-						class="fas fa-fw fa-tools"></i> <span>System</span></a></li>
+				<li class="nav-item"><a class="nav-link" href="${contextPath}/settings"> <i
+						class="fas fa-fw fa-tools"></i> <span>Settings</span></a></li>
 					
 			</security:authorize>
 
@@ -221,8 +221,7 @@
 							role="button" data-toggle="dropdown" aria-haspopup="true"
 							aria-expanded="false"> <span
 								class="mr-2 d-none d-lg-inline text-gray-600 small">${pageContext.request.userPrincipal.name}</span>
-								<img class="img-profile rounded-circle"
-								src="${contextPath}/resources/img/user.png">
+								<div id="avatar"></div>
 						</a> <!-- Dropdown - User Information -->
 							<div
 								class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
@@ -253,17 +252,19 @@
 				<div class="container-fluid">
 					<!-- Page Heading -->
 					<div
-						class="d-sm-flex align-items-center justify-content-between mb-4">
+						class="d-sm-flex mb-4">
 						<c:choose>
 							<c:when test="${id == 'Ground'}">
-								<h1 class="h3 mb-0 text-gray-800">
-									Commercial Area</b>
-								</h1>
+								<h3 class="h3 mb-0 text-gray-800">
+									<b>Commercial Area</b>
+								</h3>
+								<button type="button" class="btn btn-link" data-toggle="modal" data-target="#customerInfoModal">Customer Info</button>
 							</c:when>
 							<c:otherwise>
-								<h1 class="h3 mb-0 text-gray-800">${id}
+								<h3 class="h3 mb-0 text-gray-800">${id}
 									Floor Office: <b>0<%=room%></b>
-								</h1>
+								</h3>
+								<button type="button" class="btn btn-link" data-toggle="modal" data-target="#customerInfoModal">Customer Info</button>
 							</c:otherwise>
 						</c:choose>
 						<!--<a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>-->
@@ -279,7 +280,7 @@
 												<div class="col mr-2">
 													<div
 														class="text-xs font-weight-bold text-gray-900 text-uppercase mb-1">Energy
-														usage</div>
+														Usage</div>
 													<div id="energyxxxxx"
 														class="h5 mb-0 font-weight-bold text-gray-800">kWh</div>
 												</div>
@@ -297,7 +298,7 @@
 												<div class="col mr-2">
 													<div
 														class="text-xs font-weight-bold text-gray-900 text-uppercase mb-1">AC
-														1 usage</div>
+														1 Usage</div>
 													<div id="btuxxxxx1"
 														class="h5 mb-0 font-weight-bold text-gray-800">BTU</div>
 												</div>
@@ -315,7 +316,7 @@
 												<div class="col mr-2">
 													<div
 														class="text-xs font-weight-bold text-gray-900 text-uppercase mb-1">AC
-														2 usage</div>
+														2 Usage</div>
 													<div id="btuxxxxx2"
 														class="h5 mb-0 font-weight-bold text-gray-800">BTU</div>
 												</div>
@@ -333,7 +334,7 @@
 												<div class="col mr-2">
 													<div
 														class="text-xs font-weight-bold text-gray-900 text-uppercase mb-1">AC
-														3 usage</div>
+														3 Usage</div>
 													<div id="btuxxxxx3"
 														class="h5 mb-0 font-weight-bold text-gray-800">BTU</div>
 												</div>
@@ -357,7 +358,7 @@
 												<div class="col mr-2">
 													<div
 														class="text-xs font-weight-bold text-gray-900 text-uppercase mb-1">Energy
-														usage</div>
+														Usage</div>
 													<div id="energyxxxxx"
 														class="h5 mb-0 font-weight-bold text-gray-800">kWh</div>
 												</div>
@@ -375,7 +376,7 @@
 												<div class="col mr-2">
 													<div
 														class="text-xs font-weight-bold text-gray-900 text-uppercase mb-1">AC
-														usage</div>
+														Usage</div>
 													<div id="btuxxxxx1"
 														class="h5 mb-0 font-weight-bold text-gray-800">BTU</div>
 												</div>
@@ -429,7 +430,7 @@
 										role="tabpanel" aria-labelledby="home-tab">
 										<div class="card">
 											<div class="card-body">
-												<h1 class="h4 mb-0 text-gray-800">Useage trends</h1>
+												<h1 class="h4 mb-0 text-gray-800">Useage Trends</h1>
 												<br>
 												<div class="row justify-content-between">
 												    <div class="col-4">
@@ -462,12 +463,12 @@
 											</div>
 											<hr></hr>
 											<div class="card-body">
-												<h1 class="h4 mb-0 text-gray-800">Electricity meter
-													readings</h1>
+												<h1 class="h4 mb-0 text-gray-800">Electricity Meter
+													Readings</h1>
 													<br>
 												<div class="row no-gutters align-items-center">
 													<div class="table-responsive">
-														<table class="table table-bordered" id="elecDataTable"
+														<table class="table table-bordered display compact" id="elecDataTable"
 															width="100%" cellspacing="0">
 															<thead>
 																<tr>
@@ -496,7 +497,7 @@
 										aria-labelledby="profile-tab">
 										<div class="card">
 											<div class="card-body">
-												<h1 class="h4 mb-0 text-gray-800">Useage trends</h1>
+												<h1 class="h4 mb-0 text-gray-800">Useage Trends</h1>
 												<br>
 												<div class="row justify-content-between">
 												    <div class="col-4">
@@ -529,8 +530,8 @@
 											</div>
 											<hr></hr>
 											<div class="card-body">
-												<h1 class="h4 mb-0 text-gray-800">Air conditioner meter
-													readings</h1>
+												<h1 class="h4 mb-0 text-gray-800">Air Conditioner Meter
+													Readings</h1>
 													<br>
 												<div class="row no-gutters align-items-center">
 													<div class="table-responsive">
@@ -558,6 +559,8 @@
 												</div>
 											</div>
 										</div>
+										
+										
 									</div>
 								</div>
 							</div>
@@ -590,7 +593,24 @@
 	<a class="scroll-to-top rounded" href="#page-top"> <i
 		class="fas fa-angle-up"></i>
 	</a>
-
+	<!-- Customer info Modal -->
+	<div class="modal fade" id="customerInfoModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+	  <div class="modal-dialog modal-dialog-centered" role="document">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h5 class="modal-title" id="exampleModalLongTitle">Customer Information</h5>
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	          <span aria-hidden="true">&times;</span>
+	        </button>
+	      </div>
+	      <div class="modal-body">
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
 	<!-- Logout Modal-->
 	<div class="modal fade" id="logoutModal" tabindex="-1" role="dialog"
 		aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -600,7 +620,7 @@
 					<h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
 					<button class="close" type="button" data-dismiss="modal"
 						aria-label="Close">
-						<span aria-hidden="true">×</span>
+						<span aria-hidden="true">&times;</span>
 					</button>
 				</div>
 				<div class="modal-body">Select "Logout" below if you are ready
@@ -643,7 +663,6 @@
 	<!-- Page level custom scripts -->
 	<script src="${contextPath}/resources/js/demo/chart-area-electric.js"></script>
 	<script src="${contextPath}/resources/js/demo/chart-area-aircon.js"></script>
-	<script src="${contextPath}/resources/js/demo/datatables-demo.js"></script>
 	<script src="${contextPath}/resources/js/apartment.js"></script>
 	<script src="${contextPath}/resources/js/sockjs/sockjs.min.js"></script>
     <script src="${contextPath}/resources/js/stompjs/stomp.min.js"></script>

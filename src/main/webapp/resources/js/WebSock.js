@@ -65,11 +65,15 @@ $('document').ready(function(){
 	$('#alertsDropdown').on('show.bs.dropdown', function () {
 			$.ajax({
                 	type: "GET",
+                	//dataType: 'json',
                     url: contextPath+'/rest/resetAlertCount',
-                    complete: function() {
+                    success: function() {
 						document.getElementById("alertCount").style.display= 'none';
 						document.getElementById("alertCount").innerHTML = 0;
-                    }
+                    },
+					error: function(jqXHR, exception) {
+						window.location.href = contextPath;
+					}
                 }); 
 		});
 	$.ajax({
@@ -92,7 +96,10 @@ $('document').ready(function(){
                         // 
                         // Schedule the next request when the current one's complete
                         //setTimeout(loadValues, 5000);
-                    }
+                    },
+					error: function(jqXHR, exception) {
+						window.location.href = contextPath;
+					}
                 });
     $.ajax({
                 	type: "GET",
@@ -116,7 +123,10 @@ $('document').ready(function(){
                         // 
                         // Schedule the next request when the current one's complete
                         //setTimeout(loadValues, 5000);
-                    }
+                    },
+					error: function(jqXHR, exception) {
+						window.location.href = contextPath;
+					}
                 });                
 	if (!stompClient) {
 	      const socket = new SockJS(contextPath+"/notifications");

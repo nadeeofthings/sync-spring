@@ -120,7 +120,7 @@ public class InitialdataLoader implements ApplicationListener<ContextRefreshedEv
 		//configRepository.save(entity)
 		
 		
-		createSuAdminIfNotFound();
+		//createSuAdminIfNotFound();
 		//repairDB();
 		
 		alreadySetup = true;
@@ -173,9 +173,7 @@ public class InitialdataLoader implements ApplicationListener<ContextRefreshedEv
 		User user = new User();
 		user.setUsername("superadmin");
 		user.setPassword(bCryptPasswordEncoder.encode("testing12345"));
-		Set<Role> roles = new HashSet<>();
-		roles.add(suAdminRole);
-		user.setRoles(roles);
+		user.setRole(suAdminRole);
 		user.setEnabled(true);
 		userRepository.save(user);
         return;

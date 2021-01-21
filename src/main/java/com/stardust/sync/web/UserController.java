@@ -1,6 +1,7 @@
 package com.stardust.sync.web;
 
 import java.io.ByteArrayInputStream;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,7 @@ import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -17,13 +19,18 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.stardust.sync.model.Billing;
+import com.stardust.sync.model.Customer;
 import com.stardust.sync.model.User;
+import com.stardust.sync.service.BillingService;
+import com.stardust.sync.service.CustomerService;
 import com.stardust.sync.service.SecurityService;
 import com.stardust.sync.service.UserService;
 import com.stardust.sync.util.GenerateDailyReadingPdfReport;
 import com.stardust.sync.util.GenerateFacilitySummaryPdfReport;
 import com.stardust.sync.util.GeneratePdfBill;
 import com.stardust.sync.util.GenerateTenantSummaryPdfReport;
+import com.stardust.sync.validator.CustomerValidator;
 import com.stardust.sync.validator.UserValidator;
 
 @Controller
@@ -36,6 +43,9 @@ public class UserController {
 
 	@Autowired
 	private UserValidator userValidator;
+	
+	@Autowired
+	private CustomerValidator customerValidator;
 
 	@Autowired
 	private GenerateDailyReadingPdfReport generateDailyReadingPdfReport;
@@ -47,7 +57,10 @@ public class UserController {
 	private GenerateFacilitySummaryPdfReport generateFacilitySummaryPdfReport;
 
 	@Autowired
-	private GeneratePdfBill generatePdfBill;
+	private BillingService billingService;
+	
+	@Autowired
+	private CustomerService customerService;
 
 	@GetMapping("/registration")
 	public String registration(Model model) {
@@ -125,38 +138,41 @@ public class UserController {
 	public String reports(Model model) {
 		return "reports";
 	}
-
-	@RequestMapping(value = "/billing/generateElec", method = RequestMethod.GET, produces = MediaType.APPLICATION_PDF_VALUE)
-	public ResponseEntity<InputStreamResource> electricalR(String efl, String efr, String ero, String epp, String edi,
-			String eof, String eto, String erp, String epe) {
-		if (efl == null || efr == null || ero == null || epp == null || edi == null || eof == null || eto == null
-				|| erp == null || epe == null)
-			return null;
-
-		ByteArrayInputStream bis = generatePdfBill.electricalR(efl, efr, ero, epp, edi, eof, eto, erp, epe);
-
-		HttpHeaders headers = new HttpHeaders();
-		headers.add("Content-Disposition", "inline; filename=Electricity_Bill_" + efr + "-" + eto + ".pdf");
-
-		return ResponseEntity.ok().headers(headers).contentType(MediaType.APPLICATION_PDF)
-				.body(new InputStreamResource(bis));
+	
+	@GetMapping({ "/settings" })
+	public String settings(Model model, Authentication authentication) {
+		String auth = authentication.getAuthorities().toString();
+		if(auth.contains("ROLE_ADMIN") || auth.contains("ROLE_SUPERADMIN")) {
+			model.addAttribute("customerForm", new Customer());
+			return "settings";
+		}else
+		return "index";
 	}
 
-	@RequestMapping(value = "/billing/generateAC", method = RequestMethod.GET, produces = MediaType.APPLICATION_PDF_VALUE)
-	public ResponseEntity<InputStreamResource> airconR(String afl, String afr, String aro, String app, String adi,
-			String aof, String ato, String arp, String ape) {
-
-		if (afl == null || afr == null || aro == null || app == null || adi == null || aof == null || ato == null
-				|| arp == null || ape == null)
-			return null;
-
-		ByteArrayInputStream bis = generatePdfBill.airconR(afl, afr, aro, app, adi, aof, ato, arp, ape);
-
+	@PostMapping("/settings")
+	public String settings(@ModelAttribute("customerForm") Customer customerForm, BindingResult bindingResult) {
+		customerValidator.validate(customerForm, bindingResult);
+		if (bindingResult.hasErrors()) {
+			return "settings";
+		}
+		customerService.save(customerForm);
+		return "settings";
+	}
+	
+	@RequestMapping(value = "/billing/downloadBill", method = RequestMethod.GET, produces = MediaType.APPLICATION_PDF_VALUE)
+	public ResponseEntity<InputStreamResource> electricalR(long billId) {
+		SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+		Billing bill = billingService.getBillByBillId(billId);
+		if(bill != null) {
+		ByteArrayInputStream bis = billingService.generatePDFBill(billId);
 		HttpHeaders headers = new HttpHeaders();
-		headers.add("Content-Disposition", "inline; filename=Aircon_Bill_" + afr + "-" + ato + ".pdf");
+		headers.add("Content-Disposition", "inline; filename="+bill.getBillId()+"_"+(bill.getExt().equalsIgnoreCase("kWh")?"Electricity":"HVAC")+"_Bill_" 
+												+ bill.getId()+"_" +bill.getUnit()+"_"+bill.getMeter()+"_"+format.format(bill.getFromDate())+"-" + format.format(bill.getToDate()) + ".pdf");
 
 		return ResponseEntity.ok().headers(headers).contentType(MediaType.APPLICATION_PDF)
 				.body(new InputStreamResource(bis));
+		}
+		return null;
 	}
 
 	@RequestMapping(value = "/report/electricalDailyReport", method = RequestMethod.GET, produces = MediaType.APPLICATION_PDF_VALUE)
@@ -233,5 +249,7 @@ public class UserController {
 		return ResponseEntity.ok().headers(headers).contentType(MediaType.APPLICATION_PDF)
 				.body(new InputStreamResource(bis));
 	}
+	
+
 
 }

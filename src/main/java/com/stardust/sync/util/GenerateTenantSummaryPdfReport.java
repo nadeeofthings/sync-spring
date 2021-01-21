@@ -46,6 +46,9 @@ import org.springframework.stereotype.Service;
 
 import com.itextpdf.awt.geom.Rectangle2D;
 import com.itextpdf.io.font.FontConstants;
+import com.itextpdf.io.font.FontProgram;
+import com.itextpdf.io.font.FontProgramFactory;
+import com.itextpdf.io.font.PdfEncodings;
 import com.itextpdf.io.image.ImageData;
 import com.itextpdf.io.image.ImageDataFactory;
 import com.itextpdf.kernel.color.DeviceRgb;
@@ -72,6 +75,7 @@ import com.itextpdf.layout.element.Table;
 import com.itextpdf.layout.property.HorizontalAlignment;
 import com.itextpdf.layout.property.TextAlignment;
 import com.itextpdf.text.pdf.PdfContentByte;
+import com.stardust.sync.core.Constants;
 import com.stardust.sync.model.Meter;
 import com.stardust.sync.model.MeterExtended;
 import com.stardust.sync.service.MeterService;
@@ -100,15 +104,18 @@ public class GenerateTenantSummaryPdfReport {
 			Document doc = new Document(pdfDoc, new PageSize(595, 842));
 			doc.setMargins(70, 20, 25, 20);
 			
-			PdfFont bold = PdfFontFactory.createFont(FontConstants.HELVETICA_BOLD);
+			FontProgram fontProgram = FontProgramFactory.createFont(Constants.CALIBRI_REGULAR);
+            PdfFont calibriRegular = PdfFontFactory.createFont(fontProgram, PdfEncodings.WINANSI, true);
+            PdfFont calibriBold = PdfFontFactory.createFont(Constants.CALIBRI_BOLD, true);
+            PdfFont calibriItalic = PdfFontFactory.createFont(Constants.CALIBRI_ITALIC, true);
 			
 			// Creating an ImageData object
-			String imageFile = "C:/sync/Capture.jpg";
+            String imageFile = "src/main/webapp/resources/images/customer_logo.png";
 			ImageData data = ImageDataFactory.create(imageFile);
 			// Creating an Image object
 			Image img = new Image(data);
 
-			Header headerHandler = new Header(img, "Tenant electrical summary report");
+			Header headerHandler = new Header(img, "Tenant Electrical Summary Report");
 			Footer footerHandler = new Footer();
 
 			pdfDoc.addEventHandler(PdfDocumentEvent.START_PAGE, headerHandler);
@@ -145,25 +152,40 @@ public class GenerateTenantSummaryPdfReport {
 			Cell cell = new Cell(1, 3).add(new Paragraph("Table:" + " from: " + dFormat.format(fromDate) + " to: "+ dFormat.format(toDate)));
 			cell.setTextAlignment(TextAlignment.CENTER);
 			cell.setPadding(5);
+			cell.setFont(calibriRegular);
 			cell.setBackgroundColor(new DeviceRgb(28, 200, 138));
 			table.addCell(cell);
 
-			String[] header = { "Timestamp", "Meter reading", "Usage"};
+			String[] header = { "Timestamp", "Meter Reading", "Usage"};
 
 			for (String head : header) {
 				Cell cellx = new Cell().add(new Paragraph(head));
 				//cellx.setBold();
-				cellx.setFont(bold);
+				cellx.setFont(calibriRegular);
 				cellx.setTextAlignment(TextAlignment.CENTER);
 				table.addCell(cellx);
 			}
 			
 			for (MeterExtended meterLoop : listDailyUsage) {
-				table.addCell(dFormat.format(meterLoop.getTimeStamp()));
-				table.addCell(df2.format(meterLoop.getUseage())+" "+meterLoop.getExt());
-				table.addCell(df2.format(meterLoop.getValue())+" "+meterLoop.getExt());
+				Cell cellx = new Cell().add(new Paragraph(dFormat.format(meterLoop.getTimeStamp())));
+				cellx.setFont(calibriRegular);
+				cellx.setPadding(0f);
+				cellx.setTextAlignment(TextAlignment.CENTER);
+				table.addCell(cellx);
 				
-				dataset4.addValue( meterLoop.getUseage() , efl.equals("Ground") ? "Com area" : efl+" Office" , dFormat2.format(meterLoop.getTimeStamp()) );
+				cellx = new Cell().add(new Paragraph(df2.format(meterLoop.getValue())+" "+meterLoop.getExt()));
+				cellx.setFont(calibriRegular);
+				cellx.setPadding(0f);
+				cellx.setTextAlignment(TextAlignment.CENTER);
+				table.addCell(cellx);
+				
+				cellx = new Cell().add(new Paragraph(df2.format(meterLoop.getUseage())+" "+meterLoop.getExt()));
+				cellx.setFont(calibriRegular);
+				cellx.setPadding(0f);
+				cellx.setTextAlignment(TextAlignment.CENTER);
+				table.addCell(cellx);
+				
+				dataset4.addValue( meterLoop.getUseage() , efl.equals("Ground") ? "Com Area" : efl+" Office" , dFormat2.format(meterLoop.getTimeStamp()) );
 			}
         
 	        
@@ -175,7 +197,7 @@ public class GenerateTenantSummaryPdfReport {
 	                true,true,false);
 	        
 	     // trick to change the default font of the chart
-	        chart4.setTitle(new TextTitle( (efl.equals("Ground") ? "Com area " : efl+" floor Office "+eof)+" daily usage sammary", new java.awt.Font("Serif", Font.BOLD, 14)));
+	        chart4.setTitle(new TextTitle( (efl.equals("Ground") ? "Com Area " : efl+" Floor Office "+eof)+" Daily Usage Summary", new java.awt.Font("Serif", Font.PLAIN, 14)));
 	        chart4.setBackgroundPaint(Color.white);
 	        
 	        CategoryPlot plot2 = (CategoryPlot) chart4.getPlot();
@@ -227,15 +249,18 @@ public class GenerateTenantSummaryPdfReport {
 			Document doc = new Document(pdfDoc, new PageSize(595, 842));
 			doc.setMargins(70, 20, 25, 20);
 			
-			PdfFont bold = PdfFontFactory.createFont(FontConstants.HELVETICA_BOLD);
+			FontProgram fontProgram = FontProgramFactory.createFont(Constants.CALIBRI_REGULAR);
+            PdfFont calibriRegular = PdfFontFactory.createFont(fontProgram, PdfEncodings.WINANSI, true);
+            PdfFont calibriBold = PdfFontFactory.createFont(Constants.CALIBRI_BOLD, true);
+            PdfFont calibriItalic = PdfFontFactory.createFont(Constants.CALIBRI_ITALIC, true);
 			
 			// Creating an ImageData object
-			String imageFile = "C:/sync/Capture.jpg";
+            String imageFile = "src/main/webapp/resources/images/customer_logo.png";
 			ImageData data = ImageDataFactory.create(imageFile);
 			// Creating an Image object
 			Image img = new Image(data);
 
-			Header headerHandler = new Header(img, "Tenant air conditioning summary report");
+			Header headerHandler = new Header(img, "Tenant Air Conditioning Summary Report");
 			Footer footerHandler = new Footer();
 
 			pdfDoc.addEventHandler(PdfDocumentEvent.START_PAGE, headerHandler);
@@ -272,6 +297,7 @@ public class GenerateTenantSummaryPdfReport {
 			Cell cell = new Cell(1, 3).add(new Paragraph("Table:" + " from: " + dFormat.format(fromDate) + " to: "+ dFormat.format(toDate)));
 			cell.setTextAlignment(TextAlignment.CENTER);
 			cell.setPadding(5);
+			cell.setFont(calibriRegular);
 			cell.setBackgroundColor(new DeviceRgb(78, 115, 223));
 			table.addCell(cell);
 
@@ -280,15 +306,29 @@ public class GenerateTenantSummaryPdfReport {
 			for (String head : header) {
 				Cell cellx = new Cell().add(new Paragraph(head));
 				//cellx.setBold();
-				cellx.setFont(bold);
+				cellx.setFont(calibriRegular);
 				cellx.setTextAlignment(TextAlignment.CENTER);
 				table.addCell(cellx);
 			}
 			
 			for (MeterExtended meterLoop : listDailyUsage) {
-				table.addCell(dFormat.format(meterLoop.getTimeStamp()));
-				table.addCell(df2.format(meterLoop.getUseage())+" "+meterLoop.getExt());
-				table.addCell(df2.format(meterLoop.getValue())+" "+meterLoop.getExt());
+				Cell cellx = new Cell().add(new Paragraph(dFormat.format(meterLoop.getTimeStamp())));
+				cellx.setFont(calibriRegular);
+				cellx.setPadding(0f);
+				cellx.setTextAlignment(TextAlignment.CENTER);
+				table.addCell(cellx);
+				
+				cellx = new Cell().add(new Paragraph(df2.format(meterLoop.getValue())+" "+meterLoop.getExt()));
+				cellx.setFont(calibriRegular);
+				cellx.setPadding(0f);
+				cellx.setTextAlignment(TextAlignment.CENTER);
+				table.addCell(cellx);
+				
+				cellx = new Cell().add(new Paragraph(df2.format(meterLoop.getUseage())+" "+meterLoop.getExt()));
+				cellx.setFont(calibriRegular);
+				cellx.setPadding(0f);
+				cellx.setTextAlignment(TextAlignment.CENTER);
+				table.addCell(cellx);
 				
 				dataset4.addValue( meterLoop.getUseage() , afl.equals("Ground") ? "Com area " + (meter-1) : afl+" Office" , dFormat2.format(meterLoop.getTimeStamp()) );
 			}
@@ -302,7 +342,7 @@ public class GenerateTenantSummaryPdfReport {
 	                true,true,false);
 	        
 	     // trick to change the default font of the chart
-	        chart4.setTitle(new TextTitle((afl.equals("Ground") ? "Com area BTU:" + (meter-1) : afl+" floor Office "+aof)+" daily usage sammary", new java.awt.Font("Serif", Font.BOLD, 14)));
+	        chart4.setTitle(new TextTitle((afl.equals("Ground") ? "Com Area BTU:" + (meter-1) : afl+" Floor Office "+aof)+" Daily Usage Summary", new java.awt.Font("Serif", Font.PLAIN, 14)));
 	        chart4.setBackgroundPaint(Color.white);
 	        
 	        CategoryPlot plot2 = (CategoryPlot) chart4.getPlot();
@@ -369,7 +409,7 @@ public class GenerateTenantSummaryPdfReport {
 			img.setMargins(10, 10, 10, 20);
 			canvas.add(img);
 			// Write text at position
-			canvas.showTextAligned(header, pageSize.getWidth() / 2, pageSize.getTop() - 50,
+			canvas.showTextAligned(header, (pageSize.getWidth() / 2)+50f, pageSize.getTop() - 50,
 					TextAlignment.CENTER);
 			canvas.close();
 		}

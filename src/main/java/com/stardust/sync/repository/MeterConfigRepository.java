@@ -8,5 +8,7 @@ import com.stardust.sync.model.MeterConfiguration;
 
 public interface MeterConfigRepository extends JpaRepository<MeterConfiguration, String> {
 	
+	MeterConfiguration findTopByIdAndUnitAndMeterAndExt(String id, String unit, int meter, String ext);
+
 	List<MeterConfiguration> findAllByIdAndUnit(String id, String unit);
 }

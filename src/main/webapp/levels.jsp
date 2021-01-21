@@ -26,35 +26,6 @@
   <link href="${contextPath}/resources/css/sb-admin-2.css" rel="stylesheet">
   <link rel="stylesheet" href="${contextPath}/resources/Modules/iziToast/css/iziToast.min.css">
 <script src="${contextPath}/resources/Modules/iziToast/js/iziToast.min.js" type="text/javascript"></script>
-<script>
-	function startTime() {
-		var days = [ 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday',
-				'Friday', 'Saturday' ];
-		var months = [ 'January', 'February', 'March', 'April', 'May', 'June',
-				'July', 'August', 'September', 'October', 'November',
-				'December' ];
-
-		var today = new Date();
-		var day = days[today.getDay()];
-		var month = months[today.getMonth()];
-		var year = today.getFullYear();
-		var h = today.getHours();
-		var m = today.getMinutes();
-		var s = today.getSeconds();
-		m = checkTime(m);
-		s = checkTime(s);
-		document.getElementById('dateTime').innerHTML = day + ", " + month + " "
-				+ year + " - " + h + ":" + m + ":" + s;
-		var t = setTimeout(startTime, 500);
-	}
-	function checkTime(i) {
-		if (i < 10) {
-			i = "0" + i
-		}
-		; // add zero in front of numbers < 10
-		return i;
-	}
-</script>
 <script type="text/javascript">
 	var contextPath = "${contextPath}";
 </script>
@@ -131,9 +102,9 @@ transform:scale(1.05);
         <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
           <div class="bg-white py-2 collapse-inner rounded">
             <h6 class="collapse-header">Report Explorer:</h6>
-            <a class="collapse-item" href="${contextPath}/reports?id=dailyuseage"><i class="fas fa-fw fa-table"></i>&nbsp&nbspDaily usage</a>
-            <a class="collapse-item" href="${contextPath}/reports?id=customeruseage"><i class="fas fa-fw fa-table"></i>&nbsp&nbspTenant summary</a>
-            <a class="collapse-item" href="${contextPath}/reports?id=facilityuseage"><i class="fas fa-fw fa-table"></i>&nbsp&nbspFacility summary</a>
+            <a class="collapse-item" href="${contextPath}/reports?id=dailyuseage"><i class="fas fa-fw fa-table"></i>&nbsp&nbspDaily Usage</a>
+            <a class="collapse-item" href="${contextPath}/reports?id=customeruseage"><i class="fas fa-fw fa-table"></i>&nbsp&nbspTenant Summary</a>
+            <a class="collapse-item" href="${contextPath}/reports?id=facilityuseage"><i class="fas fa-fw fa-table"></i>&nbsp&nbspFacility Summary</a>
           </div>
         </div>
       </li>
@@ -144,17 +115,17 @@ transform:scale(1.05);
           <i class="fas fa-fw fa-dollar-sign"></i>
           <span>Billing</span></a>
       </li>
-      <security:authorize access="hasRole('ROLE_SUPERADMIN')">
+      <security:authorize access="hasAnyRole('ROLE_SUPERADMIN', 'ROLE_ADMIN')">
 						
 
 				<!-- Divider -->
 				<hr class="sidebar-divider">
 	
 				<!-- Heading -->
-				<div class="sidebar-heading">Settings</div>
+				<div class="sidebar-heading">System</div>
 				<!-- Nav Item - Settings -->
-				<li class="nav-item"><a class="nav-link" href="#"> <i
-						class="fas fa-fw fa-tools"></i> <span>System</span></a></li>
+				<li class="nav-item"><a class="nav-link" href="${contextPath}/settings"> <i
+						class="fas fa-fw fa-tools"></i> <span>Settings</span></a></li>
 					
 			</security:authorize>
 
@@ -220,7 +191,7 @@ transform:scale(1.05);
             <li class="nav-item dropdown no-arrow">
               <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <span class="mr-2 d-none d-lg-inline text-gray-600 small">${pageContext.request.userPrincipal.name}</span>
-                <img class="img-profile rounded-circle" src="${contextPath}/resources/img/user.png">
+                <div id="avatar"></div>
               </a>
               <!-- Dropdown - User Information -->
               <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
@@ -255,7 +226,7 @@ transform:scale(1.05);
 			<div class="col-xl-2 col-md-6 mb-4">
           <!-- Page Heading -->
           <div class="d-sm-flex align-items-center mb-4">
-            <h1 class="h3 mb-0 text-gray-800">${id} floor</h1>
+            <h1 class="h3 mb-0 text-gray-800">${id} Floor</h1>
           </div>
           </div>
           <div class="col-xl-4 col-md-6 mb-4">
@@ -383,7 +354,7 @@ transform:scale(1.05);
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
           <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">×</span>
+            <span aria-hidden="true">&times;</span>
           </button>
         </div>
         <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>

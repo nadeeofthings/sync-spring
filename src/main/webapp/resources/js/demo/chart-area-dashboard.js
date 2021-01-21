@@ -185,10 +185,11 @@ var getElecData = function(date,limit) {
 	elecChart.data.datasets[1].data = [];
 	
   $.ajax({
-    url: 'http://localhost:8080/tebbiq/rest/buildingDailyUsage?ext=kWh&limit='+limit+'&start='+timestamp+'',
+    url:  contextPath+'/rest/buildingDailyUsage?ext=kWh&limit='+limit+'&start='+timestamp+'',
+    dataType: 'json',
     success: function(data) {
       // process your data to pull out what you plan to use to update the chart
-      // e.g. new label and a new data point
+
     	data.forEach(function(object) {
     	      // add new label and data point to chart's underlying data structures
     		var days = [ 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday',
@@ -202,13 +203,18 @@ var getElecData = function(date,limit) {
     		elecChart.data.labels.unshift(moment(newDate).format("DD/MM"));
     		elecChart.data.datasets[0].data.unshift(object.value);
         });
+    },
+    error: function(jqXHR, exception) {
+        window.location.href = contextPath;
     }
   });
   $.ajax({
-	    url: 'http://localhost:8080/tebbiq/rest/buildingDailyUsage?ext=BTU&limit='+limit+'&start='+timestamp+'',
+	    url:  contextPath+'/rest/buildingDailyUsage?ext=BTU&limit='+limit+'&start='+timestamp+'',
+	    dataType: 'json',
 	    success: function(data) {
 	      // process your data to pull out what you plan to use to update the chart
 	      // e.g. new label and a new data point
+
 	    	data.forEach(function(object) {
 	    	      // add new label and data point to chart's underlying data structures
 	    		var days = [ 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday',
@@ -224,6 +230,9 @@ var getElecData = function(date,limit) {
 	      
 	        //re-render the chart
 	    	elecChart.update();
+	    },
+	    error: function(jqXHR, exception) {
+	        window.location.href = contextPath;
 	    }
 	  });
 };
@@ -242,7 +251,8 @@ var getAirconData = function(date,limit) {
 };
 var getPrevData = function() {
   $.ajax({
-    url: 'http://localhost:8080/tebbiq/rest/prevMonthTotal',
+    url:  contextPath+'/rest/prevMonthTotal',
+    dataType: 'json',
     success: function(data) {
       // process your data to pull out what you plan to use to update the chart
       // e.g. new label and a new data point
@@ -270,6 +280,9 @@ var getPrevData = function() {
        //prevAirMonthValue
       // currAirMonth
        //currAirMonthValue
+    },
+    error: function(jqXHR, exception) {
+        window.location.href = contextPath;
     }
   });
 };
@@ -277,7 +290,8 @@ var getPrevData = function() {
 //logic to get new data
 var getCurrData = function() {
   $.ajax({
-    url: 'http://localhost:8080/tebbiq/rest/currMonthTotal',
+    url:  contextPath+'/rest/currMonthTotal',
+    dataType: 'json',
     success: function(data) {
       // process your data to pull out what you plan to use to update the chart
       // e.g. new label and a new data point
@@ -305,6 +319,9 @@ var getCurrData = function() {
        //prevAirMonthValue
       // currAirMonth
        //currAirMonthValue
+    },
+    error: function(jqXHR, exception) {
+        window.location.href = contextPath;
     }
   });
 };

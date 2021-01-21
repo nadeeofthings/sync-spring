@@ -1,6 +1,9 @@
 package com.stardust.sync.service;
 
 import java.util.List;
+import java.util.Map;
+
+import org.springframework.security.core.Authentication;
 
 import com.stardust.sync.model.User;
 
@@ -18,4 +21,15 @@ public interface UserService {
 	long getAlertCountByUsername(String username);
 
 	void resetAlertCountByUsername(String name);
+
+	List<User> getUsers(Authentication authentication);
+
+	User getUser(Authentication authentication, long id);
+
+	Map<String, String> getInitials(Authentication authentication);
+
+	User rank(Authentication authentication, String uname, String role);
+
+	User enable(Authentication authentication, String uname, String flag);
+	
 }

@@ -28,7 +28,7 @@
       <div class="card-body p-0">
         <!-- Nested Row within Card Body -->
         <div class="row">
-          <div class="col-lg-5 d-none d-lg-block bg-register-image"></div>
+          <div class="col-lg-5 d-none d-lg-block bg-register-image float-right"></div>
           <div class="col-lg-7">
             <div class="p-5">
               <div class="text-center">
@@ -47,34 +47,36 @@
                   </spring:bind>
                   </div>
                 </div>
-                <div class="form-group">
-                  <spring:bind path="department">
+                <div class="form-group row">
+                  <div class="col-sm-6 mb-3 mb-sm-0">
+                    <spring:bind path="department">
                   	<form:input type="text" path="department"  class="form-control form-control-user"  placeholder="Department"></form:input>
+                  	</spring:bind>
+                  </div>
+                  <div class="col-sm-6">
+                  <spring:bind path="phone">
+                    <form:input type="text" path="phone" class="form-control form-control-user ${status.error ? 'is-invalid' : ''}"  placeholder="Phone Number"></form:input>
+                    <form:errors path="phone" class="invalid-feedback"></form:errors>
                   </spring:bind>
+                  </div>
                 </div>
                 <div class="form-group">
                   <spring:bind path="username">
-                  <div class="form-group ${status.error ? 'has-error' : ''}">
-                  	<form:input type="text" path="username"  class="form-control form-control-user" placeholder="Email Address"></form:input>
-                  	<form:errors path="username"></form:errors>
-                  </div>
+                  	<form:input type="text" path="username"  class="form-control form-control-user ${status.error ? 'is-invalid' : ''}" placeholder="Email Address"></form:input>
+                  	<form:errors path="username" class="invalid-feedback"></form:errors>
                   </spring:bind>
                 </div>
                 <div class="form-group row">
                   <div class="col-sm-6 mb-3 mb-sm-0">
                   <spring:bind path="password">
-                  <div class="form-group ${status.error ? 'has-error' : ''}">
-                    <form:input type="password" path="password" class="form-control form-control-user" placeholder="Password"></form:input>
-                    <form:errors path="password"></form:errors>
-                                    </div>
+                    <form:input type="password" path="password" class="form-control form-control-user ${status.error ? 'is-invalid' : ''}" placeholder="Password"></form:input>
+                    <form:errors path="password" class="invalid-feedback"></form:errors>
             </spring:bind>
                   </div>
                   <div class="col-sm-6">
                               <spring:bind path="passwordConfirm">
-                <div class="form-group ${status.error ? 'has-error' : ''}">
-                    <form:input type="password" path="passwordConfirm" placeholder="Confirm your password" class="form-control form-control-user"></form:input>
-                     <form:errors path="passwordConfirm"></form:errors>
-                                  </div>
+                    <form:input type="password" path="passwordConfirm" placeholder="Confirm your password" class="form-control form-control-user ${status.error ? 'is-invalid' : ''}"></form:input>
+                     <form:errors path="passwordConfirm" class="invalid-feedback"></form:errors>
             </spring:bind>
                   </div>
                 </div>
@@ -104,6 +106,6 @@
   <script src="${contextPath}/resources/vendor/jquery-easing/jquery.easing.min.js"></script>
 
   <!-- Custom scripts for all pages-->
-  <script src="${contextPath}/resources/js/sb-admin-2.min.js"></script>
+  <script src="${contextPath}/resources/js/sb-admin-2.js"></script>
   </body>
 </html>

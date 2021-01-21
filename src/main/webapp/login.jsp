@@ -37,7 +37,7 @@
           <div class="card-body p-0">
             <!-- Nested Row within Card Body -->
             <div class="row">
-              <div class="col-lg-6 d-none d-lg-block bg-login-image"></div>
+              <div class="col-lg-6 d-none d-lg-block bg-login-image float-right"></div>
               <div class="col-lg-6">
                 <div class="p-5">
                   <div class="text-center">
@@ -48,10 +48,10 @@
                       <input type="text" class="form-control form-control-user" name="username" aria-describedby="emailHelp" placeholder="Enter Email Address...">
                     </div>
                     <div class="form-group">
-                      <input type="password" class="form-control form-control-user" name="password" placeholder="Password">
+                      <input type="password" class="form-control form-control-user ${(error!=null) ? 'is-invalid' : ''}" name="password" placeholder="Password">
+                      <div class="invalid-feedback text-center">${error}</div>
                     </div>
                     <div class="form-group">
-                      <p class="text-center text-danger">${error}</p>
                       <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                     </div>
                     <div class="form-group">
@@ -61,8 +61,6 @@
                       </div>
                     </div>
                     <input type="submit" value="Login" class="btn btn-success btn-user btn-block">
-                    
-                    
                   </form>
                   <hr>
                   <!--  <div class="text-center">
@@ -91,7 +89,7 @@
   <script src="${contextPath}/resources/vendor/jquery-easing/jquery.easing.min.js"></script>
 
   <!-- Custom scripts for all pages-->
-  <script src="${contextPath}/resources/js/sb-admin-2.min.js"></script>
+  <script src="${contextPath}/resources/js/sb-admin-2.js"></script>
 
 </body>
 

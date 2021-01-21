@@ -1,15 +1,23 @@
 package com.stardust.sync.service;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.annotation.PostConstruct;
+import javax.persistence.EntityNotFoundException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.stardust.sync.core.Constants;
 import com.stardust.sync.model.Configuration;
 import com.stardust.sync.repository.ConfigRepository;
@@ -65,7 +73,17 @@ public class ConfigurationService {
     	
     	return configurationList.get(key);
     }
+    
+    public Configuration findConfiguration(String key) {
+    	return configRepository.findById(key)
+        .orElseThrow(() -> new EntityNotFoundException());
 
+     }
+    
+    
+    public List<Configuration> getAllConfigurations() {
+     	return configRepository.findAll();
+     }
     /**
      * Checks if the mandatory parameters are exists in Database
      */
@@ -92,4 +110,34 @@ public class ConfigurationService {
         }
 
     }
+
+	public int setConfigurations(Authentication authentication, String data) {
+		if((authentication.getAuthorities().toString().contains("ROLE_SUPERADMIN")||authentication.getAuthorities().toString().contains("ROLE_ADMIN"))) {
+			ObjectMapper mapper = new ObjectMapper();
+			try {
+				String decoded = URLDecoder.decode(data, "UTF-8");
+				@SuppressWarnings("unchecked")
+				HashMap<String,Object> result = mapper.readValue(decoded, HashMap.class);
+				String peakStart = (String)result.get(Constants.CONFIG_KEY_PEAK_START_CONFIG);
+				String peakEnd = (String)result.get(Constants.CONFIG_KEY_PEAK_END_CONFIG);
+				Pattern pattern = Pattern.compile("([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]");
+				if(pattern.matcher(peakStart).matches() && pattern.matcher(peakEnd).matches()) {
+					Configuration configPeakStart = findConfiguration(Constants.CONFIG_KEY_PEAK_START_CONFIG);
+					configPeakStart.setConfigValue(peakStart);
+					Configuration configPeakEnd = findConfiguration(Constants.CONFIG_KEY_PEAK_END_CONFIG);
+					configPeakEnd.setConfigValue(peakEnd);
+					configRepository.save(configPeakStart);
+					configRepository.save(configPeakEnd);
+				}
+				
+			} catch (JsonProcessingException | UnsupportedEncodingException e) {
+				// TODO Auto-generated catch block
+				LOGGER.error("Error parsing json string "+e);
+			}
+			return 1;
+		}
+		
+		return 0;
+	}
+
 }

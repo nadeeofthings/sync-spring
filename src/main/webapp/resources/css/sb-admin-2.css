@@ -2074,7 +2074,11 @@ pre code {
   opacity: 1;
 }
 
-.form-control:disabled, .form-control[readonly] {
+.form-control[readonly] {
+  
+}
+
+.form-control:disabled {
   background-color: #eaecf4;
   opacity: 1;
 }
@@ -8304,6 +8308,12 @@ button.bg-dark:focus {
   z-index: 1030;
 }
 
+.fixed-topz {
+  height: 90vh; /* %-height of the viewport */
+    position: fixed;
+    overflow-y: scroll;
+}
+
 .fixed-bottom {
   position: fixed;
   right: 0;
@@ -11655,13 +11665,13 @@ a:focus {
 
 .bg-register-image {
   background: url("../img/SNK.png");
-  background-position: center;
+  background-position: left;
   background-size: cover;
 }
 
 .bg-password-image {
   background: url("../img/SNK.png");
-  background-position: center;
+  background-position: left;
   background-size: cover;
 }
 
@@ -12037,7 +12047,48 @@ form.user .btn-user {
     clip: rect(81px, 9999px, 41px, 0);
   }
 }
-
+.avatar-circle-40 {
+  width: 40px;
+  height: 40px;
+  text-align: center;
+  border-radius: 50%;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+   margin:0px auto;
+}
+.initials-40 {
+  position: relative;
+  top: 10px; /* 25% of parent */
+  left:0px;
+  font-size: 20px; /* 50% of parent */
+  line-height: 20px; /* 50% of parent */
+  color: #fff;
+  font-family: "Raleway";
+  text-transform: uppercase;
+}
+.avatar-circle-64 {
+  width: 64px;
+  height: 64px;
+  text-align: center;
+  border-radius: 50%;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  margin:0px auto;
+}
+.initials-64 {
+  position: relative;
+  top: 16px; /* 25% of parent */
+  left:0px;
+  font-size: 32px; /* 50% of parent */
+  line-height: 32px; /* 50% of parent */
+  color: #fff;
+  font-family: "Raleway";
+  text-transform: uppercase;
+}
+.slimSelect{
+	height: 28px;
+    padding: 1px;
+}
 .error:before {
   content: attr(data-text);
   position: absolute;

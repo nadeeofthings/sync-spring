@@ -29,6 +29,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.itextpdf.io.font.FontConstants;
+import com.itextpdf.io.font.FontProgram;
+import com.itextpdf.io.font.FontProgramFactory;
+import com.itextpdf.io.font.PdfEncodings;
 import com.itextpdf.io.image.ImageData;
 import com.itextpdf.io.image.ImageDataFactory;
 import com.itextpdf.kernel.color.DeviceRgb;
@@ -54,6 +57,7 @@ import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.element.Table;
 import com.itextpdf.layout.property.HorizontalAlignment;
 import com.itextpdf.layout.property.TextAlignment;
+import com.stardust.sync.core.Constants;
 import com.stardust.sync.model.Meter;
 import com.stardust.sync.model.MeterExtended;
 import com.stardust.sync.service.MeterService;
@@ -82,15 +86,18 @@ public class GenerateFacilitySummaryPdfReport {
 			Document doc = new Document(pdfDoc, new PageSize(595, 842));
 			doc.setMargins(70, 20, 25, 20);
 			
-			PdfFont bold = PdfFontFactory.createFont(FontConstants.HELVETICA_BOLD);
+			FontProgram fontProgram = FontProgramFactory.createFont(Constants.CALIBRI_REGULAR);
+            PdfFont calibriRegular = PdfFontFactory.createFont(fontProgram, PdfEncodings.WINANSI, true);
+            PdfFont calibriBold = PdfFontFactory.createFont(Constants.CALIBRI_BOLD, true);
+            PdfFont calibriItalic = PdfFontFactory.createFont(Constants.CALIBRI_ITALIC, true);
 			
 			// Creating an ImageData object
-			String imageFile = "C:/sync/Capture.jpg";
+			String imageFile = "src/main/webapp/resources/images/customer_logo.png";
 			ImageData data = ImageDataFactory.create(imageFile);
 			// Creating an Image object
 			Image img = new Image(data);
 
-			Header headerHandler = new Header(img, "Facility summary report");
+			Header headerHandler = new Header(img, "Facility Summary Report");
 			Footer footerHandler = new Footer();
 
 			pdfDoc.addEventHandler(PdfDocumentEvent.START_PAGE, headerHandler);
@@ -106,8 +113,6 @@ public class GenerateFacilitySummaryPdfReport {
 			int limit = (int) (((toDate.getTime()-fromDate.getTime())/86400000L) < 93 ? 
 					(toDate.getTime()-fromDate.getTime())/86400000L : 93);
 			
-			List<MeterExtended> listDailyUsage = null;
-			
 			List<Meter> listBuildingDailyUsagekWh = meterService.listBuildingDailyUsage("kWh", toDate, limit);
 			List<Meter> listBuildingDailyUsageBTU = meterService.listBuildingDailyUsage("BTU", toDate, limit);
 			
@@ -122,23 +127,38 @@ public class GenerateFacilitySummaryPdfReport {
 			Cell cell = new Cell(1, 3).add(new Paragraph("Table:" + " from: " + dFormat.format(fromDate) + " to: "+ dFormat.format(toDate)));
 			cell.setTextAlignment(TextAlignment.CENTER);
 			cell.setPadding(5);
+			cell.setFont(calibriRegular);
 			cell.setBackgroundColor(new DeviceRgb(246, 194, 62));
 			table.addCell(cell);
 
-			String[] header = { "Timestamp", "Electricity usage", "Aircon usage"};
+			String[] header = { "Timestamp", "Electricity Usage", "Aircon Usage"};
 
 			for (String head : header) {
 				Cell cellx = new Cell().add(new Paragraph(head));
 				//cellx.setBold();
-				cellx.setFont(bold);
+				cellx.setFont(calibriRegular);
 				cellx.setTextAlignment(TextAlignment.CENTER);
 				table.addCell(cellx);
 			}
 			
 			for (int counter = 0 ; counter < listBuildingDailyUsagekWh.size(); counter++) {
-				table.addCell(dFormat.format(listBuildingDailyUsagekWh.get(counter).getTimeStamp()));
-				table.addCell(df2.format(listBuildingDailyUsagekWh.get(counter).getValue())+" "+listBuildingDailyUsagekWh.get(counter).getExt());
-				table.addCell(df2.format(listBuildingDailyUsageBTU.get(counter).getValue())+" "+listBuildingDailyUsageBTU.get(counter).getExt());
+				Cell cellx = new Cell().add(new Paragraph(dFormat.format(listBuildingDailyUsagekWh.get(counter).getTimeStamp())));
+				cellx.setFont(calibriRegular);
+				cellx.setPadding(0f);
+				cellx.setTextAlignment(TextAlignment.CENTER);
+				table.addCell(cellx);
+				
+				cellx = new Cell().add(new Paragraph(df2.format(listBuildingDailyUsagekWh.get(counter).getValue())+" "+listBuildingDailyUsagekWh.get(counter).getExt()));
+				cellx.setFont(calibriRegular);
+				cellx.setPadding(0f);
+				cellx.setTextAlignment(TextAlignment.CENTER);
+				table.addCell(cellx);
+				
+				cellx = new Cell().add(new Paragraph(df2.format(listBuildingDailyUsageBTU.get(counter).getValue())+" "+listBuildingDailyUsageBTU.get(counter).getExt()));
+				cellx.setFont(calibriRegular);
+				cellx.setPadding(0f);
+				cellx.setTextAlignment(TextAlignment.CENTER);
+				table.addCell(cellx);
 				
 				dataset4.addValue( listBuildingDailyUsagekWh.get(counter).getValue() ,"Electricity" , dFormat2.format(listBuildingDailyUsagekWh.get(counter).getTimeStamp()) );
 				dataset4.addValue( listBuildingDailyUsageBTU.get(counter).getValue()/1000 ,"Air Conditioning" , dFormat2.format(listBuildingDailyUsageBTU.get(counter).getTimeStamp()) );
@@ -153,7 +173,7 @@ public class GenerateFacilitySummaryPdfReport {
 	                true,true,false);
 	        
 	     // trick to change the default font of the chart
-	        chart4.setTitle(new TextTitle("Facility energy usage", new java.awt.Font("Serif", Font.BOLD, 14)));
+	        chart4.setTitle(new TextTitle("Facility Energy Usage", new java.awt.Font("Serif", Font.PLAIN, 14)));
 	        chart4.setBackgroundPaint(Color.white);
 	        
 	        CategoryPlot plot2 = (CategoryPlot) chart4.getPlot();
@@ -220,7 +240,7 @@ public class GenerateFacilitySummaryPdfReport {
 			img.setMargins(10, 10, 10, 20);
 			canvas.add(img);
 			// Write text at position
-			canvas.showTextAligned(header, pageSize.getWidth() / 2, pageSize.getTop() - 50,
+			canvas.showTextAligned(header, (pageSize.getWidth() / 2)+50f, pageSize.getTop() - 50,
 					TextAlignment.CENTER);
 			canvas.close();
 		}

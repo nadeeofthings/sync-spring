@@ -61,7 +61,7 @@ public class SchedulerService implements SchedulingConfigurer {
                 // Do not put @Scheduled annotation above this method, we don't need it anymore.
             	freshRun = true;
                 configurationService.loadConfigurations();
-            	alertService.success("Meter readings recorded successfully");
+            	//alertService.success("Meter readings recorded successfully");
                 
             }
         }, new Trigger() {
@@ -83,7 +83,7 @@ public class SchedulerService implements SchedulingConfigurer {
             	if(freshRun) {
 	            	LOG.info("Peak time capture");
 	            	meterService.capturePeakReadings();
-	            	alertService.success("Meter readings recorded successfully");
+	            	alertService.success("Peak meter readings recorded successfully");
 	            	freshRun=false;
 	            }
             }
@@ -117,8 +117,8 @@ public class SchedulerService implements SchedulingConfigurer {
             	// Do not put @Scheduled annotation above this method, we don't need it anymore.
                 if(freshRun) {
 	            	LOG.info("Peak time end capture");
-	                meterService.capturePeakReadings();
-	            	alertService.success("Meter readings recorded successfully");
+	                meterService.captureOffPeakReadings();
+	            	alertService.success("Off-peak meter readings recorded successfully");
 	                freshRun=false;
                 }
             }

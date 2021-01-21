@@ -1,0 +1,305 @@
+/* The switch - the box around the slider */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 44.12px;
+  height: 25px;
+  float:left;
+}
+
+/* Hide default HTML checkbox */
+.switch input {display:none;}
+
+/* The slider */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 4px;
+  left: 0;
+  right: 0;
+  bottom: -4px;
+  background-color: #1cc88a;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+.slider2 {
+  position: absolute;
+  cursor: pointer;
+  top: 4px;
+  left: 0;
+  right: 0;
+  bottom: -4px;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+.even-larger-badge {
+    font-size: 0.9em;
+    font-weight: normal;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 17px;
+  width: 17px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider2:before {
+  position: absolute;
+  content: "";
+  height: 17px;
+  width: 17px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input.default:checked + .slider {
+  background-color: #444;
+}
+input.primary:checked + .slider2 {
+  background-color: #2196F3;
+}
+input.success:checked + .slider {
+  background-color: #8bc34a;
+}
+input.info:checked + .slider {
+  background-color: #3de0f5;
+}
+input.warning:checked + .slider {
+  background-color: #FFC107;
+}
+input.danger:checked + .slider {
+  background-color: #f44336;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+input.primary:focus + .slider2 {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(19px);
+  -ms-transform: translateX(19px);
+  transform: translateX(19px);
+}
+input.primary:checked + .slider2:before {
+  -webkit-transform: translateX(19px);
+  -ms-transform: translateX(19px);
+  transform: translateX(19px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+/* Rounded sliders */
+.slider2.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+.slider2.round:before {
+  border-radius: 50%;
+}
+
+ /*.bootstrap-tagsinput .tag {
+  background: #4e73df;
+  padding: 0.3rem 0.5rem;
+  margin-right: 2px;
+  color: white;
+  border-radius: 0.35rem;
+  line-height: 1.5;
+  font-size: 1rem;
+  font-weight: 400;
+  border: 1px solid transparent;
+  text-align: center;
+  vertical-align: middle;
+      display: inline-block;
+  
+}*/
+
+
+.tagjs {
+  display: inline-block;
+  padding: 0.3rem 0.5rem;
+  margin-right: 2px;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  border-radius: 0.35rem;
+  -webkit-transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tagjs {
+    -webkit-transition: none;
+    transition: none;
+  }
+}
+
+a.tagjs:hover, a.tagjs:focus {
+  text-decoration: none;
+}
+
+.tagjs:empty {
+  display: none;
+}
+
+.btn .tagjs {
+  position: relative;
+  top: -1px;
+}
+
+.tagjs-pill {
+  padding-right: 0.6em;
+  padding-left: 0.6em;
+  border-radius: 10rem;
+}
+
+.tagjs-primary {
+  color: #fff;
+  background-color: #4e73df;
+}
+
+a.tagjs-primary:hover, a.tagjs-primary:focus {
+  color: #fff;
+  background-color: #2653d4;
+}
+
+a.tagjs-primary:focus, a.tagjs-primary.focus {
+  outline: 0;
+  -webkit-box-shadow: 0 0 0 0.2rem rgba(78, 115, 223, 0.5);
+  box-shadow: 0 0 0 0.2rem rgba(78, 115, 223, 0.5);
+}
+
+.tagjs-secondary {
+  color: #fff;
+  background-color: #858796;
+}
+
+a.tagjs-secondary:hover, a.tagjs-secondary:focus {
+  color: #fff;
+  background-color: #6b6d7d;
+}
+
+a.tagjs-secondary:focus, a.tagjs-secondary.focus {
+  outline: 0;
+  -webkit-box-shadow: 0 0 0 0.2rem rgba(133, 135, 150, 0.5);
+  box-shadow: 0 0 0 0.2rem rgba(133, 135, 150, 0.5);
+}
+
+.tagjs-success {
+  color: #fff;
+  background-color: #1cc88a;
+}
+
+a.tagjs-success:hover, a.tagjs-success:focus {
+  color: #fff;
+  background-color: #169b6b;
+}
+
+a.tagjs-success:focus, a.tagjs-success.focus {
+  outline: 0;
+  -webkit-box-shadow: 0 0 0 0.2rem rgba(28, 200, 138, 0.5);
+  box-shadow: 0 0 0 0.2rem rgba(28, 200, 138, 0.5);
+}
+
+.tagjs-info {
+  color: #fff;
+  background-color: #36b9cc;
+}
+
+a.tagjs-info:hover, a.tagjs-info:focus {
+  color: #fff;
+  background-color: #2a96a5;
+}
+
+a.tagjs-info:focus, a.tagjs-info.focus {
+  outline: 0;
+  -webkit-box-shadow: 0 0 0 0.2rem rgba(54, 185, 204, 0.5);
+  box-shadow: 0 0 0 0.2rem rgba(54, 185, 204, 0.5);
+}
+
+.tagjs-warning {
+  color: #fff;
+  background-color: #f6c23e;
+}
+
+a.tagjs-warning:hover, a.tagjs-warning:focus {
+  color: #fff;
+  background-color: #f4b30d;
+}
+
+a.tagjs-warning:focus, a.tagjs-warning.focus {
+  outline: 0;
+  -webkit-box-shadow: 0 0 0 0.2rem rgba(246, 194, 62, 0.5);
+  box-shadow: 0 0 0 0.2rem rgba(246, 194, 62, 0.5);
+}
+
+.tagjs-danger {
+  color: #fff;
+  background-color: #e74a3b;
+}
+
+a.tagjs-danger:hover, a.tagjs-danger:focus {
+  color: #fff;
+  background-color: #d52a1a;
+}
+
+a.tagjs-danger:focus, a.tagjs-danger.focus {
+  outline: 0;
+  -webkit-box-shadow: 0 0 0 0.2rem rgba(231, 74, 59, 0.5);
+  box-shadow: 0 0 0 0.2rem rgba(231, 74, 59, 0.5);
+}
+
+.tagjs-light {
+  color: #3a3b45;
+  background-color: #f8f9fc;
+}
+
+a.tagjs-light:hover, a.tagjs-light:focus {
+  color: #3a3b45;
+  background-color: #d4daed;
+}
+
+a.tagjs-light:focus, a.tagjs-light.focus {
+  outline: 0;
+  -webkit-box-shadow: 0 0 0 0.2rem rgba(248, 249, 252, 0.5);
+  box-shadow: 0 0 0 0.2rem rgba(248, 249, 252, 0.5);
+}
+
+.tagjs-dark {
+  color: #fff;
+  background-color: #5a5c69;
+}
+
+a.tagjs-dark:hover, a.tagjs-dark:focus {
+  color: #fff;
+  background-color: #42444e;
+}
+
+a.tagjs-dark:focus, a.tagjs-dark.focus {
+  outline: 0;
+  -webkit-box-shadow: 0 0 0 0.2rem rgba(90, 92, 105, 0.5);
+  box-shadow: 0 0 0 0.2rem rgba(90, 92, 105, 0.5);
+}

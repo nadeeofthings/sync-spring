@@ -20,49 +20,30 @@
   <title>TEBBIQ - Dashboard</title>
   <link rel="icon" href="${contextPath}/resources/img/iq_systems.ico" />
 
-  <!-- Custom fonts for this template-->
-  <link href="${contextPath}/resources/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
-  <link href="${contextPath}/resources/vendor/googleFonts/googleFonts.css" rel="stylesheet">
-  <link href="${contextPath}/resources/css/bootstrap-datepicker3.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="${contextPath}/resources/Modules/iziToast/css/iziToast.min.css">
-<script src="${contextPath}/resources/Modules/iziToast/js/iziToast.min.js" type="text/javascript"></script>
+<!-- Custom fonts for this template-->
+<link
+	href="${contextPath}/resources/vendor/datatables/dataTables.bootstrap4.min.css"
+	rel="stylesheet">
+<link
+	href="${contextPath}/resources/vendor/fontawesome-free/css/all.min.css"
+	rel="stylesheet" type="text/css">
+<link href="${contextPath}/resources/vendor/googleFonts/googleFonts.css"
+	rel="stylesheet">
+<link rel="stylesheet" href="${contextPath}/resources/Modules/iziToast/css/iziToast.min.css">
+<link rel="stylesheet" href="${contextPath}/resources/vendor/flatpickr/flatpickr.min.css">
 
-  <!-- Custom styles for this template-->
-  <link href="${contextPath}/resources/css/sb-admin-2.css" rel="stylesheet">
-  <script src="${contextPath}/resources/js/jquery.min.js" type="text/javascript"></script>
-    <script src="${contextPath}/resources/js/bootstrap-datepicker.min.js"></script>
-  <script src="${contextPath}/resources/js/billing.js" type="text/javascript"></script>
-  
-<script>
-	function startTime() {
-		var days = [ 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday',
-				'Friday', 'Saturday' ];
-		var months = [ 'January', 'February', 'March', 'April', 'May', 'June',
-				'July', 'August', 'September', 'October', 'November',
-				'December' ];
 
-		var today = new Date();
-		var day = days[today.getDay()];
-		var month = months[today.getMonth()];
-		var year = today.getFullYear();
-		var h = today.getHours();
-		var m = today.getMinutes();
-		var s = today.getSeconds();
-		m = checkTime(m);
-		s = checkTime(s);
-		document.getElementById('dateTime').innerHTML = day + ", " + month + " "
-				+ year + " - " + h + ":" + m + ":" + s;
-		var t = setTimeout(startTime, 500);
-	}
-	function checkTime(i) {
-		if (i < 10) {
-			i = "0" + i
-		}
-		; // add zero in front of numbers < 10
-		return i;
-	}
+
+
+<!-- Custom styles for this template-->
+<link href="${contextPath}/resources/css/sb-admin-2.css"
+	rel="stylesheet">
+	<link href="${contextPath}/resources/vendor/datatables/buttons.bootstrap4.min.css"
+	rel="stylesheet">
+	
+	<script type="text/javascript">
+	var contextPath = "${contextPath}";
 </script>
-
 <script type="text/javascript">
 var contextPath = "${contextPath}";
 </script>
@@ -134,9 +115,9 @@ transform:scale(1.05);
         <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
           <div class="bg-white py-2 collapse-inner rounded">
             <h6 class="collapse-header">Report Explorer:</h6>
-            <a class="collapse-item" href="${contextPath}/reports?id=dailyuseage"><i class="fas fa-fw fa-table"></i>&nbsp&nbspDaily usage</a>
-            <a class="collapse-item" href="${contextPath}/reports?id=customeruseage"><i class="fas fa-fw fa-table"></i>&nbsp&nbspTenant summary</a>
-            <a class="collapse-item" href="${contextPath}/reports?id=facilityuseage"><i class="fas fa-fw fa-table"></i>&nbsp&nbspFacility summary</a>
+            <a class="collapse-item" href="${contextPath}/reports?id=dailyuseage"><i class="fas fa-fw fa-table"></i>&nbsp&nbspDaily Usage</a>
+            <a class="collapse-item" href="${contextPath}/reports?id=customeruseage"><i class="fas fa-fw fa-table"></i>&nbsp&nbspTenant Summary</a>
+            <a class="collapse-item" href="${contextPath}/reports?id=facilityuseage"><i class="fas fa-fw fa-table"></i>&nbsp&nbspFacility Summary</a>
           </div>
         </div>
       </li>
@@ -147,17 +128,17 @@ transform:scale(1.05);
           <i class="fas fa-fw fa-dollar-sign"></i>
           <span>Billing</span></a>
       </li>
-      <security:authorize access="hasRole('ROLE_SUPERADMIN')">
+      <security:authorize access="hasAnyRole('ROLE_SUPERADMIN', 'ROLE_ADMIN')">
 						
 
 				<!-- Divider -->
 				<hr class="sidebar-divider">
 	
 				<!-- Heading -->
-				<div class="sidebar-heading">Settings</div>
+				<div class="sidebar-heading">System</div>
 				<!-- Nav Item - Settings -->
-				<li class="nav-item"><a class="nav-link" href="#"> <i
-						class="fas fa-fw fa-tools"></i> <span>System</span></a></li>
+				<li class="nav-item"><a class="nav-link" href="${contextPath}/settings"> <i
+						class="fas fa-fw fa-tools"></i> <span>Settings</span></a></li>
 					
 			</security:authorize>
 
@@ -223,7 +204,7 @@ transform:scale(1.05);
             <li class="nav-item dropdown no-arrow">
               <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <span class="mr-2 d-none d-lg-inline text-gray-600 small">${pageContext.request.userPrincipal.name}</span>
-                <img class="img-profile rounded-circle" src="${contextPath}/resources/img/user.png">
+                <div id="avatar"></div>
               </a>
               <!-- Dropdown - User Information -->
               <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
@@ -257,7 +238,7 @@ transform:scale(1.05);
         <div class="row">
         			<!-- Page Heading -->
           <div class="d-sm-flex align-items-center justify-content-between mb-4">
-		  	  	<h1 class="h3 mb-0 text-gray-800">Generate bill</h1>
+		  	  	<h1 class="h3 mb-0 text-gray-800">Generate Bill</h1>
           </div>
         </div>
         </div>
@@ -279,17 +260,16 @@ transform:scale(1.05);
 			  <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
 					<div class="card">
 					      <div class="card-body">
-					      <h1 class="h6 mb-0 text-gray-800">Electricity invoice wizard </h1>
+					      <h6 class="h6 mb-0 text-gray-800">Electricity Invoice Wizard </h6>
 					      <hr></hr>
 		                  <div class="row no-gutters align-items-center">
 		                  
-
 							<div class="container-fluid">
 								<div class="row">
 									<div class="col-md-6">
 										<div class="input-group mb-3">
 										  <select class="custom-select" id="EFL">
-										    <option selected value="Ground">Commercial area</option>
+										    <option selected value="Ground">Commercial Area</option>
 										    <option value="3rd">Third</option>
 										    <option value="4th">Fourth</option>
 										    <option value="5th">Fifth</option>
@@ -302,13 +282,10 @@ transform:scale(1.05);
 										
 										<div class="input-group date mb-3" id="dp1">
 										  <div class="input-group-prepend">
-										    <span class="input-group-text " id="inputGroup-sizing-default">From</span>
+										    <span class="input-group-text " id="inputGroup-sizing-default">Period</span>
 										  </div>
-										  <input id ="EFR" type="text"  class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default"></input>
-											<div class="input-group-append">
-										    <label class="input-group-text" for="inputGroupSelect02"><i class="far fa-calendar-alt"></i></label>
-										  </div>
-										   <div class="invalid-feedback">
+										  <input id ="EFR" type="text" class="form-control" aria-label="" aria-describedby="inputGroup-sizing-default"></input>
+											<div id="EFRERROR" class="invalid-feedback">
 									          Please fill this field.
 									        </div>
 										</div>
@@ -325,15 +302,7 @@ transform:scale(1.05);
 										  </select>
 										</div>
 										 
-										<div class="input-group mb-3">
-										  <div class="input-group-prepend">
-										    <span class="input-group-text" id="inputGroup-sizing-default">Previously paid amount</span>
-										  </div>
-										  <input id="EPP" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
-											 <div class="invalid-feedback">
-									          Please fill this field.
-									        </div>
-										</div>
+										
 										
 										<div class="input-group mb-3">
 										  <div class="input-group-prepend">
@@ -345,6 +314,15 @@ transform:scale(1.05);
 										  </select>
 										</div>
 										
+										<div class="input-group mb-3">
+										  <div class="input-group-prepend">
+										    <span class="input-group-text" id="inputGroup-sizing-default">Adjustments</span>
+										  </div>
+										  <input id="EADJ" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+											 <div class="invalid-feedback">
+									          Please fill this field.
+									        </div>
+										</div> 
 									</div>
 									<div class="col-md-6">
 										 
@@ -357,22 +335,19 @@ transform:scale(1.05);
 										  </select>
 										</div>
 										 
-										<div class="input-group date mb-3" id="dp2">
+										<div class="input-group mb-3">
 										  <div class="input-group-prepend">
-										    <span class="input-group-text " id="inputGroup-sizing-default">To</span>
+										    <span class="input-group-text" id="inputGroup-sizing-default">Previously Paid Amount</span>
 										  </div>
-										  <input id="ETO" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default"></input>
-											<div class="input-group-append">
-										    <label class="input-group-text" for="inputGroupSelect02"><i class="far fa-calendar-alt"></i></label>
-										  </div>
-										   <div id="ETOERROR" class="invalid-feedback">
+										  <input id="EPP" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+											 <div class="invalid-feedback">
 									          Please fill this field.
 									        </div>
 										</div>
 										 
 										<div class="input-group mb-3">
 										  <div class="input-group-prepend">
-											 <label class="input-group-text" for="inputGroupSelect01">Offpeak Rate</label>
+											 <label class="input-group-text" for="inputGroupSelect01">Off Peak Rate</label>
 										  </div>
 										  <select class="custom-select" id="ERO">
 										    <option selected value="20">20</option>
@@ -392,32 +367,68 @@ transform:scale(1.05);
 										    <option value="30">Damage</option>
 										  </select>
 										</div>
-										 
 										<button id="EGEN" type="button" class="btn btn-success btn-block">
-											Generate bill
-										</button>
+											Generate Bill
+								</button>
+										
 									</div>
 								</div>
+								
 							</div>
-
-
 		                  </div>
 		                </div>
+		                		                	<hr></hr>
+											<div class="card-body">
+												<h6 class="h6 mb-0 text-gray-800">Electricity Bill Log</h6>
+												<hr></hr>
+													<br>
+												<div class="row no-gutters align-items-center">
+													<div class="table-responsive">
+														<table class="table table-bordered" id="elecLog"
+															width="100%" cellspacing="0">
+															<thead>
+																<tr>
+																	<th>Invoice Date</th>
+																	<th>Invoice No.</th>
+																	<th>Floor</th>
+																	<th>Office</th>
+																	<th>From</th>
+																	<th>To</th>
+																	<th>Action</th>
+																</tr>
+															</thead>
+															<tfoot>
+																<tr>
+																	<th>Invoice Date</th>
+																	<th>Invoice No.</th>
+																	<th>Floor</th>
+																	<th>Office</th>
+																	<th>From</th>
+																	<th>To</th>
+																	<th>Action</th>
+																</tr>
+															</tfoot>
+															<tbody>
+
+															</tbody>
+														</table>
+													</div>
+												</div>
+											</div>
 	                </div>
 				</div>
 			  <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
 					<div class="card">
 					      <div class="card-body">
-					      <h1 class="h6 mb-0 text-gray-800">Air conditioning invoice wizard</h1>
+					      <h1 class="h6 mb-0 text-gray-800">Air Conditioning Invoice Wizard</h1>
 					      <hr></hr>
 		                  <div class="row no-gutters align-items-center">
-
 						  <div class="container-fluid">
 								<div class="row">
 									<div class="col-md-6">
 										<div class="input-group mb-3">
 										  <select class="custom-select" id="AFL">
-										    <option selected value="Ground">Commercial area</option>
+										    <option selected value="Ground">Commercial Area</option>
 										    <option value="3rd">Third</option>
 										    <option value="4th">Fourth</option>
 										    <option value="5th">Fifth</option>
@@ -430,13 +441,10 @@ transform:scale(1.05);
 										
 										<div class="input-group date mb-3" id="dp3">
 										  <div class="input-group-prepend">
-										    <span class="input-group-text " id="inputGroup-sizing-default">From</span>
+										    <span class="input-group-text " id="inputGroup-sizing-default">Period</span>
 										  </div>
 										  <input id ="AFR" type="text"  class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default"></input>
-											<div class="input-group-append">
-										    <label class="input-group-text" for="inputGroupSelect02"><i class="far fa-calendar-alt"></i></label>
-										  </div>
-										   <div class="invalid-feedback">
+										   <div id="AFRERROR" class="invalid-feedback">
 									          Please fill this field.
 									        </div>
 										</div>
@@ -453,15 +461,7 @@ transform:scale(1.05);
 										  </select>
 										</div>
 										 
-										<div class="input-group mb-3">
-										  <div class="input-group-prepend">
-										    <span class="input-group-text" id="inputGroup-sizing-default">Previously paid amount</span>
-										  </div>
-										  <input id="APP" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
-											 <div class="invalid-feedback">
-									          Please fill this field.
-									        </div>
-										</div>
+										
 										
 										<div class="input-group mb-3">
 										  <div class="input-group-prepend">
@@ -471,6 +471,15 @@ transform:scale(1.05);
 										    <option selected value="0">None</option>
 										    <option value="25">25% Special</option>
 										  </select>
+										</div>
+										<div class="input-group mb-3">
+										  <div class="input-group-prepend">
+										    <span class="input-group-text" id="inputGroup-sizing-default">Adjustments</span>
+										  </div>
+										  <input id="AADJ" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+											 <div class="invalid-feedback">
+									          Please fill this field.
+									        </div>
 										</div>
 										
 									</div>
@@ -487,22 +496,19 @@ transform:scale(1.05);
 										  </select>
 										</div>
 										 
-										<div class="input-group date mb-3" id="dp4">
+										<div class="input-group mb-3">
 										  <div class="input-group-prepend">
-										    <span class="input-group-text " id="inputGroup-sizing-default">To</span>
+										    <span class="input-group-text" id="inputGroup-sizing-default">Previously Paid Amount</span>
 										  </div>
-										  <input id="ATO" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default"></input>
-											<div class="input-group-append">
-										    <label class="input-group-text" for="inputGroupSelect02"><i class="far fa-calendar-alt"></i></label>
-										  </div>
-										   <div id="ATOERROR" class="invalid-feedback">
+										  <input id="APP" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+											 <div class="invalid-feedback">
 									          Please fill this field.
 									        </div>
 										</div>
 										 
 										<div class="input-group mb-3">
 										  <div class="input-group-prepend">
-											 <label class="input-group-text" for="inputGroupSelect01">Offpeak Rate</label>
+											 <label class="input-group-text" for="inputGroupSelect01">Off Peak Rate</label>
 										  </div>
 										  <select class="custom-select" id="ARO">
 										    <option selected value="0.020">0.020</option>
@@ -522,16 +528,56 @@ transform:scale(1.05);
 										    <option value="30">Damage</option>
 										  </select>
 										</div>
-										 
+										
 										<button id="AGEN" type="button" class="btn btn-primary btn-block">
-											Generate bill
+											Generate Bill
 										</button>
+										
 									</div>
+									
 								</div>
 							</div>
  
 		                  </div>
 		                </div>
+		                	<hr></hr>
+											<div class="card-body">
+												<h6 class="h6 mb-0 text-gray-800">Air Conditioning Bill Log</h6>
+												<hr></hr>
+													<br>
+												<div class="row no-gutters align-items-center">
+													<div class="table-responsive">
+														<table class="table table-bordered" id="airconLog"
+															width="100%" cellspacing="0">
+															<thead>
+																<tr>
+																	<th>Invoice Date</th>
+																	<th>Invoice No.</th>
+																	<th>Floor</th>
+																	<th>Office</th>
+																	<th>From</th>
+																	<th>To</th>
+																	<th>Action</th>
+																</tr>
+															</thead>
+															<tfoot>
+																<tr>
+																	<th>Invoice Date</th>
+																	<th>Invoice No.</th>
+																	<th>Floor</th>
+																	<th>Office</th>
+																	<th>From</th>
+																	<th>To</th>
+																	<th>Action</th>
+																</tr>
+															</tfoot>
+															<tbody>
+
+															</tbody>
+														</table>
+													</div>
+												</div>
+											</div>
 		               </div>
 				</div>
 			</div>
@@ -565,6 +611,27 @@ transform:scale(1.05);
   <a class="scroll-to-top rounded" href="#page-top">
     <i class="fas fa-angle-up"></i>
   </a>
+  
+<!-- Bill confirmation Modal -->
+<div class="modal fade" id="BillConfirmation" tabindex="-1" role="dialog" aria-labelledby="Bill Confirmation" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Confirm Bill Generation</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      	<div class="modal-body">
+		<p>*Bill generation cannot be undone or deleted. Please make sure the details are correct</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Back</button>
+        <button type="button" class="btn btn-primary" id="confirmed">Confirm</button>
+      </div>
+    </div>
+  </div>
+</div>
 
   <!-- Logout Modal-->
   <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -573,7 +640,7 @@ transform:scale(1.05);
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
           <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">×</span>
+            <span aria-hidden="true"></span>
           </button>
         </div>
         <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
@@ -587,31 +654,35 @@ transform:scale(1.05);
       </div>
     </div>
   </div>
-
 	<!-- Bootstrap core JavaScript-->
 	<script src="${contextPath}/resources/vendor/jquery/jquery.min.js"></script>
-	<script
-		src="${contextPath}/resources/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+	<script src="${contextPath}/resources/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
 	<!-- Core plugin JavaScript-->
-	<script
-		src="${contextPath}/resources/vendor/jquery-easing/jquery.easing.min.js"></script>
-			<script src="${contextPath}/resources/js/bootstrap-datepicker.min.js"></script>
+	<script src="${contextPath}/resources/vendor/jquery-easing/jquery.easing.min.js"></script>
 
 	<!-- Custom scripts for all pages-->
 	<script src="${contextPath}/resources/js/sb-admin-2.min.js"></script>
+	<script src="${contextPath}/resources/js/bootstrap-datepicker.min.js"></script>
 
 	<!-- Page level plugins -->
 	<script src="${contextPath}/resources/vendor/chart.js/Chart.min.js"></script>
-	<script
-		src="${contextPath}/resources/vendor/datatables/jquery.dataTables.min.js"></script>
-		<script src="${contextPath}/resources/vendor/moment/moment.min.js"></script>
+	<script src="${contextPath}/resources/vendor/datatables/jquery.dataTables.min.js"></script>
+	<script src="${contextPath}/resources/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+	<script src="${contextPath}/resources/vendor/datatables/dataTables.buttons.min.js"></script>
+	<script src="${contextPath}/resources/vendor/datatables/buttons.bootstrap4.min.js"></script>
+		
+	<script src="${contextPath}/resources/vendor/moment/moment.min.js"></script>
 	<script src="${contextPath}/resources/vendor/moment/datetime-moment.js"></script>
-
+	<script src="${contextPath}/resources/vendor/flatpickr/flatpickr.js"></script>
+	<script src="${contextPath}/resources/vendor/flatpickr/rangePlugin.js"></script>
+	<script src="${contextPath}/resources/Modules/iziToast/js/iziToast.min.js" type="text/javascript"></script>
+	
 	<!-- Page level custom scripts -->
 	<script src="${contextPath}/resources/js/sockjs/sockjs.min.js"></script>
     <script src="${contextPath}/resources/js/stompjs/stomp.min.js"></script>
     <script src="${contextPath}/resources/js/WebSock.js"></script>
+    <script src="${contextPath}/resources/js/billing.js" type="text/javascript"></script>
 
 </body>
 

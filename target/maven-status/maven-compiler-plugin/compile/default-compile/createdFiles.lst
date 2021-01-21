@@ -1,14 +1,18 @@
 com\stardust\sync\web\UserRestController.class
 com\stardust\sync\timekeeper\SchedulerService$4.class
 com\stardust\sync\util\GeneratePdfReportTemplate$Footer.class
+com\stardust\sync\service\AlertService.class
 com\stardust\sync\init\InitialdataLoader.class
 com\stardust\sync\core\ModbusSingleton.class
 com\stardust\sync\util\GenerateDailyReadingPdfReport$Footer.class
 com\stardust\sync\util\GeneratePdfBill.class
 com\stardust\sync\model\UnitId.class
 com\stardust\sync\WebSecurityConfig.class
+com\stardust\sync\model\Alert.class
+com\stardust\sync\repository\AlertRepository.class
 com\stardust\sync\timekeeper\SchedulerService$1.class
 com\stardust\sync\util\GenerateFacilitySummaryPdfReport.class
+com\stardust\sync\model\MeterConfiguration.class
 com\stardust\sync\service\MeterService.class
 com\stardust\sync\model\MeterExtended.class
 com\stardust\sync\util\GenerateTenantSummaryPdfReport$Header.class
@@ -16,6 +20,7 @@ com\stardust\sync\service\UserDetailsServiceImpl.class
 com\stardust\sync\util\GenerateFacilitySummaryPdfReport$Footer.class
 com\stardust\sync\timekeeper\SchedulerService$3.class
 com\stardust\sync\service\SecurityService.class
+com\stardust\sync\repository\MeterConfigRepository.class
 com\stardust\sync\service\ConfigurationService.class
 com\stardust\sync\repository\UserRepository.class
 com\stardust\sync\model\Role.class
@@ -23,8 +28,11 @@ com\stardust\sync\timekeeper\SchedulerService.class
 com\stardust\sync\util\GeneratePdfReportTemplate$Header.class
 com\stardust\sync\repository\RoleRepository.class
 com\stardust\sync\validator\UserValidator.class
+com\stardust\sync\web\NotificationsController.class
 com\stardust\sync\model\Configuration.class
 com\stardust\sync\web\UserController.class
+com\stardust\sync\WebSocketConfig.class
+com\stardust\sync\service\NotificationDispatcherService.class
 com\stardust\sync\model\User.class
 com\stardust\sync\util\GenerateDailyReadingPdfReport$Header.class
 com\stardust\sync\util\GenerateFacilitySummaryPdfReport$Header.class
@@ -42,6 +50,7 @@ com\stardust\sync\util\GeneratePdfReportTemplate.class
 com\stardust\sync\repository\ConfigRepository.class
 com\stardust\sync\service\UserService.class
 com\stardust\sync\SyncApplication.class
+com\stardust\sync\service\MeterConfigurationService.class
 com\stardust\sync\timekeeper\SchedulerService$2.class
 com\stardust\sync\web\AppErrorController.class
 com\stardust\sync\repository\MeterRepository.class

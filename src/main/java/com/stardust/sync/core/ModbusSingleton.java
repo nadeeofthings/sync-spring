@@ -3,6 +3,10 @@ package com.stardust.sync.core;
 import java.io.IOException;
 import java.net.UnknownHostException;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.stardust.sync.service.AlertService;
+
 import de.re.easymodbus.modbusclient.ModbusClient;
 
 public class ModbusSingleton {
@@ -10,6 +14,7 @@ public class ModbusSingleton {
 	private static String address = "192.168.1.10";
 	private static int port = 502;
 	private static ModbusClient modbusClient = null;
+
 	
 	private ModbusSingleton() {
     }
@@ -21,6 +26,13 @@ public class ModbusSingleton {
         }
         return modbusClient;
     }
+    
+    
+    //in an event of a broken connection this method forces it to reload by nulling the existing connection.
+    public static void resetInstance() {
+    	modbusClient = null;
+    }
+    
  
     // getters and setters
 

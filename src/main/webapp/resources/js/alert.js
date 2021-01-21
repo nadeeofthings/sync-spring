@@ -2,6 +2,7 @@ $('document').ready(function(){
 	$('#alertDataTable').DataTable( {
 			    ajax: {
 			        url: contextPath+'/rest/getAllAlerts',
+			        dataType: 'json',
 			        dataSrc: function ( json ) {
 			            for ( var i=0, ien=json.length ; i<ien ; i++ ) {
 				            var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour:'numeric', minute:'numeric', second:'numeric' };
@@ -23,7 +24,10 @@ $('document').ready(function(){
 								 }
 			              }
 			              return json;
-			            }
+			            },
+					    error: function(jqXHR, exception) {
+					        window.location.href = contextPath;
+					    }
 			    },
 			    columns: [
 		            { "data": "dateTime" },

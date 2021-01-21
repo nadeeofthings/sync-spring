@@ -41,6 +41,39 @@ $(document).ready(function() {
 	    todayHighlight: true
 		});
 	 $("#fromdatepickelec,#fromdatepickair").datepicker('setDate', new Date());
+
+	 $('#customerInfoModal').on('show.bs.modal', function (e) {
+		  $.ajax({
+                	type: "GET",
+                    url: contextPath+'/rest/getCustomerInformation?id='+id+'&unit='+unit+'&ext=kWh',
+                    dataType: 'json',
+                    success: function(data) {
+                       if(!data.address){
+                       		var $div = $("<div>", {"class": "container"})
+		  					.append($("<div>", {"class": "row"}).append($("<p>", {"class": "text-left"}).html("Customer name: <b>"+data.name+"</b>")))
+							.append($("<div>", {"class": "row"}).append($("<p>", {"class": "text-left"}).html("Business Contact: <b>"+data.business_phone+"</b>")))
+							.append($("<div>", {"class": "row"}).append($("<p>", {"class": "text-left"}).html("Business Email: <b>"+data.business_email+"</b>")))
+							.append($("<div>", {"class": "row"}).append($("<p>", {"class": "text-left"}).html()));
+							$('#customerInfoModal').find('.modal-body').empty().append($div);
+                       }else{
+                       	var $div = $("<div>", {"class": "container"})
+		  					.append($("<div>", {"class": "row"}).append($("<p>", {"class": "text-left"}).html("Customer name: <b>"+data.name+"</b>")))
+		  					.append($("<div>", {"class": "row"}).append($("<p>", {"class": "text-left"}).html("Address: <b>"+data.address+"</b>")))
+		  					.append($("<div>", {"class": "row"}).append($("<p>", {"class": "text-left"}).html("NIC: <b>"+data.nic+"</b>")))
+		  					.append($("<div>", {"class": "row"}).append($("<p>", {"class": "text-left"}).html("BRC: <b>"+data.brc+"</b>")))
+		  					.append($("<div>", {"class": "row"}).append($("<p>", {"class": "text-left"}).html("Phone: <b>"+data.phone+"</b>")))
+		  					.append($("<div>", {"class": "row"}).append($("<p>", {"class": "text-left"}).html("Email: <b>"+data.email+"</b>")))
+							.append($("<div>", {"class": "row"}).append($("<p>", {"class": "text-left"}).html("Business Contact: <b>"+data.business_phone+"</b>")))
+							.append($("<div>", {"class": "row"}).append($("<p>", {"class": "text-left"}).html("Business Email: <b>"+data.business_email+"</b>")));
+							$('#customerInfoModal').find('.modal-body').empty().append($div);
+                       }
+                       
+                    },
+					error: function(jqXHR, exception) {
+							window.location.href = contextPath;
+						}
+                });
+		})
 });
 
 $(document).ready(function() {
@@ -73,7 +106,8 @@ function loadTables() {
 	  $.fn.dataTable.moment( "dddd, MMMM Do YYYY, h:mm:ss a" );
 	  $('#elecDataTable').DataTable( {
 		    ajax: {
-		        url: 'http://localhost:8080/tebbiq/rest/byId?ext=kWh&id='+id+'&unit='+unit+'',
+		        url: contextPath+'/rest/byId?ext=kWh&id='+id+'&unit='+unit+'',
+		        dataType: 'json',
 		        dataSrc: function ( json ) {
 		            for ( var i=0, ien=json.length ; i<ien ; i++ ) {
 			            json[i].meter= 'Meter '+json[i].meter;
@@ -89,13 +123,14 @@ function loadTables() {
 		    columns: [
 	            { "data": "meter" },
 	            { "data": "dateTime" },
-	            { "data": "value" },
+	            { "data": "value" }
 	        ],
 		    order: [[ 1, "desc" ]]
 		} );
 	  $('#airconDataTable').DataTable( {
 		    ajax: {
-		        url: 'http://localhost:8080/tebbiq/rest/byId?ext=BTU&id='+id+'&unit='+unit+'',
+		        url: contextPath+'/rest/byId?ext=BTU&id='+id+'&unit='+unit+'',
+		        dataType: 'json',
 		        dataSrc:  function ( json ) {
 		            for ( var i=0, ien=json.length ; i<ien ; i++ ) {
 			            json[i].meter= 'Meter '+(json[i].meter-1);
@@ -119,40 +154,11 @@ function loadTables() {
 	 // getElecData(id,unit,$("#limitElec")[0].value,$("#fromdatepickelec")[0].value);
 	 // getAirconData(id,unit,$("#limitAir")[0].value,$("#fromdatepickair")[0].value);
 	}
-  
-  
-	function startTime() {
-		var days = [ 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday',
-				'Friday', 'Saturday' ];
-		var months = [ 'January', 'February', 'March', 'April', 'May', 'June',
-				'July', 'August', 'September', 'October', 'November',
-				'December' ];
-
-		var today = new Date();
-		var day = days[today.getDay()];
-		var month = months[today.getMonth()];
-		var year = today.getFullYear();
-		var h = today.getHours();
-		var m = today.getMinutes();
-		var s = today.getSeconds();
-		m = checkTime(m);
-		s = checkTime(s);
-		document.getElementById('dateTime').innerHTML = day + ", " + month + " "
-				+ year + " - " + h + ":" + m + ":" + s;
-		var t = setTimeout(startTime, 500);
-	}
-	function checkTime(i) {
-		if (i < 10) {
-			i = "0" + i
-		}
-		; // add zero in front of numbers < 10
-		return i;
-	}
 
 function loadValues() {
                 $.ajax({
                 	type: "GET",
-                    url: 'http://localhost:8080/tebbiq/rest/reading?id='+id+'&unit='+unit+'',
+                    url: contextPath+'/rest/reading?id='+id+'&unit='+unit+'',
                     dataType: 'json',
                     success: function(data) {
                        // $("#refresh").html(data);
@@ -174,6 +180,9 @@ function loadValues() {
                         // 
                         // Schedule the next request when the current one's complete
                         setTimeout(loadValues, 5000);
-                    }
+                    },
+					error: function(jqXHR, exception) {
+							window.location.href = contextPath;
+						}
                 });
             }

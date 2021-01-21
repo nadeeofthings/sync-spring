@@ -180,7 +180,8 @@ var getAirconData = function(id,unit,limit,date) {
 	airChart.data.datasets[2].data = [];
 	
   $.ajax({
-	  url: 'http://localhost:8080/tebbiq/rest/unitDailyUsage?ext=BTU&limit='+limit+'&id='+id+'&unit='+unit+'&meter=2&start='+timestamp+'',
+	  url:  contextPath+'/rest/unitDailyUsage?ext=BTU&limit='+limit+'&id='+id+'&unit='+unit+'&meter=2&start='+timestamp+'',
+    dataType: 'json',
     success: function(data) {
       // process your data to pull out what you plan to use to update the chart
       // e.g. new label and a new data point
@@ -198,11 +199,15 @@ var getAirconData = function(id,unit,limit,date) {
         });
     	 // re-render the chart
     	airChart.update();
+    },
+    error: function(jqXHR, exception) {
+        window.location.href = contextPath;
     }
   });
   if(id=="Ground"){
   $.ajax({
-	  url: 'http://localhost:8080/tebbiq/rest/unitDailyUsage?ext=BTU&limit='+limit+'&id='+id+'&unit='+unit+'&meter=3&start='+timestamp+'',
+	  url:  contextPath+'/rest/unitDailyUsage?ext=BTU&limit='+limit+'&id='+id+'&unit='+unit+'&meter=3&start='+timestamp+'',
+    dataType: 'json',
     success: function(data) {
       // process your data to pull out what you plan to use to update the chart
       // e.g. new label and a new data point
@@ -219,10 +224,14 @@ var getAirconData = function(id,unit,limit,date) {
         });
     	 // re-render the chart
     	airChart.update();
+    },
+    error: function(jqXHR, exception) {
+        window.location.href = contextPath;
     }
   });
   $.ajax({
-	  url: 'http://localhost:8080/tebbiq/rest/unitDailyUsage?ext=BTU&limit='+limit+'&id='+id+'&unit='+unit+'&meter=4&start='+timestamp+'',
+	  url:  contextPath+'/rest/unitDailyUsage?ext=BTU&limit='+limit+'&id='+id+'&unit='+unit+'&meter=4&start='+timestamp+'',
+    dataType: 'json',
     success: function(data) {
       // process your data to pull out what you plan to use to update the chart
       // e.g. new label and a new data point
@@ -239,6 +248,9 @@ var getAirconData = function(id,unit,limit,date) {
         });
     	 // re-render the chart
     	airChart.update();
+    },
+    error: function(jqXHR, exception) {
+        window.location.href = contextPath;
     }
   });
   }

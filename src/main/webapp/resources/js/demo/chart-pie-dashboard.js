@@ -58,7 +58,8 @@ var getTopUnitDataKWH = function() {
 	var total = 0;
 		
   $.ajax({
-    url: 'http://localhost:8080/tebbiq/rest/topUnitsThisWeek?ext=kWh',
+    url:  contextPath+'/rest/topUnitsThisWeek?ext=kWh',
+    dataType: 'json',
     success: function(data) {
       // process your data to pull out what you plan to use to update the chart
       // e.g. new label and a new data point
@@ -72,7 +73,10 @@ var getTopUnitDataKWH = function() {
     	
     	//re-render the chart
     	topChart.update();
-   }
+   },
+    error: function(jqXHR, exception) {
+        window.location.href = contextPath;
+    }
   });
 };
 
@@ -82,7 +86,8 @@ var getTopUnitDataBTU = function(){
 	var total = 0;
 	
 	$.ajax({
-		    url: 'http://localhost:8080/tebbiq/rest/topUnitsThisWeek?ext=BTU',
+		    url: contextPath+'/rest/topUnitsThisWeek?ext=BTU',
+        dataType: 'json',
 		    success: function(data) {
 		      // process your data to pull out what you plan to use to update the chart
 		      // e.g. new label and a new data point
@@ -96,7 +101,10 @@ var getTopUnitDataBTU = function(){
 		    	
 		        //re-render the chart
 		    	topChart.update();
-		    }
+		    },
+        error: function(jqXHR, exception) {
+            window.location.href = contextPath;
+        }
 		  });
 }
 

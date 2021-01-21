@@ -2,7 +2,6 @@ package com.stardust.sync.service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -16,7 +15,6 @@ import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import com.stardust.sync.core.Constants;
@@ -24,7 +22,6 @@ import com.stardust.sync.core.ModbusSingleton;
 import com.stardust.sync.model.Meter;
 import com.stardust.sync.model.MeterConfiguration;
 import com.stardust.sync.model.MeterExtended;
-import com.stardust.sync.repository.MeterConfigRepository;
 import com.stardust.sync.repository.MeterRepository;
 
 import de.re.easymodbus.modbusclient.ModbusClient;
@@ -261,6 +258,7 @@ public class MeterService {
 		double total = 0;
 		long diffInMillies = Math.abs(end.getTime() - start.getTime());
 		long diff = TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
+		diff = diff+1;
 		Date currDate = start;
 		Date nextDate = new Date(currDate.getTime() + (1000 * 60 * 60 * 24));
 		for (int i = 0; i < diff; i++) {
@@ -324,7 +322,7 @@ public class MeterService {
 		cal.add(Calendar.DATE, -7);
 		Date weekStart = cal.getTime();
 		
-		System.out.println(weekStart+">>>>>>>>>>>>>>>>>>>>>"+weekEnd);
+		//System.out.println(weekStart+">>>>>>>>>>>>>>>>>>>>>"+weekEnd);
 		List<Meter> meters = new ArrayList<Meter>();
 		List<MeterConfiguration> configs = meterConfigurationService.getAllMeterConfigurations();
 		for(MeterConfiguration mConfiguration : configs) {
@@ -519,28 +517,33 @@ public class MeterService {
 
 	private Meter getOffPeakReading(MeterConfiguration mConfig) {
 
-		String PeakStart = configurationService.getConfiguration(Constants.CONFIG_KEY_PEAK_START_CONFIG).getConfigValue();
+		String PeakEnd = configurationService.getConfiguration(Constants.CONFIG_KEY_PEAK_END_CONFIG).getConfigValue();
     	Calendar cal = Calendar.getInstance();
     	SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.ENGLISH);
     	try {
-			cal.setTime(sdf.parse(PeakStart));
+			cal.set(Calendar.HOUR_OF_DAY, sdf.parse(PeakEnd).getHours());
+    		cal.set(Calendar.MINUTE, sdf.parse(PeakEnd).getMinutes());
+    		cal.set(Calendar.SECOND, 0);
 		} catch (ParseException e) {
 			LOGGER.error("Time parse error:"+e);
 		}// all done
     	
-    	//This routine ensures the value read is greater than the previous value to avoid reading errors.
+    	//This routine ensures the value read is greater than or equal to the previous value to avoid reading errors.
     	Meter prevReading = meterRepository.findTopByIdAndUnitAndExtAndMeterOrderByTimeStampDesc(mConfig.getId(), mConfig.getUnit(), mConfig.getExt(), mConfig.getMeter());
     	Double curReading = 0.0;
     	for(int i=0; i<5; i++) {
     		curReading = getValue(mConfig.getAddress());
-    		if(prevReading.getValue()<curReading) {
-    			return new Meter(mConfig.getId(), mConfig.getUnit(), 1, curReading, mConfig.getExt(), cal.getTime(), true);
+    		if(prevReading.getValue()<=curReading) {
+    			LOGGER.info(mConfig.getAddress()+ " read successful");
+    			return new Meter(mConfig.getId(), mConfig.getUnit(), mConfig.getMeter(), curReading, mConfig.getExt(), cal.getTime(), false);
+    			//break;
     		}
+    		LOGGER.warn("Attempt:"+i+" Unsuccessful"+mConfig.getAddress()+ " cur:"+curReading+" pre:"+prevReading.getValue());
     		
     	}
-    	
+    	LOGGER.error(mConfig.getId()+" floor, unit " + mConfig.getUnit().toString() +" "+ mConfig.getExt()+" meter read error. Last known value recorded in the DB");
     	alertService.error(mConfig.getId()+" floor, unit " + mConfig.getUnit().toString() +" "+ mConfig.getExt()+" meter read error. Last known value recorded in the DB");
-    	return new Meter(mConfig.getId(), mConfig.getUnit(), 1, prevReading.getValue(), mConfig.getExt(), cal.getTime(), false);
+    	return new Meter(mConfig.getId(), mConfig.getUnit(), mConfig.getMeter(), prevReading.getValue(), mConfig.getExt(), cal.getTime(), false);
 		
 	}
 
@@ -550,7 +553,9 @@ public class MeterService {
         	Calendar cal = Calendar.getInstance();
         	SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.ENGLISH);
         	try {
-				cal.setTime(sdf.parse(PeakStart));
+				cal.set(Calendar.HOUR_OF_DAY, sdf.parse(PeakStart).getHours());
+    			cal.set(Calendar.MINUTE, sdf.parse(PeakStart).getMinutes());
+    			cal.set(Calendar.SECOND, 0);
 			} catch (ParseException e) {
 				LOGGER.error("Time parse error:"+e);
 			}// all done
@@ -560,14 +565,17 @@ public class MeterService {
         	Double curReading = 0.0;
         	for(int i=0; i<5; i++) {
         		curReading = getValue(mConfig.getAddress());
-        		if(prevReading.getValue()<curReading) {
-        			return new Meter(mConfig.getId(), mConfig.getUnit(), 1, curReading, mConfig.getExt(), cal.getTime(), true);
+        		if(prevReading.getValue()<=curReading) {
+        			LOGGER.info(mConfig.getAddress()+ " read successful");
+        			return new Meter(mConfig.getId(), mConfig.getUnit(), mConfig.getMeter(), curReading, mConfig.getExt(), cal.getTime(), true);
+        			//break;
         		}
+        		LOGGER.warn("Attempt:"+i+" Unsuccessful"+mConfig.getAddress()+ " cur:"+curReading+" pre:"+prevReading.getValue());
         		
         	}
-        	
+        	LOGGER.error(mConfig.getId()+" floor, unit " + mConfig.getUnit().toString() +" "+ mConfig.getExt()+" meter read error. Last known value recorded in the DB");
         	alertService.error(mConfig.getId()+" floor, unit " + mConfig.getUnit().toString() +" "+ mConfig.getExt()+" meter read error. Last known value recorded in the DB");
-        	return new Meter(mConfig.getId(), mConfig.getUnit(), 1, prevReading.getValue(), mConfig.getExt(), cal.getTime(), true);
+        	return new Meter(mConfig.getId(), mConfig.getUnit(), mConfig.getMeter(), prevReading.getValue(), mConfig.getExt(), cal.getTime(), true);
 				
 		
 	}
@@ -582,8 +590,10 @@ public class MeterService {
 			return value;
 
 		} catch (Exception e) {
-			System.out.println("Modbus read error " + e);
-			return 0;
+			alertService.error("Modbus read error "+ e);
+			ModbusSingleton.resetInstance();
+			alertService.success("Modbus connection resetted successfully");
+        	return 0;
 		}
 
 

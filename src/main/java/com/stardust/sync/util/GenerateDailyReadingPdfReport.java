@@ -19,6 +19,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.itextpdf.io.font.FontConstants;
+import com.itextpdf.io.font.FontProgram;
+import com.itextpdf.io.font.FontProgramFactory;
+import com.itextpdf.io.font.PdfEncodings;
 import com.itextpdf.io.image.ImageData;
 import com.itextpdf.io.image.ImageDataFactory;
 import com.itextpdf.kernel.color.DeviceRgb;
@@ -41,6 +44,7 @@ import com.itextpdf.layout.element.Image;
 import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.element.Table;
 import com.itextpdf.layout.property.TextAlignment;
+import com.stardust.sync.core.Constants;
 import com.stardust.sync.model.Meter;
 import com.stardust.sync.service.MeterService;
 
@@ -64,15 +68,18 @@ public class GenerateDailyReadingPdfReport {
 			Document doc = new Document(pdfDoc, new PageSize(595, 842));
 			doc.setMargins(70, 20, 25, 20);
 			
-			PdfFont bold = PdfFontFactory.createFont(FontConstants.HELVETICA_BOLD);
+			FontProgram fontProgram = FontProgramFactory.createFont(Constants.CALIBRI_REGULAR);
+            PdfFont calibriRegular = PdfFontFactory.createFont(fontProgram, PdfEncodings.WINANSI, true);
+            PdfFont calibriBold = PdfFontFactory.createFont(Constants.CALIBRI_BOLD, true);
+            PdfFont calibriItalic = PdfFontFactory.createFont(Constants.CALIBRI_ITALIC, true);
 			
 			// Creating an ImageData object
-			String imageFile = "C:/sync/Capture.jpg";
+			String imageFile = "src/main/webapp/resources/images/customer_logo.png";
 			ImageData data = ImageDataFactory.create(imageFile);
 			// Creating an Image object
 			Image img = new Image(data);
 
-			Header headerHandler = new Header(img, "Facility electricity daily reading log");
+			Header headerHandler = new Header(img, "Facility Electricity Daily Reading Log");
 			Footer footerHandler = new Footer();
 
 			pdfDoc.addEventHandler(PdfDocumentEvent.START_PAGE, headerHandler);
@@ -101,25 +108,48 @@ public class GenerateDailyReadingPdfReport {
 				// first row
 				Cell cell = new Cell(1, 4).add(new Paragraph("Table:" + (i+1) + " for the date:" + dFormat.format(fromDate)));
 				cell.setTextAlignment(TextAlignment.CENTER);
-				cell.setPadding(5);
+				cell.setPadding(2);
+				cell.setFont(calibriRegular);
 				cell.setBackgroundColor(new DeviceRgb(28, 200, 138));
 				table.addCell(cell);
 
-				String[] header = { "Floor", "Office", "Timestamp", "Meter reading"};
+				String[] header = { "Floor", "Office", "Timestamp", "Meter Reading"};
 
 				for (String head : header) {
 					Cell cellx = new Cell().add(new Paragraph(head));
 					//cellx.setBold();
-					cellx.setFont(bold);
+					cellx.setFont(calibriRegular);
+					cellx.setPadding(0f);
+					
 					cellx.setTextAlignment(TextAlignment.CENTER);
 					table.addCell(cellx);
 				}
 
 				for (Meter meter : dailyReadingByExtBetweenStartAndEnd) {
-					table.addCell(meter.getId()+" Floor");
-					table.addCell(meter.getId().equals("Ground") ? "Com area" : "Office "+meter.getUnit());
-					table.addCell(meter.getTimeStamp().toLocaleString());
-					table.addCell(df2.format(meter.getValue())+" "+meter.getExt());
+					Cell cellx = new Cell().add(new Paragraph(meter.getId()+" Floor"));
+					cellx.setFont(calibriRegular);
+					cellx.setPadding(0f);
+					cellx.setTextAlignment(TextAlignment.CENTER);
+					table.addCell(cellx);
+					
+					cellx = new Cell().add(new Paragraph(meter.getId().equals("Ground") ? "Com Area" : "Office "+meter.getUnit()));
+					cellx.setFont(calibriRegular);
+					cellx.setPadding(0f);
+					cellx.setTextAlignment(TextAlignment.CENTER);
+					table.addCell(cellx);
+					
+					cellx = new Cell().add(new Paragraph(meter.getTimeStamp().toLocaleString()));
+					cellx.setFont(calibriRegular);
+					cellx.setPadding(0f);
+					cellx.setTextAlignment(TextAlignment.CENTER);
+					table.addCell(cellx);
+					
+					cellx = new Cell().add(new Paragraph(df2.format(meter.getValue())+" "+meter.getExt()));
+					cellx.setFont(calibriRegular);
+					cellx.setPadding(0f);
+					cellx.setTextAlignment(TextAlignment.CENTER);
+					table.addCell(cellx);
+					
 				}
 
 				doc.add(table);
@@ -155,15 +185,18 @@ public class GenerateDailyReadingPdfReport {
 			Document doc = new Document(pdfDoc, new PageSize(595, 842));
 			doc.setMargins(70, 20, 25, 20);
 			
-			PdfFont bold = PdfFontFactory.createFont(FontConstants.HELVETICA_BOLD);
+			FontProgram fontProgram = FontProgramFactory.createFont(Constants.CALIBRI_REGULAR);
+            PdfFont calibriRegular = PdfFontFactory.createFont(fontProgram, PdfEncodings.WINANSI, true);
+            PdfFont calibriBold = PdfFontFactory.createFont(Constants.CALIBRI_BOLD, true);
+            PdfFont calibriItalic = PdfFontFactory.createFont(Constants.CALIBRI_ITALIC, true);
 			
 			// Creating an ImageData object
-			String imageFile = "C:/sync/Capture.jpg";
+            String imageFile = "src/main/webapp/resources/images/customer_logo.png";
 			ImageData data = ImageDataFactory.create(imageFile);
 			// Creating an Image object
 			Image img = new Image(data);
 
-			Header headerHandler = new Header(img, "Facility aircon daily reading log");
+			Header headerHandler = new Header(img, "Facility Aircon Daily Reading Log");
 			Footer footerHandler = new Footer();
 
 			pdfDoc.addEventHandler(PdfDocumentEvent.START_PAGE, headerHandler);
@@ -192,25 +225,47 @@ public class GenerateDailyReadingPdfReport {
 				// first row
 				Cell cell = new Cell(1, 4).add(new Paragraph("Table:" + (i+1) + " for the date:" + dFormat.format(fromDate)));
 				cell.setTextAlignment(TextAlignment.CENTER);
-				cell.setPadding(5);
+				cell.setPadding(2);
+				cell.setFont(calibriRegular);
 				cell.setBackgroundColor(new DeviceRgb(78, 115, 223));
 				table.addCell(cell);
 
-				String[] header = { "Floor", "Office", "Timestamp", "Meter reading"};
+				String[] header = { "Floor", "Office", "Timestamp", "Meter Reading"};
 
 				for (String head : header) {
 					Cell cellx = new Cell().add(new Paragraph(head));
 					//cellx.setBold();
-					cellx.setFont(bold);
+					cellx.setFont(calibriRegular);
+					cellx.setPadding(0f);
 					cellx.setTextAlignment(TextAlignment.CENTER);
 					table.addCell(cellx);
 				}
 
 				for (Meter meter : dailyReadingByExtBetweenStartAndEnd) {
-					table.addCell(meter.getId()+" Floor");
-					table.addCell(meter.getId().equals("Ground") ? "Com area "+(meter.getMeter()-1) : "Office "+meter.getUnit());
-					table.addCell(meter.getTimeStamp().toLocaleString());
-					table.addCell(df2.format(meter.getValue())+" "+meter.getExt());
+					Cell cellx = new Cell().add(new Paragraph(meter.getId()+" Floor"));
+					cellx.setFont(calibriRegular);
+					cellx.setPadding(0f);
+					cellx.setTextAlignment(TextAlignment.CENTER);
+					table.addCell(cellx);
+					
+					cellx = new Cell().add(new Paragraph(meter.getId().equals("Ground") ? "Com area "+(meter.getMeter()-1) : "Office "+meter.getUnit()));
+					cellx.setFont(calibriRegular);
+					cellx.setPadding(0f);
+					cellx.setTextAlignment(TextAlignment.CENTER);
+					table.addCell(cellx);
+					
+					cellx = new Cell().add(new Paragraph(meter.getTimeStamp().toLocaleString()));
+					cellx.setFont(calibriRegular);
+					cellx.setPadding(0f);
+					cellx.setTextAlignment(TextAlignment.CENTER);
+					table.addCell(cellx);
+					
+					cellx = new Cell().add(new Paragraph(df2.format(meter.getValue())+" "+meter.getExt()));
+					cellx.setFont(calibriRegular);
+					cellx.setPadding(0f);
+					cellx.setTextAlignment(TextAlignment.CENTER);
+					table.addCell(cellx);
+					
 				}
 
 				doc.add(table);
@@ -262,7 +317,7 @@ public class GenerateDailyReadingPdfReport {
 			img.setMargins(10, 10, 10, 20);
 			canvas.add(img);
 			// Write text at position
-			canvas.showTextAligned(header, pageSize.getWidth() / 2, pageSize.getTop() - 50,
+			canvas.showTextAligned(header, (pageSize.getWidth() / 2)+50f, pageSize.getTop() - 50,
 					TextAlignment.CENTER);
 			canvas.close();
 		}

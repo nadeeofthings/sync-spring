@@ -5,7 +5,7 @@ import java.util.Date;
 import javax.persistence.*;
 
 @Entity
-@IdClass(UnitId.class)
+@IdClass(MeterId.class)
 @Table(name = "meter")
 public class Meter implements Comparable {
 

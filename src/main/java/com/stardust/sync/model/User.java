@@ -4,6 +4,8 @@ import java.util.Set;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 @Entity
 @Table(name = "user")
 public class User {
@@ -17,9 +19,44 @@ public class User {
     
     private String department;
     
+    private String phone;
+    
     private long alertCount;
+    
+	private String username;
 
-    public long getAlertCount() {
+    private String password;
+
+    @Transient
+    private String passwordConfirm;
+
+    @ManyToOne
+    private Role role;
+    
+    private boolean enabled;
+    
+    public User() {};
+
+  
+
+	public User(String firstname, String lastname, String department, String phone, long alertCount, String username,
+			String password, String passwordConfirm, Role role, boolean enabled) {
+		super();
+		this.firstname = firstname;
+		this.lastname = lastname;
+		this.department = department;
+		this.phone = phone;
+		this.alertCount = alertCount;
+		this.username = username;
+		this.password = password;
+		this.passwordConfirm = passwordConfirm;
+		this.role = role;
+		this.enabled = enabled;
+	}
+
+
+
+	public long getAlertCount() {
 		return alertCount;
 	}
 
@@ -50,18 +87,6 @@ public class User {
 	public void setDepartment(String department) {
 		this.department = department;
 	}
-
-	private String username;
-
-    private String password;
-
-    @Transient
-    private String passwordConfirm;
-
-    @ManyToMany
-    private Set<Role> roles;
-    
-    private boolean enabled;
 
     public boolean isEnabled() {
 		return enabled;
@@ -94,8 +119,18 @@ public class User {
     public void setPassword(String password) {
         this.password = password;
     }
+    
+    
 
-    public String getPasswordConfirm() {
+    public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+
+	public String getPasswordConfirm() {
         return passwordConfirm;
     }
 
@@ -103,11 +138,11 @@ public class User {
         this.passwordConfirm = passwordConfirm;
     }
 
-    public Set<Role> getRoles() {
-        return roles;
+    public Role getRole() {
+        return role;
     }
 
-    public void setRoles(Set<Role> roles) {
-        this.roles = roles;
+    public void setRole(Role role) {
+        this.role = role;
     }
 }
