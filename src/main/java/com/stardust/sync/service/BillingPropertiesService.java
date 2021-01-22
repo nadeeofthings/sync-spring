@@ -119,12 +119,12 @@ public class BillingPropertiesService {
  					 List<BillingProperties> conf = new ArrayList<BillingProperties>();
  					 long timestamp = new Date().getTime();
  					conf.add(new BillingProperties(Constants.CONFIG_KEY_SERVICE_CHARGE, "kWhBTU", serviceCharge, Constants.FLAG_ENABLED, new Date(timestamp), false));
- 					conf.add(new BillingProperties(Constants.CONFIG_KEY_DUE_DAYS_PERIOD, "kWhBTU", dueDaysPeriod, Constants.FLAG_ENABLED, new Date(timestamp+5000l), false));
- 					conf.add(new BillingProperties(Constants.CONFIG_KEY_NBTAX, "kWhBTU", nbtax, Constants.FLAG_ENABLED, new Date(timestamp+10000l), false));
- 					conf.add(new BillingProperties(Constants.CONFIG_KEY_VATAX, "kWhBTU", vatax, Constants.FLAG_ENABLED, new Date(timestamp+15000l), false));
- 					conf.add(new BillingProperties(Constants.CONFIG_KEY_EMERGENCY_CONTACT, "kWhBTU", emergencyContact, Constants.FLAG_ENABLED, new Date(timestamp+20000l), false));
- 					conf.add(new BillingProperties(Constants.CONFIG_KEY_BILLING_INQUIRIES, "kWhBTU", billingInquiries, Constants.FLAG_ENABLED, new Date(timestamp+25000l), false));
- 					conf.add(new BillingProperties(Constants.CONFIG_KEY_T_AND_C, "kWhBTU", tandc, Constants.FLAG_ENABLED, new Date(timestamp+30000l), false));
+ 					conf.add(new BillingProperties(Constants.CONFIG_KEY_DUE_DAYS_PERIOD, "kWhBTU", dueDaysPeriod, Constants.FLAG_ENABLED, new Date(timestamp), false));
+ 					conf.add(new BillingProperties(Constants.CONFIG_KEY_NBTAX, "kWhBTU", nbtax, Constants.FLAG_ENABLED, new Date(timestamp), false));
+ 					conf.add(new BillingProperties(Constants.CONFIG_KEY_VATAX, "kWhBTU", vatax, Constants.FLAG_ENABLED, new Date(timestamp), false));
+ 					conf.add(new BillingProperties(Constants.CONFIG_KEY_EMERGENCY_CONTACT, "kWhBTU", emergencyContact, Constants.FLAG_ENABLED, new Date(timestamp), false));
+ 					conf.add(new BillingProperties(Constants.CONFIG_KEY_BILLING_INQUIRIES, "kWhBTU", billingInquiries, Constants.FLAG_ENABLED, new Date(timestamp), false));
+ 					conf.add(new BillingProperties(Constants.CONFIG_KEY_T_AND_C, "kWhBTU", tandc, Constants.FLAG_ENABLED, new Date(timestamp), false));
  					    disablePreviousMandatoryBillingProperties("kWhBTU");
 						billingPropertiesRepository.saveAll(conf);
 					}
@@ -137,7 +137,7 @@ public class BillingPropertiesService {
 			
 		}
 
-	public void setElecRates(Authentication authentication, String data) {
+	public void setRatesPeak(Authentication authentication, String data, String ext) {
 		if((authentication.getAuthorities().toString().contains("ROLE_SUPERADMIN")||authentication.getAuthorities().toString().contains("ROLE_ADMIN"))) {
 			ObjectMapper mapper = new ObjectMapper();
 			try {
@@ -147,11 +147,10 @@ public class BillingPropertiesService {
 				long timestamp = new Date().getTime();
 				for(String value : result) {
 					if(value != null)
-					conf.add(new BillingProperties(Constants.CONFIG_KEY_PEAK_RATE, "kWh", value, Constants.FLAG_ENABLED, new Date(timestamp), false));
-					timestamp = timestamp + 5000l;
+					conf.add(new BillingProperties(Constants.CONFIG_KEY_PEAK_RATE, ext, value, Constants.FLAG_ENABLED, new Date(timestamp), false));
 				}
 				if(!conf.isEmpty()) {
-					disablePreviousMandatoryBillingProperties(Constants.CONFIG_KEY_PEAK_RATE, "kWh");
+					disablePreviousMandatoryBillingProperties(Constants.CONFIG_KEY_PEAK_RATE, ext);
 					billingPropertiesRepository.saveAll(conf);
 				}
 				
@@ -164,5 +163,82 @@ public class BillingPropertiesService {
 		
 		
 	}
+
+	public void setRatesOffPeak(Authentication authentication, String data, String ext) {
+		if((authentication.getAuthorities().toString().contains("ROLE_SUPERADMIN")||authentication.getAuthorities().toString().contains("ROLE_ADMIN"))) {
+			ObjectMapper mapper = new ObjectMapper();
+			try {
+				String decoded = URLDecoder.decode(data, "UTF-8");
+				String[] result = mapper.readValue(decoded, String[].class);
+				List<BillingProperties> conf = new ArrayList<BillingProperties>();
+				long timestamp = new Date().getTime();
+				for(String value : result) {
+					if(value != null)
+					conf.add(new BillingProperties(Constants.CONFIG_KEY_OFF_PEAK_RATE, ext, value, Constants.FLAG_ENABLED, new Date(timestamp), false));
+				}
+				if(!conf.isEmpty()) {
+					disablePreviousMandatoryBillingProperties(Constants.CONFIG_KEY_OFF_PEAK_RATE, ext);
+					billingPropertiesRepository.saveAll(conf);
+				}
+				
+				
+			} catch (JsonProcessingException | UnsupportedEncodingException e) {
+				// TODO Auto-generated catch block
+				LOGGER.error("Error parsing json string "+ext+" "+e);
+			}
+		}
 		
+	}
+
+	public void setDiscounts(Authentication authentication, String data, String ext) {
+		if((authentication.getAuthorities().toString().contains("ROLE_SUPERADMIN")||authentication.getAuthorities().toString().contains("ROLE_ADMIN"))) {
+			ObjectMapper mapper = new ObjectMapper();
+			try {
+				String decoded = URLDecoder.decode(data, "UTF-8");
+				String[] result = mapper.readValue(decoded, String[].class);
+				List<BillingProperties> conf = new ArrayList<BillingProperties>();
+				long timestamp = new Date().getTime();
+				for(String value : result) {
+					if(value != null)
+					conf.add(new BillingProperties(Constants.CONFIG_KEY_DISCOUNT, ext, value, Constants.FLAG_ENABLED, new Date(timestamp), false));
+				}
+				if(!conf.isEmpty()) {
+					disablePreviousMandatoryBillingProperties(Constants.CONFIG_KEY_DISCOUNT, ext);
+					billingPropertiesRepository.saveAll(conf);
+				}
+				
+				
+			} catch (JsonProcessingException | UnsupportedEncodingException e) {
+				// TODO Auto-generated catch block
+				LOGGER.error("Error parsing json string "+ext+" "+e);
+			}
+		}
+		
+	}
+
+	public void setPenalties(Authentication authentication, String data, String ext) {
+		if((authentication.getAuthorities().toString().contains("ROLE_SUPERADMIN")||authentication.getAuthorities().toString().contains("ROLE_ADMIN"))) {
+			ObjectMapper mapper = new ObjectMapper();
+			try {
+				String decoded = URLDecoder.decode(data, "UTF-8");
+				String[] result = mapper.readValue(decoded, String[].class);
+				List<BillingProperties> conf = new ArrayList<BillingProperties>();
+				long timestamp = new Date().getTime();
+				for(String value : result) {
+					if(value != null)
+					conf.add(new BillingProperties(Constants.CONFIG_KEY_PENALTY, ext, value, Constants.FLAG_ENABLED, new Date(timestamp), false));
+				}
+				if(!conf.isEmpty()) {
+					disablePreviousMandatoryBillingProperties(Constants.CONFIG_KEY_PENALTY, ext);
+					billingPropertiesRepository.saveAll(conf);
+				}
+				
+				
+			} catch (JsonProcessingException | UnsupportedEncodingException e) {
+				// TODO Auto-generated catch block
+				LOGGER.error("Error parsing json string "+ext+" "+e);
+			}
+		}
+		
+	}
 }

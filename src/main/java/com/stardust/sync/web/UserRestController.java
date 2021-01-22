@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.stardust.sync.core.ModbusSingleton;
+import com.stardust.sync.model.Activity;
 import com.stardust.sync.model.Alert;
 import com.stardust.sync.model.Billing;
 import com.stardust.sync.model.BillingProperties;
@@ -23,6 +24,7 @@ import com.stardust.sync.model.Meter;
 import com.stardust.sync.model.MeterConfiguration;
 import com.stardust.sync.model.MeterExtended;
 import com.stardust.sync.model.User;
+import com.stardust.sync.service.ActivityService;
 import com.stardust.sync.service.AlertService;
 import com.stardust.sync.service.BillingPropertiesService;
 import com.stardust.sync.service.BillingService;
@@ -71,6 +73,9 @@ public class UserRestController {
 	
 	@Autowired
 	private BillingService billingService;
+	
+	@Autowired
+	ActivityService activityService;
 	
 	@GetMapping(value = "rest/reading")
     public List<Meter> getReadings(String id, String unit) {
@@ -234,21 +239,24 @@ public class UserRestController {
 	
 	@GetMapping(value = "rest/generateElec")
     public int generateElecBill(String efl, String efr, String ero, String epp, String edi,
-			String eof, String eto, String erp, String epe, String eadj) {
+			String eof, String eto, String erp, String epe, String eadj, Authentication authentication) {
 		if (efl == null || efr == null || ero == null || epp == null || edi == null || eof == null || eto == null
 				|| erp == null || epe == null || eadj == null )
 			return 0;
-
+		
+		activityService.log("Electricity bill generated for Office "+eof+" at "+efl+" Floor. (From:"+efr+" To:"+eto+")", authentication.getName());
 		billingService.generateBill(efl, efr, ero, epp, edi, eof, eto, erp, epe, eadj, "kWh");
 		return 1;
 	}
 	
 	@GetMapping(value = "rest/generateAC")
     public int generateACBill(String afl, String afr, String aro, String app, String adi,
-			String aof, String ato, String arp, String ape, String aadj) {
+			String aof, String ato, String arp, String ape, String aadj, Authentication authentication) {
 		if (afl == null || afr == null || aro == null || app == null || adi == null || aof == null || ato == null
 				|| arp == null || ape == null || aadj == null)
 			return 0;
+		
+		activityService.log("Air Conditioning bill generated for Office "+aof+" at "+afl+" Floor. (From:"+afr+" To:"+ato+")", authentication.getName());
 		billingService.generateBill(afl, afr, aro, app, adi, aof, ato, arp, ape, aadj, "BTU");
 		return 1;
 	}
@@ -271,6 +279,10 @@ public class UserRestController {
 	@GetMapping(value = "rest/getUser")
     public User getUser(Authentication authentication, long id) {
 		return userService.getUser(authentication, id);
+	}
+	@GetMapping(value = "rest/getProfile")
+    public User getProfile(Authentication authentication) {
+		return userService.getProfile(authentication);
 	}
 	@GetMapping(value = "rest/getInitials")
     public Map<String, String> getInitials(Authentication authentication) {
@@ -296,16 +308,76 @@ public class UserRestController {
 	@PostMapping(value = "rest/setSystemConfig")
     public List<Configuration> setSystemConfig(Authentication authentication,@RequestBody  String data) {
 		configurationService.setConfigurations(authentication, data);
+		
+		activityService.log("System configuration updated", authentication.getName());
 		return configurationService.getAllConfigurations();
 	}
 	@PostMapping(value = "rest/setBillPropsMK1")
     public List<List<BillingProperties>> setBillPropsMK1(Authentication authentication,@RequestBody  String data) {
 		billingPropertiesService.setConfigurations(authentication, data);
+		
+		activityService.log("System common billing properties updated", authentication.getName());
 		return billingPropertiesService.getBillingProperties("kWh");
 	}
-	@PostMapping(value = "rest/setElecRates")
-    public List<List<BillingProperties>> setElecRates(Authentication authentication,@RequestBody  String data) {
-		billingPropertiesService.setElecRates(authentication, data);
+	@PostMapping(value = "rest/setElecRatesPeak")
+    public List<List<BillingProperties>> setElecRatesPeak(Authentication authentication,@RequestBody  String data) {
+		billingPropertiesService.setRatesPeak(authentication, data, "kWh");
+		
+		activityService.log("Electricity bill peak rates updated", authentication.getName());
 		return billingPropertiesService.getBillingProperties("kWh");
 	}
+	@PostMapping(value = "rest/setElecRatesOffPeak")
+    public List<List<BillingProperties>> setElecRatesOffPeak(Authentication authentication,@RequestBody  String data) {
+		billingPropertiesService.setRatesOffPeak(authentication, data, "kWh");
+		
+		activityService.log("Electricity bill off peak rates updated", authentication.getName());
+		return billingPropertiesService.getBillingProperties("kWh");
+	}
+    @PostMapping(value = "rest/setAirconRatesPeak")
+    public List<List<BillingProperties>> setAirconRatesPeak(Authentication authentication,@RequestBody  String data) {
+		billingPropertiesService.setRatesPeak(authentication, data, "BTU");
+		
+		activityService.log("Air conditioning bill peak rates updated", authentication.getName());
+		return billingPropertiesService.getBillingProperties("BTU");
+	}
+    @PostMapping(value = "rest/setAirconRatesOffPeak")
+    public List<List<BillingProperties>> setAirconRatesOffPeak(Authentication authentication,@RequestBody  String data) {
+		billingPropertiesService.setRatesOffPeak(authentication, data, "BTU");
+		
+		activityService.log("Air conditioning bill off peak rates updated", authentication.getName());
+		return billingPropertiesService.getBillingProperties("BTU");
+	}
+    @PostMapping(value = "rest/setElecDiscounts")
+    public List<List<BillingProperties>> setElecDiscounts(Authentication authentication,@RequestBody  String data) {
+		billingPropertiesService.setDiscounts(authentication, data, "kWh");
+		
+		activityService.log("Electricity bill discounts updated", authentication.getName());
+		return billingPropertiesService.getBillingProperties("kWh");
+	}
+    @PostMapping(value = "rest/setAirconDiscounts")
+    public List<List<BillingProperties>> setAirconDiscounts(Authentication authentication,@RequestBody  String data) {
+		billingPropertiesService.setDiscounts(authentication, data, "BTU");
+		
+		activityService.log("Air conditioning bill discounts updated", authentication.getName());
+		return billingPropertiesService.getBillingProperties("BTU");
+	}
+    @PostMapping(value = "rest/setElecPenalties")
+    public List<List<BillingProperties>> setElecPenalties(Authentication authentication,@RequestBody  String data) {
+		billingPropertiesService.setPenalties(authentication, data, "kWh");
+		
+		activityService.log("Electricity bill penalties updated", authentication.getName());
+		return billingPropertiesService.getBillingProperties("kWh");
+	}
+    @PostMapping(value = "rest/setAirconPenalties")
+    public List<List<BillingProperties>> setAirconPenalties(Authentication authentication,@RequestBody  String data) {
+		billingPropertiesService.setPenalties(authentication, data, "BTU");
+		
+		activityService.log("Air conditioning bill penalties updated", authentication.getName());
+		return billingPropertiesService.getBillingProperties("BTU");
+	}
+    @GetMapping(value = "rest/getActivities")
+    public List<Activity> getActivities(Authentication authentication) {
+    	return activityService.getActivities(authentication);
+	}
+    
 }

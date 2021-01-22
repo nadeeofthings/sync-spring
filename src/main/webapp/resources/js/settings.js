@@ -3,6 +3,8 @@ var customerList= "";
 
 $(document).ready(function(){
 	//TODO CODE
+
+    redirect_tab();
 	loadTables();
 	$('#userTable tbody').on('click', 'tr', function () {
         var data = userTable.row( this ).data();
@@ -448,10 +450,49 @@ $(document).ready(function(){
 	  	
 	  	$.ajax({
 					type: "POST",
-					url: contextPath+'/rest/setElecRates',
+					url: contextPath+'/rest/setElecRatesPeak',
 					data: JSON.stringify($("#elecPeak").tagsinput('items')),
 					success: function(data) {
-					    load_elecRates();
+					  	 $.ajax({
+								type: "POST",
+								url: contextPath+'/rest/setElecRatesOffPeak',
+								data: JSON.stringify($("#elecOffPeak").tagsinput('items')),
+								success: function(data) {
+								    load_elecRates();
+						        },
+								error: function(jqXHR, exception) {
+									window.location.href = contextPath;
+								}
+							      });
+			        },
+					error: function(jqXHR, exception) {
+						window.location.href = contextPath;
+					}
+				      });
+	  	
+	  });
+
+	  $("#elecRates_RST").on("click", function(){
+		  load_elecRates();
+		 });
+
+	  $("#airconRates").on("click", function(){
+	  	$.ajax({
+					type: "POST",
+					url: contextPath+'/rest/setAirconRatesPeak',
+					data: JSON.stringify($("#airconPeak").tagsinput('items')),
+					success: function(data) {
+					    $.ajax({
+								type: "POST",
+								url: contextPath+'/rest/setAirconRatesOffPeak',
+								data: JSON.stringify($("#airconOffPeak").tagsinput('items')),
+								success: function(data) {
+								    load_airconRates();
+						        },
+								error: function(jqXHR, exception) {
+									window.location.href = contextPath;
+								}
+							      });
 			        },
 					error: function(jqXHR, exception) {
 						window.location.href = contextPath;
@@ -459,11 +500,65 @@ $(document).ready(function(){
 				      });
 	  });
 
-	  $("#elecRates_RST").on("click", function(){
-		  load_elecRates();
+	  $("#airconRates_RST").on("click", function(){
+		  load_airconRates();
 		 });
 
+	  $("#discounts").on("click", function(){
+	  	$.ajax({
+					type: "POST",
+					url: contextPath+'/rest/setElecDiscounts',
+					data: JSON.stringify($("#elecDisc").tagsinput('items')),
+					success: function(data) {
+					    $.ajax({
+								type: "POST",
+								url: contextPath+'/rest/setAirconDiscounts',
+								data: JSON.stringify($("#airconDisc").tagsinput('items')),
+								success: function(data) {
+								    load_discounts();
+						        },
+								error: function(jqXHR, exception) {
+									window.location.href = contextPath;
+								}
+							      });
+			        },
+					error: function(jqXHR, exception) {
+						window.location.href = contextPath;
+					}
+				      });
+	  });
 
+	  $("#discounts_RST").on("click", function(){
+		  load_discounts();
+		 });
+
+	  $("#peanlties").on("click", function(){
+	  	$.ajax({
+					type: "POST",
+					url: contextPath+'/rest/setElecPenalties',
+					data: JSON.stringify($("#elecPen").tagsinput('items')),
+					success: function(data) {
+					    $.ajax({
+								type: "POST",
+								url: contextPath+'/rest/setAirconPenalties',
+								data: JSON.stringify($("#airconPen").tagsinput('items')),
+								success: function(data) {
+								    load_peanlties();
+						        },
+								error: function(jqXHR, exception) {
+									window.location.href = contextPath;
+								}
+							      });
+			        },
+					error: function(jqXHR, exception) {
+						window.location.href = contextPath;
+					}
+				      });
+	  });
+
+	  $("#peanlties_RST").on("click", function(){
+		  load_peanlties();
+		 });
 
 	  //END TODO CODE
 });
@@ -612,6 +707,7 @@ function loadTables() {
 		    order: [[ 4, "asc" ]]
 		} );
 }
+
 function loadUserInfo(id){
 	$.ajax({
 		type: "GET",
@@ -669,6 +765,90 @@ function loadUserInfo(id){
             });
 };
 
+function load_peanlties(){
+	$.ajax({
+		type: "GET",
+		url: contextPath+'/rest/getAllBillingProperties?ext=kWh',
+		dataType: 'json',
+		success: function(data) {
+			elopetag = $('#elecPen');
+            $.each(data[7], function(key,value){
+		      elopetag.tagsinput('add', value.propertyValue);  	 
+		    });
+		},
+		error: function(jqXHR, exception) {
+			window.location.href = contextPath;
+		}
+	      });
+	$.ajax({
+		type: "GET",
+		url: contextPath+'/rest/getAllBillingProperties?ext=BTU',
+		dataType: 'json',
+		success: function(data) {
+			acopetag = $('#airconPen');
+            $.each(data[7], function(key,value){
+		      acopetag.tagsinput('add', value.propertyValue);  	 
+		    });
+		    },
+		error: function(jqXHR, exception) {
+			window.location.href = contextPath;
+		}
+	      });
+}
+
+function load_discounts(){
+	$.ajax({
+		type: "GET",
+		url: contextPath+'/rest/getAllBillingProperties?ext=kWh',
+		dataType: 'json',
+		success: function(data) {
+			elodtag = $('#elecDisc');
+            $.each(data[8], function(key,value){
+            	//console.log(value.propertyValue);
+		      elodtag.tagsinput('add', value.propertyValue);  	 
+		    });
+		},
+		error: function(jqXHR, exception) {
+			window.location.href = contextPath;
+		}
+	      });
+	$.ajax({
+		type: "GET",
+		url: contextPath+'/rest/getAllBillingProperties?ext=BTU',
+		dataType: 'json',
+		success: function(data) {
+			acdtag = $('#airconDisc');
+            $.each(data[8], function(key,value){
+		      acdtag.tagsinput('add', value.propertyValue);  	 
+		    });
+		    },
+		error: function(jqXHR, exception) {
+			window.location.href = contextPath;
+		}
+	      });
+}
+function load_airconRates(){
+ $.ajax({
+		type: "GET",
+		url: contextPath+'/rest/getAllBillingProperties?ext=BTU',
+		dataType: 'json',
+		success: function(data) {
+			acptag = $('#airconPeak');
+            $.each(data[5], function(key,value){
+		      acptag.tagsinput('add', value.propertyValue);  	 
+		    });
+		    acoptag = $('#airconOffPeak');
+            $.each(data[6], function(key,value){
+		      acoptag.tagsinput('add', value.propertyValue);  	 
+		    });
+		    },
+		error: function(jqXHR, exception) {
+			window.location.href = contextPath;
+		}
+	      });
+}
+
+
 function load_elecRates(){
  $.ajax({
 		type: "GET",
@@ -691,8 +871,6 @@ function load_elecRates(){
 		}
 	      });
 }
-
-
 
 function load_sys_config(){
 
@@ -736,6 +914,14 @@ function load_billPropsMK1(){
 			window.location.href = contextPath;
 		}
 	      });
+}
+
+function redirect_tab(){
+	var url_string =window.location.href;
+	var url = new URL(url_string);
+	if(url.searchParams.get("tab")=="customer"){
+		$('#customerTab').tab('show')
+	}
 }
 
 function number_format(number, decimals, dec_point, thousands_sep) {

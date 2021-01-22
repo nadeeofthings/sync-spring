@@ -208,15 +208,17 @@ transform:scale(1.05);
               </a>
               <!-- Dropdown - User Information -->
               <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-                <a class="dropdown-item" href="#">
+                <a class="dropdown-item" href="#" id="profile_BTN" >
                   <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                   Profile
                 </a>
-                <a class="dropdown-item" href="#">
+                <security:authorize access="hasAnyRole('ROLE_SUPERADMIN', 'ROLE_ADMIN')">
+                <a class="dropdown-item" href="${contextPath}/settings">
                   <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
                   Settings
                 </a>
-                <a class="dropdown-item" href="#">
+                </security:authorize>
+                <a class="dropdown-item" href="${contextPath}/activity">
                   <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
                   Activity Log
                 </a>
@@ -253,7 +255,7 @@ transform:scale(1.05);
 	                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-user mr-2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
 	                  User Settings
 	                </a>
-	                <a href="#customer" data-toggle="tab" class="nav-item nav-link has-icon nav-link-faded">
+	                <a href="#customer" id="customerTab" data-toggle="tab" class="nav-item nav-link has-icon nav-link-faded">
 	                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="currentColor" stroke="currentColor" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round" class="feather feather-credit-card mr-2"><path fill-rule="evenodd" d="M11.03 2.59a1.5 1.5 0 011.94 0l7.5 6.363a1.5 1.5 0 01.53 1.144V19.5a1.5 1.5 0 01-1.5 1.5h-5.75a.75.75 0 01-.75-.75V14h-2v6.25a.75.75 0 01-.75.75H4.5A1.5 1.5 0 013 19.5v-9.403c0-.44.194-.859.53-1.144l7.5-6.363zM12 3.734l-7.5 6.363V19.5h5v-6.25a.75.75 0 01.75-.75h3.5a.75.75 0 01.75.75v6.25h5v-9.403L12 3.734z"></path></svg>
 	                  Customer Settings
 	                </a>
@@ -509,8 +511,8 @@ transform:scale(1.05);
 						  <small id="emailHelp" class="form-text text-muted"><i>To enter a new value, type it in and press enter (5 entries max)</i></small>
 						</div>
 						<div class="text-right">
-		                  <button type="button" class="btn btn-primary pull-right">Update Values</button>
-		                  <button type="reset" class="btn btn-light pull-right">Reset Changes</button>
+		                  <button type="button" id="airconRates" class="btn btn-primary pull-right">Update Values</button>
+		                  <button type="button" id="airconRates_RST" class="btn btn-light pull-right">Reset Changes</button>
 		                  </div>
 		                  
 		                  <input class="form-control invisible"></input>
@@ -527,8 +529,8 @@ transform:scale(1.05);
 						  <small id="emailHelp" class="form-text text-muted"><i>To enter a new value, type it in and press enter (5 entries max)</i></small>
 						</div>
 						<div class="text-right">
-		                  <button type="button" class="btn btn-info pull-right">Update Values</button>
-		                  <button type="reset" class="btn btn-light pull-right">Reset Changes</button>
+		                  <button type="button" id=discounts class="btn btn-info pull-right">Update Values</button>
+		                  <button type="button" id="discounts_RST" class="btn btn-light pull-right">Reset Changes</button>
 		                  </div>
 		                  
 						<input class="form-control invisible"></input>
@@ -546,8 +548,8 @@ transform:scale(1.05);
 						  <small id="emailHelp" class="form-text text-muted"><i>To enter a new value, type it in and press enter (5 entries max)</i></small>
 						</div>
 						<div class="text-right">
-		                  <button type="button" class="btn btn-danger pull-right">Update Values</button>
-		                  <button type="reset" class="btn btn-light pull-right">Reset Changes</button>
+		                  <button type="button" id="peanlties" class="btn btn-danger pull-right">Update Values</button>
+		                  <button type="button" id="peanlties_RST" class="btn btn-light pull-right">Reset Changes</button>
 		                  </div>
 	                </form>
 	                </div>
@@ -639,7 +641,7 @@ transform:scale(1.05);
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLongTitle">Information</h5>
+        <h5 class="modal-title">Information</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -703,6 +705,68 @@ transform:scale(1.05);
 									   </td>
 									</tr>
 								</security:authorize>
+								<tr>
+									<th class="align-middle"></th>
+									<td class="align-middle"></td>
+								</tr>
+							</tbody>
+						</table>
+
+					</div>
+				</div>
+		
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Profile Modal -->
+<div class="modal fade" id="userProfile" tabindex="-1" role="dialog" aria-labelledby="Bill Confirmation" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Profile</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      	<div class="modal-body">
+						<div class="card">
+					<div class="card-header">
+						<h5 id="ProleH" class="card-title mb-0"></h5>
+					</div>
+					<div class="card-body">
+						<div class="row justify-content-center">
+							<div  class="col">
+								<div id="Pinitials"></div>
+							</div>
+							<div class="col-sm-9 col-xl-12 col-xxl-9 text-center text-capitalize font-weight-bold">
+								<p id="Pfirstname"></p>
+							</div>
+						</div>
+
+						<table class="table table-sm mt-2 mb-4">
+							<tbody>
+								<tr>
+									<th class="align-middle">Name</th>
+									<td class="align-middle" id="Pname"></td>
+								</tr>
+								<tr>
+									<th class="align-middle">Department</th>
+									<td class="align-middle" id="Pdepartment"></td>
+								</tr>
+								<tr>
+									<th class="align-middle">Email</th>
+									<td class="align-middle" id="Pemail"></td>
+								</tr>
+								<tr>
+									<th class="align-middle">Phone</th>
+									<td class="align-middle" id="Pphone" ></td>
+								</tr>
 								<tr>
 									<th class="align-middle"></th>
 									<td class="align-middle"></td>

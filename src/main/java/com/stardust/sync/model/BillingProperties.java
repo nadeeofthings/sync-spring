@@ -10,12 +10,14 @@ public class BillingProperties {
 	/**
 	 * 
 	 */
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	long id;
 	private String propertyKey;
 	private String ext;
 	@Lob
 	private String propertyValue;
 	private int enabled;
-	@Id
 	private Date timestamp;
 	
 	private Boolean defaultVal;
@@ -33,6 +35,16 @@ public class BillingProperties {
 		this.enabled = enabled;
 		this.timestamp = timestamp;
 		this.defaultVal = defaultVal;
+	}
+
+	
+
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
 	}
 
 

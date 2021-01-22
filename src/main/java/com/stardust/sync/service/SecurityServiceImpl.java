@@ -17,6 +17,9 @@ public class SecurityServiceImpl implements SecurityService{
 
     @Autowired
     private UserDetailsService userDetailsService;
+    
+    @Autowired
+    private ActivityService activityService;
 
     private static final Logger logger = LoggerFactory.getLogger(SecurityServiceImpl.class);
 

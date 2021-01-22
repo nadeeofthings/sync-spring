@@ -1,5 +1,6 @@
 package com.stardust.sync.model;
 
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.*;

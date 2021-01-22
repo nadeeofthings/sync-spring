@@ -23,6 +23,9 @@ public class CustomerService {
 	@Autowired
 	private MeterConfigurationService meterConfigurationService;
 	
+	@Autowired
+	ActivityService activityService;
+	
 	public String save(Customer customer) {
 		customerRepository.save(customer);
 		return "success";
@@ -51,6 +54,8 @@ public class CustomerService {
 			MeterConfiguration config = meterConfigurationService.getMeterConfigurationByIdAndUnitAndMeterAndExt(id, unit, meter, ext);
 			Customer customer = findById(customerId);
 			config.setCustomer(customer);
+			
+			activityService.log(customer.getName()+" assigned to "+id+" floor office "+unit+" meter "+meter, authentication.getName());
 			meterConfigurationService.saveConfiguration(config);
 			return config;
 		}else {

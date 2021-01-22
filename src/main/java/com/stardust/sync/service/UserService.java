@@ -31,5 +31,9 @@ public interface UserService {
 	User rank(Authentication authentication, String uname, String role);
 
 	User enable(Authentication authentication, String uname, String flag);
+
+	User getProfile(Authentication authentication);
+
+	User findById(Long id);
 	
 }

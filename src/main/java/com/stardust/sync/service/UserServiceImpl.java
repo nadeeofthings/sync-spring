@@ -16,6 +16,9 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import javax.persistence.EntityNotFoundException;
+
 import java.util.Map;
 
 @Service
@@ -26,6 +29,10 @@ public class UserServiceImpl implements UserService {
     private RoleRepository roleRepository;
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
+    
+
+	@Autowired
+	ActivityService activityService;
 
     @Override
     public void save(User user) {
@@ -101,6 +108,13 @@ public class UserServiceImpl implements UserService {
 	public User findByIdAndEnabled(Long id, boolean enabled) {
 		return userRepository.findByIdAndEnabled(id, enabled);
 	}
+	
+	@Override
+	public User findById(Long id) {
+		return userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException());
+	}
+	
+	
 	@Override
 	public User getUser(Authentication authentication, long id){
 		User usrOut = findByIdAndEnabled(id, true);
@@ -134,6 +148,7 @@ public class UserServiceImpl implements UserService {
 		if(authentication.getAuthorities().toString().contains("ROLE_SUPERADMIN") && usr!=null) {
 			Role roler =(role.contains("ADMIN")) ? roleRepository.findByName("ROLE_ADMIN") : roleRepository.findByName("ROLE_USER");
 			usr.setRole(roler);
+			activityService.log(usr.getFirstname() +" "+usr.getLastname()+" "+((role.contains("ADMIN")?"promoted":"demoted"))+" to "+((role.contains("ADMIN")?"Admin":"User")), authentication.getName());
 			userRepository.save(usr);
 			return usr;
 		}else {
@@ -146,11 +161,19 @@ public class UserServiceImpl implements UserService {
 		User usr = findByUsername(uname);
 		if((authentication.getAuthorities().toString().contains("ROLE_SUPERADMIN")||authentication.getAuthorities().toString().contains("ROLE_ADMIN")) && usr!=null) {
 			usr.setEnabled((flag.contains("ENABLE")?true:false));
+			activityService.log(usr.getFirstname() +" "+usr.getLastname()+" is now "+((flag.contains("ENABLE")?"activated":"deactivated")), authentication.getName());
 			userRepository.save(usr);
 			return usr;
 		}else {
 			return new User();
 		}
+	}
+
+	@Override
+	public User getProfile(Authentication authentication) {
+		User usrOut = findByUsername(authentication.getName());
+		usrOut.setPassword(null);
+		return usrOut;
 	}
 	
 }

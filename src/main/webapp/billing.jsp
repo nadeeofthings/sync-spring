@@ -208,15 +208,17 @@ transform:scale(1.05);
               </a>
               <!-- Dropdown - User Information -->
               <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-                <a class="dropdown-item" href="#">
+                <a class="dropdown-item" href="#" id="profile_BTN" >
                   <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                   Profile
                 </a>
-                <a class="dropdown-item" href="#">
+                <security:authorize access="hasAnyRole('ROLE_SUPERADMIN', 'ROLE_ADMIN')">
+                <a class="dropdown-item" href="${contextPath}/settings">
                   <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
                   Settings
                 </a>
-                <a class="dropdown-item" href="#">
+                </security:authorize>
+                <a class="dropdown-item" href="${contextPath}/activity">
                   <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
                   Activity Log
                 </a>
@@ -633,6 +635,68 @@ transform:scale(1.05);
   </div>
 </div>
 
+
+<!-- Profile Modal -->
+<div class="modal fade" id="userProfile" tabindex="-1" role="dialog" aria-labelledby="Bill Confirmation" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Profile</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      	<div class="modal-body">
+						<div class="card">
+					<div class="card-header">
+						<h5 id="ProleH" class="card-title mb-0"></h5>
+					</div>
+					<div class="card-body">
+						<div class="row justify-content-center">
+							<div  class="col">
+								<div id="Pinitials"></div>
+							</div>
+							<div class="col-sm-9 col-xl-12 col-xxl-9 text-center text-capitalize font-weight-bold">
+								<p id="Pfirstname"></p>
+							</div>
+						</div>
+
+						<table class="table table-sm mt-2 mb-4">
+							<tbody>
+								<tr>
+									<th class="align-middle">Name</th>
+									<td class="align-middle" id="Pname"></td>
+								</tr>
+								<tr>
+									<th class="align-middle">Department</th>
+									<td class="align-middle" id="Pdepartment"></td>
+								</tr>
+								<tr>
+									<th class="align-middle">Email</th>
+									<td class="align-middle" id="Pemail"></td>
+								</tr>
+								<tr>
+									<th class="align-middle">Phone</th>
+									<td class="align-middle" id="Pphone" ></td>
+								</tr>
+								<tr>
+									<th class="align-middle"></th>
+									<td class="align-middle"></td>
+								</tr>
+							</tbody>
+						</table>
+
+					</div>
+				</div>
+		
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
   <!-- Logout Modal-->
   <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">

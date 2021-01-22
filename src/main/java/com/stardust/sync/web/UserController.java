@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import com.stardust.sync.model.Billing;
 import com.stardust.sync.model.Customer;
 import com.stardust.sync.model.User;
+import com.stardust.sync.service.ActivityService;
 import com.stardust.sync.service.BillingService;
 import com.stardust.sync.service.CustomerService;
 import com.stardust.sync.service.SecurityService;
@@ -61,6 +62,9 @@ public class UserController {
 	
 	@Autowired
 	private CustomerService customerService;
+	
+	@Autowired
+	ActivityService activityService;
 
 	@GetMapping("/registration")
 	public String registration(Model model) {
@@ -78,7 +82,6 @@ public class UserController {
 		}
 
 		userService.save(userForm);
-
 		// securityService.autoLogin(userForm.getUsername(),
 		// userForm.getPasswordConfirm());
 
@@ -139,6 +142,11 @@ public class UserController {
 		return "reports";
 	}
 	
+	@GetMapping({ "/activity" })
+	public String activity(Model model) {
+		return "activity";
+	}
+	
 	@GetMapping({ "/settings" })
 	public String settings(Model model, Authentication authentication) {
 		String auth = authentication.getAuthorities().toString();
@@ -150,17 +158,20 @@ public class UserController {
 	}
 
 	@PostMapping("/settings")
-	public String settings(@ModelAttribute("customerForm") Customer customerForm, BindingResult bindingResult) {
+	public String settings( Authentication authentication, Model model, @ModelAttribute("customerForm") Customer customerForm, BindingResult bindingResult) {
 		customerValidator.validate(customerForm, bindingResult);
 		if (bindingResult.hasErrors()) {
 			return "settings";
 		}
 		customerService.save(customerForm);
+		
+		activityService.log("New customer: "+customerForm.getName()+" created", authentication.getName());
+		model.addAttribute("tab", "customer");
 		return "settings";
 	}
 	
 	@RequestMapping(value = "/billing/downloadBill", method = RequestMethod.GET, produces = MediaType.APPLICATION_PDF_VALUE)
-	public ResponseEntity<InputStreamResource> electricalR(long billId) {
+	public ResponseEntity<InputStreamResource> electricalR(long billId, Authentication authentication) {
 		SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
 		Billing bill = billingService.getBillByBillId(billId);
 		if(bill != null) {
@@ -168,7 +179,9 @@ public class UserController {
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Content-Disposition", "inline; filename="+bill.getBillId()+"_"+(bill.getExt().equalsIgnoreCase("kWh")?"Electricity":"HVAC")+"_Bill_" 
 												+ bill.getId()+"_" +bill.getUnit()+"_"+bill.getMeter()+"_"+format.format(bill.getFromDate())+"-" + format.format(bill.getToDate()) + ".pdf");
-
+		
+		activityService.log(bill.getBillId()+"_"+(bill.getExt().equalsIgnoreCase("kWh")?"Electricity":"HVAC")+"_Bill_" 
+				+ bill.getId()+"_" +bill.getUnit()+"_"+bill.getMeter()+"_"+format.format(bill.getFromDate())+"-" + format.format(bill.getToDate()) + ".pdf generated", authentication.getName());
 		return ResponseEntity.ok().headers(headers).contentType(MediaType.APPLICATION_PDF)
 				.body(new InputStreamResource(bis));
 		}
@@ -176,7 +189,7 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "/report/electricalDailyReport", method = RequestMethod.GET, produces = MediaType.APPLICATION_PDF_VALUE)
-	public ResponseEntity<InputStreamResource> electricalDailyReport(String efr, String eto) {
+	public ResponseEntity<InputStreamResource> electricalDailyReport(String efr, String eto, Authentication authentication) {
 
 		if (efr == null || eto == null)
 			return null;
@@ -185,13 +198,14 @@ public class UserController {
 
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Content-Disposition", "inline; filename=Electrical_DailyReport_" + efr + "-" + eto + ".pdf");
-
+		
+		activityService.log("Electrical_DailyReport_" + efr + "-" + eto + ".pdf created", authentication.getName());
 		return ResponseEntity.ok().headers(headers).contentType(MediaType.APPLICATION_PDF)
 				.body(new InputStreamResource(bis));
 	}
 
 	@RequestMapping(value = "/report/airconDailyReport", method = RequestMethod.GET, produces = MediaType.APPLICATION_PDF_VALUE)
-	public ResponseEntity<InputStreamResource> airconDailyReport(String efr, String eto) {
+	public ResponseEntity<InputStreamResource> airconDailyReport(String efr, String eto, Authentication authentication) {
 
 		if (efr == null || eto == null)
 			return null;
@@ -200,13 +214,14 @@ public class UserController {
 
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Content-Disposition", "inline; filename=Aircon_DailyReport_" + efr + "-" + eto + ".pdf");
-
+		
+		activityService.log("Aircon_DailyReport_" + efr + "-" + eto + ".pdf generated", authentication.getName());
 		return ResponseEntity.ok().headers(headers).contentType(MediaType.APPLICATION_PDF)
 				.body(new InputStreamResource(bis));
 	}
 
 	@RequestMapping(value = "/report/electricalTenantSummary", method = RequestMethod.GET, produces = MediaType.APPLICATION_PDF_VALUE)
-	public ResponseEntity<InputStreamResource> electricalTenantSummary(String efl, String eof, String efr, String eto) {
+	public ResponseEntity<InputStreamResource> electricalTenantSummary(String efl, String eof, String efr, String eto, Authentication authentication) {
 
 		if (efr == null || eto == null)
 			return null;
@@ -215,13 +230,15 @@ public class UserController {
 
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Content-Disposition", "inline; filename=Electrical_TenantSummary_" + efr + "-" + eto + ".pdf");
-
+		
+		
+		activityService.log("Electrical_TenantSummary_" + efr + "-" + eto + ".pdf generated", authentication.getName());
 		return ResponseEntity.ok().headers(headers).contentType(MediaType.APPLICATION_PDF)
 				.body(new InputStreamResource(bis));
 	}
 
 	@RequestMapping(value = "/report/airconTenantSummary", method = RequestMethod.GET, produces = MediaType.APPLICATION_PDF_VALUE)
-	public ResponseEntity<InputStreamResource> airconTenantSummary(String afl, String aof, String afr, String ato) {
+	public ResponseEntity<InputStreamResource> airconTenantSummary(String afl, String aof, String afr, String ato, Authentication authentication) {
 
 		if (afr == null || ato == null)
 			return null;
@@ -231,12 +248,13 @@ public class UserController {
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Content-Disposition", "inline; filename=Aircon_TenantSummary_" + afr + "-" + ato + ".pdf");
 
+		activityService.log("Aircon_TenantSummary_" + afr + "-" + ato + ".pdf generated", authentication.getName());
 		return ResponseEntity.ok().headers(headers).contentType(MediaType.APPLICATION_PDF)
 				.body(new InputStreamResource(bis));
 	}
 
 	@RequestMapping(value = "/report/facilitySummaryReport", method = RequestMethod.GET, produces = MediaType.APPLICATION_PDF_VALUE)
-	public ResponseEntity<InputStreamResource> facilitySummaryReport(String efr, String eto) {
+	public ResponseEntity<InputStreamResource> facilitySummaryReport(String efr, String eto, Authentication authentication) {
 
 		if (efr == null || eto == null)
 			return null;
@@ -246,6 +264,7 @@ public class UserController {
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Content-Disposition", "inline; filename=Facility_Summary_Report_" + efr + "-" + eto + ".pdf");
 
+		activityService.log("Facility_Summary_Report_" + efr + "-" + eto + ".pdf generated", authentication.getName());
 		return ResponseEntity.ok().headers(headers).contentType(MediaType.APPLICATION_PDF)
 				.body(new InputStreamResource(bis));
 	}
