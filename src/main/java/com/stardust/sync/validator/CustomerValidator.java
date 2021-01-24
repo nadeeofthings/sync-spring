@@ -1,5 +1,6 @@
 package com.stardust.sync.validator;
 
+import org.apache.commons.validator.routines.EmailValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
@@ -24,16 +25,25 @@ public class CustomerValidator implements Validator {
     @Override
     public void validate(Object o, Errors errors) {
         Customer customer = (Customer) o;
-
+        EmailValidator validator = EmailValidator.getInstance();
+        
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "name", "NotEmpty");
         
         if (customerService.findByName(customer.getName()) != null) {
             errors.rejectValue("name", "Duplicate.customerForm.name");
         }
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "address", "NotEmpty");
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "business_email", "NotEmpty");
+        //ValidationUtils.rejectIfEmptyOrWhitespace(errors, "business_email", "NotEmpty");
+        
+        if(!validator.isValid(customer.getBusiness_email())) {
+        	 errors.rejectValue("business_email", "ValidEmail.customerForm");
+        }
+        
+        if(!validator.isValid(customer.getEmail())) {
+       	 errors.rejectValue("email", "ValidEmail.customerForm");
+       }
+        
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "business_phone", "NotEmpty");
-       
-
+        
     }
 }

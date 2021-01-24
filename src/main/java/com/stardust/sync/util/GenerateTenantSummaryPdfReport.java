@@ -23,6 +23,8 @@ import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.CategoryLabelPositions;
+import org.jfree.chart.axis.NumberAxis;
+import org.jfree.chart.axis.NumberTickUnit;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PiePlot3D;
 import org.jfree.data.category.CategoryDataset;
@@ -185,7 +187,7 @@ public class GenerateTenantSummaryPdfReport {
 				cellx.setTextAlignment(TextAlignment.CENTER);
 				table.addCell(cellx);
 				
-				dataset4.addValue( meterLoop.getUseage() , efl.equals("Ground") ? "Com Area" : efl+" Office" , dFormat2.format(meterLoop.getTimeStamp()) );
+				dataset4.addValue( meterLoop.getUseage() , efl.equals("Ground") ? "Com Area kWh "+eof : efl+" Office" , dFormat2.format(meterLoop.getTimeStamp()) );
 			}
         
 	        
@@ -197,7 +199,7 @@ public class GenerateTenantSummaryPdfReport {
 	                true,true,false);
 	        
 	     // trick to change the default font of the chart
-	        chart4.setTitle(new TextTitle( (efl.equals("Ground") ? "Com Area " : efl+" Floor Office "+eof)+" Daily Usage Summary", new java.awt.Font("Serif", Font.PLAIN, 14)));
+	        chart4.setTitle(new TextTitle( (efl.equals("Ground") ? "Com Area kWh "+eof : efl+" Floor Office "+eof)+" Daily Usage Summary", new java.awt.Font("Serif", Font.PLAIN, 14)));
 	        chart4.setBackgroundPaint(Color.white);
 	        
 	        CategoryPlot plot2 = (CategoryPlot) chart4.getPlot();
@@ -207,6 +209,7 @@ public class GenerateTenantSummaryPdfReport {
 	        plot2.getDomainAxis().setCategoryLabelPositions(CategoryLabelPositions.UP_45);
 	        plot2.getDomainAxis().setTickLabelFont(new Font("Serif", java.awt.Font.PLAIN, 9));
 	        plot2.getRangeAxis().setLabelFont(new Font("Serif", java.awt.Font.PLAIN, 12));
+	        
 	        
 			PdfReader reader = new PdfReader(new ByteArrayInputStream(chartGenerator.generateChartPDF(chart4)));
 			PdfDocument chartDoc = new PdfDocument(reader);

@@ -33,17 +33,6 @@
 <link href="${contextPath}/resources/vendor/bootstrapTags/bootstrap-tagsinput.css" rel="stylesheet">
 <link href="${contextPath}/resources/css/switch.css" rel="stylesheet">
 
-
-	
-	
-	<script type="text/javascript">
-	var contextPath = "${contextPath}";
-</script>
-
-<script>
-
-</script>
-
 <script type="text/javascript">
 var contextPath = "${contextPath}";
 </script>
@@ -319,7 +308,7 @@ transform:scale(1.05);
 	                <h5>CUSTOMER SETTINGS</h5>
 	                <hr>
 	                <div class="container">
-		                <form:form method="POST" modelAttribute="customerForm" class="customer" autocomplete="off">
+		                <form:form method="POST" modelAttribute="customerForm" class="customer" autocomplete="off" id="customerFormJS">
 		                <!-- 	                "name": "Default Company",
 												"address": "Default Address",
 												"nic": "123456789",
@@ -329,18 +318,18 @@ transform:scale(1.05);
 												"business_phone": "0112123456",
 												"business_email": "admin@default.com"
 	 							--> 
-	
 		                		<div class="form-group">
 							    <label for="inputAddress2">Name</label>
 							    <spring:bind path="name">
-							    <form:input type="text" class="form-control ${status.error ? 'is-invalid' : ''}" path="name" placeholder="ABC (Pvt) Ltd."></form:input>
+							    <form:input type="text" class="form-control ${status.error ? 'is-invalid' : ''}" path="name" ></form:input>
 							    <form:errors path="name" class="invalid-feedback"></form:errors>
+							    <input  class="invisible" value=${status.error ? 'error' : ''}>
 							    </spring:bind>
 							  </div>
 							  <div class="form-group">
 							    <label for="inputAddress">Address</label>
 							    <spring:bind path="address">
-							    <form:input type="text" class="form-control ${status.error ? 'is-invalid' : ''}" path="address" placeholder="1234 Main St"></form:input>
+							    <form:input type="text" class="form-control ${status.error ? 'is-invalid' : ''}" path="address" ></form:input>
 							    <form:errors path="address" class="invalid-feedback"></form:errors>
 							    </spring:bind>
 							  </div>
@@ -348,42 +337,44 @@ transform:scale(1.05);
 							    <div class="form-group col-md-6">
 							      <label for="inputEmail4">National Identity Number</label>
 							      <spring:bind path="nic">
-							      <form:input type="text" class="form-control " path="nic" placeholder="123456789V"></form:input>
+							      <form:input type="text" class="form-control " path="nic" ></form:input>
 							      </spring:bind>
 							    </div>
 							    <div class="form-group col-md-6">
 							      <label for="inputPassword4">Business Registration</label>
 							      <spring:bind path="brc">
-							      <form:input type="text" class="form-control" path="brc" placeholder="123456789"></form:input>
+							      <form:input type="text" class="form-control" path="brc" ></form:input>
 							      </spring:bind>
 							    </div>
 							  </div>
 							  <div class="form-row">
 							    <div class="form-group col-md-6">
-							      <label for="inputEmail4">Email</label>
+							      <label for="inputEmail4">Lessee Email</label>
 							      <spring:bind path="email">
-							      <form:input type="text" class="form-control" path="email" placeholder="admin@company.lk"></form:input>
+							      <form:input type="text" class="form-control  ${status.error ? 'is-invalid' : ''}" path="email" ></form:input>
+							      <form:errors path="email" class="invalid-feedback"></form:errors>
 							      </spring:bind>
 							    </div>
 							    <div class="form-group col-md-6">
-							      <label for="inputPassword4">Phone</label>
+							      <label for="inputPassword4">Lessee Phone</label>
 							      <spring:bind path="phone">
-							      <form:input type="text" class="form-control" path="phone" placeholder="0112345678"></form:input>
+							      <form:input type="text" class="form-control  ${status.error ? 'is-invalid' : ''}" path="phone" ></form:input>
+							      <form:errors path="phone" class="invalid-feedback"></form:errors>
 							      </spring:bind>
 							    </div>
 							  </div>
 							  <div class="form-row">
 							    <div class="form-group col-md-6">
-							      <label for="inputEmail4">Business Email</label>
+							      <label for="inputEmail4">General Contact Email</label>
 							      <spring:bind path="business_email">
-							      <form:input type="text" class="form-control ${status.error ? 'is-invalid' : ''}" path="business_email" placeholder="emergency@company.lk"></form:input>
+							      <form:input type="text" class="form-control ${status.error ? 'is-invalid' : ''}" path="business_email" ></form:input>
 							      <form:errors path="business_email" class="invalid-feedback"></form:errors>
 							      </spring:bind>
 							    </div>
 							    <div class="form-group col-md-6">
-							      <label for="inputPassword4">Business Phone</label>
+							      <label for="inputPassword4">General Contact Phone</label>
 							      <spring:bind path="business_phone">
-							      <form:input type="text" class="form-control ${status.error ? 'is-invalid' : ''}" path="business_phone" placeholder="0112345678"></form:input>
+							      <form:input type="text" class="form-control ${status.error ? 'is-invalid' : ''}" path="business_phone"></form:input>
 							      <form:errors path="business_phone" class="invalid-feedback"></form:errors>
 							      </spring:bind>
 							    </div>
@@ -501,12 +492,12 @@ transform:scale(1.05);
 		                  <h6>Air Conditioning Unit Rate Settings</h6>
 	                  <hr>
 						<div class="form-group">
-						<label for="airconPeak">Peak Air Conditioning Unit Rates (LKR/BTU)</label>
+						<label for="airconPeak">Peak Air Conditioning Unit Rates (LKR/BTU x10,000)</label>
 						  <input id="airconPeak" multiple type="text" class="form-control" aria-label="Username" aria-describedby="basic-addon3">
 						  <small id="emailHelp" class="form-text text-muted"><i>To enter a new value, type it in and press enter (5 entries max)</i></small>
 						</div>
 						<div class="form-group">
-						<label for="airconOffPeak">Off-Peak Air Conditioning Unit Rates (LKR/BTU)</label>
+						<label for="airconOffPeak">Off-Peak Air Conditioning Unit Rates (LKR/BTU x10,000)</label>
 						  <input id="airconOffPeak" multiple type="text" class="form-control" aria-label="Username" aria-describedby="basic-addon3">
 						  <small id="emailHelp" class="form-text text-muted"><i>To enter a new value, type it in and press enter (5 entries max)</i></small>
 						</div>

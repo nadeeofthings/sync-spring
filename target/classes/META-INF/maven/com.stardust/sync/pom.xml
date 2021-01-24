@@ -47,13 +47,13 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>
 		</dependency>
-		 <!-- DEV ENV ONLY 
+		 <!-- DEV ENV ONLY -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
 			<optional>true</optional>
 		</dependency>
-		  DEV ENV ONLY -->
+		 <!-- DEV ENV ONLY -->
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
@@ -70,7 +70,16 @@
 			<artifactId>tomcat-embed-jasper</artifactId>
 
 		</dependency>
-
+		<dependency>
+		    <groupId>commons-validator</groupId>
+		    <artifactId>commons-validator</artifactId>
+		    <version>1.4.1</version>
+		</dependency>
+		<dependency>
+		      <groupId>oro</groupId>
+		      <artifactId>oro</artifactId>
+		      <version>2.0.8</version>
+		  </dependency>
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>jstl</artifactId>

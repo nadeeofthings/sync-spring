@@ -107,6 +107,12 @@ public class GeneratePdfBill {
             BigDecimal offPeakRate = billLatest.getOffPeakRate();
             BigDecimal peakBill = peakRate.multiply(peakUseage);
             BigDecimal offPeakBill = offPeakRate.multiply(offPeakUseage);
+            
+            if(ext.equalsIgnoreCase("BTU")) {
+            	peakBill = peakBill.divide(new BigDecimal("10000"));
+            	offPeakBill = offPeakBill.divide(new BigDecimal("10000"));
+	        }
+            
             BigDecimal totalUseage = peakBill.add(offPeakBill);
             BigDecimal totalBill = totalUseage.add(new BigDecimal(billProps.get(Constants.CONFIG_KEY_SERVICE_CHARGE)));
             
@@ -118,13 +124,15 @@ public class GeneratePdfBill {
             BigDecimal currentBill = totalBill.subtract(adjustmentsDiscounts).add(penalties);
             BigDecimal nbTax = (currentBill.multiply(new BigDecimal(billProps.get(Constants.CONFIG_KEY_NBTAX)))).divide(new BigDecimal("100.00"));
             BigDecimal vaTax = (currentBill.multiply(new BigDecimal(billProps.get(Constants.CONFIG_KEY_VATAX)))).divide(new BigDecimal("100.00"));		
+            BigDecimal totalPayableForThisBillingPeriod = currentBill.add(nbTax).add(vaTax);
             
-            
-            BigDecimal previousBalance = billLatest.getBalance().add(billLatest.getPayment()).subtract(currentBill).subtract(nbTax).subtract(vaTax);
+            BigDecimal previousBalance = billLatest.getBalance().add(billLatest.getPayment()).subtract(totalPayableForThisBillingPeriod);
             
             if (previousBalance.compareTo(BigDecimal.ONE)< 0)
             	previousBalance = new BigDecimal("0.00");
-	         
+            
+            
+            Text prefix = new Text("10x-3").setFont(calibriRegular).setFontColor(myColor).setFontSize(5);
             //T&C
             Rectangle rect = new Rectangle(53, 175.5f, 493.5f, 72);
             canvas.rectangle(rect);
@@ -150,7 +158,7 @@ public class GeneratePdfBill {
             canvas.rectangle(rect);
             //canvas.stroke();
             childCanvas = new Canvas(canvas, pdfDoc, rect);
-            title = new Text(String.format("%.2f", currentBill)).setFont(calibriRegular).setFontColor(myColor).setFontSize(12);
+            title = new Text(String.format("%.2f", totalPayableForThisBillingPeriod)).setFont(calibriRegular).setFontColor(myColor).setFontSize(12);
             p = new Paragraph().add(title).setTextAlignment(TextAlignment.CENTER).setVerticalAlignment(VerticalAlignment.MIDDLE);
             childCanvas.add(p);
             childCanvas.close();
@@ -271,7 +279,7 @@ public class GeneratePdfBill {
             canvas.rectangle(rect);
             //canvas.stroke();
             childCanvas = new Canvas(canvas, pdfDoc, rect);
-            title = new Text(String.format("%.2f", billLatest.getBalance())).setFont(calibriBold).setFontColor(myColor).setFontSize(9);
+            title = new Text(String.format("%.2f", totalPayableForThisBillingPeriod)).setFont(calibriBold).setFontColor(myColor).setFontSize(9);
             p = new Paragraph().add(title).setTextAlignment(TextAlignment.RIGHT);
             childCanvas.add(p);
             childCanvas.close();

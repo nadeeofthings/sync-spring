@@ -13,4 +13,5 @@ public interface BillingPropertiesRepository extends JpaRepository<BillingProper
 	BillingProperties findTopByPropertyKeyAndExtIgnoreCaseContainingAndEnabledOrderByTimestampDesc(String propertyKey, String ext, int enabled);
 	List<BillingProperties> findAllByPropertyKeyAndExtIgnoreCaseContainingAndEnabledOrderByTimestampDesc(String propertyKey, String ext, int enabled);
 	List<BillingProperties> findAllByPropertyKeyAndDefaultValAndExtIgnoreCaseContainingAndEnabledOrderByTimestampDesc(String configKeyTAndC, boolean i, String ext, int flagEnabled);
+	List<BillingProperties> findAllByPropertyKeyAndExtIgnoreCaseContainingAndEnabledOrderByPropertyValueAsc(String configKeyPeakRate, String ext, int flagEnabled);
 }

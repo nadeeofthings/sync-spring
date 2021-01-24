@@ -2,6 +2,7 @@ package com.stardust.sync.web;
 
 import java.io.ByteArrayInputStream;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,12 +20,15 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.stardust.sync.core.Constants;
+import com.stardust.sync.model.Alert;
 import com.stardust.sync.model.Billing;
 import com.stardust.sync.model.Customer;
 import com.stardust.sync.model.User;
 import com.stardust.sync.service.ActivityService;
 import com.stardust.sync.service.BillingService;
 import com.stardust.sync.service.CustomerService;
+import com.stardust.sync.service.NotificationDispatcherService;
 import com.stardust.sync.service.SecurityService;
 import com.stardust.sync.service.UserService;
 import com.stardust.sync.util.GenerateDailyReadingPdfReport;
@@ -65,6 +69,9 @@ public class UserController {
 	
 	@Autowired
 	ActivityService activityService;
+	
+	@Autowired
+    private NotificationDispatcherService notificationDispatcherService;
 
 	@GetMapping("/registration")
 	public String registration(Model model) {
@@ -161,13 +168,15 @@ public class UserController {
 	public String settings( Authentication authentication, Model model, @ModelAttribute("customerForm") Customer customerForm, BindingResult bindingResult) {
 		customerValidator.validate(customerForm, bindingResult);
 		if (bindingResult.hasErrors()) {
+			//model.addAttribute("tab", "customer");
 			return "settings";
 		}
 		customerService.save(customerForm);
 		
 		activityService.log("New customer: "+customerForm.getName()+" created", authentication.getName());
-		model.addAttribute("tab", "customer");
-		return "settings";
+		model.addAttribute("customerForm", new Customer());
+		notificationDispatcherService.dispatch(new Alert("New customer added to the system", Constants.ALERT_SUCCESS, new Date()));
+		return "redirect:/settings?tag=customer";
 	}
 	
 	@RequestMapping(value = "/billing/downloadBill", method = RequestMethod.GET, produces = MediaType.APPLICATION_PDF_VALUE)

@@ -39,10 +39,12 @@ import com.itextpdf.kernel.pdf.canvas.PdfCanvas;
 import com.itextpdf.kernel.pdf.xobject.PdfFormXObject;
 import com.itextpdf.layout.Canvas;
 import com.itextpdf.layout.Document;
+import com.itextpdf.layout.element.AreaBreak;
 import com.itextpdf.layout.element.Cell;
 import com.itextpdf.layout.element.Image;
 import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.element.Table;
+import com.itextpdf.layout.property.AreaBreakType;
 import com.itextpdf.layout.property.TextAlignment;
 import com.stardust.sync.core.Constants;
 import com.stardust.sync.model.Meter;
@@ -154,6 +156,7 @@ public class GenerateDailyReadingPdfReport {
 
 				doc.add(table);
 				fromDate = new Date(fromDate.getTime()+86400000L);
+				doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
 			}
 
 	
@@ -270,6 +273,7 @@ public class GenerateDailyReadingPdfReport {
 
 				doc.add(table);
 				fromDate = new Date(fromDate.getTime()+86400000L);
+				doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
 			}
 
 	

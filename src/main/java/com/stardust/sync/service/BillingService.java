@@ -79,9 +79,15 @@ public class BillingService {
 	        BigDecimal peakUseage = BigDecimal.valueOf(peakUseageOfAUnit.getValue());
 	        BigDecimal offPeakUseage = BigDecimal.valueOf(totalUseageOfAUnit.getValue()-peakUseageOfAUnit.getValue());
 	        BigDecimal peakRate = new BigDecimal(erp);
-            BigDecimal offPeakRate = new BigDecimal(ero);
+	        BigDecimal offPeakRate = new BigDecimal(ero);		
             BigDecimal peakBill = peakRate.multiply(peakUseage);
             BigDecimal offPeakBill = offPeakRate.multiply(offPeakUseage);
+            
+            if(ext.equalsIgnoreCase("BTU")) {
+            	peakBill = peakBill.divide(new BigDecimal("10000"));
+            	offPeakBill = offPeakBill.divide(new BigDecimal("10000"));
+	        }
+            
             BigDecimal totalUseage = peakBill.add(offPeakBill);
             BigDecimal totalBill = totalUseage.add(new BigDecimal(billProps.get(Constants.CONFIG_KEY_SERVICE_CHARGE)));
             
@@ -92,11 +98,11 @@ public class BillingService {
             BigDecimal currentBill = totalBill.subtract(adjustmentsDiscounts).add(penalties);
             BigDecimal nbTax = (currentBill.multiply(new BigDecimal(billProps.get(Constants.CONFIG_KEY_NBTAX)))).divide(new BigDecimal("100.00"));
             BigDecimal vaTax = (currentBill.multiply(new BigDecimal(billProps.get(Constants.CONFIG_KEY_VATAX)))).divide(new BigDecimal("100.00"));	
+            
+            BigDecimal totalPayableForThisBillingPeriod = currentBill.add(nbTax).add(vaTax);
             BigDecimal totalPayable = ((billPrevious != null) ? billPrevious.getBalance() : new BigDecimal("0.00"))
 					            		.subtract(new BigDecimal(epp))
-					            		.add(currentBill)
-					            		.add(nbTax)
-        								.add(vaTax);
+					            		.add(totalPayableForThisBillingPeriod);
             
             
 

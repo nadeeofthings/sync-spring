@@ -167,7 +167,7 @@ public class GenerateFacilitySummaryPdfReport {
 	        
 	        JFreeChart chart4 = ChartFactory.createLineChart(
 	                "",
-	                "Time","kWh/K.BTU",
+	                "Time","kWh/BTU x1000",
 	                dataset4,
 	                PlotOrientation.VERTICAL,
 	                true,true,false);

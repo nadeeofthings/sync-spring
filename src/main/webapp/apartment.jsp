@@ -224,26 +224,26 @@
 								<div id="avatar"></div>
 						</a> <!-- Dropdown - User Information -->
 							<div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-			                <a class="dropdown-item" href="#" id="profile_BTN" >
-			                  <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
-			                  Profile
-			                </a>
-			                <security:authorize access="hasAnyRole('ROLE_SUPERADMIN', 'ROLE_ADMIN')">
-			                <a class="dropdown-item" href="${contextPath}/settings">
-			                  <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
-			                  Settings
-			                </a>
-			                </security:authorize>
-			                <a class="dropdown-item" href="${contextPath}/activity">
-			                  <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
-			                  Activity Log
-			                </a>
-			                <div class="dropdown-divider"></div>
-			                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
-			                  <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-			                  Logout
-			                </a>
-			              </div></li>
+		                <a class="dropdown-item" href="#" id="profile_BTN" >
+		                  <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+		                  Profile
+		                </a>
+		                <security:authorize access="hasAnyRole('ROLE_SUPERADMIN', 'ROLE_ADMIN')">
+		                <a class="dropdown-item" href="${contextPath}/settings">
+		                  <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
+		                  Settings
+		                </a>
+		                </security:authorize>
+		                <a class="dropdown-item" href="${contextPath}/activity">
+		                  <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
+		                  Activity Log
+		                </a>
+		                <div class="dropdown-divider"></div>
+		                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+		                  <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+		                  Logout
+		                </a>
+		              </div></li>
 
 					</ul>
 
@@ -260,13 +260,13 @@
 								<h3 class="h3 mb-0 text-gray-800">
 									<b>Commercial Area</b>
 								</h3>
-								<button type="button" class="btn btn-link" data-toggle="modal" data-target="#customerInfoModal">Customer Info</button>
+								<button type="button" class="btn btn-secondary btn-sm" style="margin-left: 10px" data-toggle="modal" data-target="#customerInfoModal">Customer Info</button>
 							</c:when>
 							<c:otherwise>
 								<h3 class="h3 mb-0 text-gray-800">${id}
 									Floor Office: <b>0<%=room%></b>
 								</h3>
-								<button type="button" class="btn btn-link" data-toggle="modal" data-target="#customerInfoModal">Customer Info</button>
+								<button type="button" style="margin-left: 10px" class="btn btn-secondary btn-sm" data-toggle="modal" data-target="#customerInfoModal">Customer Info</button>
 							</c:otherwise>
 						</c:choose>
 						<!--<a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>-->
