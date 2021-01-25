@@ -258,6 +258,7 @@ var contextPath = "${contextPath}";
 																	<th>Timestamp</th>
 																	<th>Level</th>
 																	<th>Message</th>
+																	<th>Status</th>
 																</tr>
 															</thead>
 															<tfoot>
@@ -265,6 +266,7 @@ var contextPath = "${contextPath}";
 																	<th>Timestamp</th>
 																	<th>Level</th>
 																	<th>Message</th>
+																	<th>Status</th>
 																</tr>
 															</tfoot>
 															<tbody>
@@ -415,7 +417,6 @@ var contextPath = "${contextPath}";
 	<script src="${contextPath}/resources/vendor/moment/datetime-moment.js"></script>
 
 	<!-- Page level custom scripts -->
-	<script src="${contextPath}/resources/js/demo/datatables-demo.js"></script>
 	<script src="${contextPath}/resources/js/alert.js"></script>
 	<script src="${contextPath}/resources/js/sockjs/sockjs.min.js"></script>
     <script src="${contextPath}/resources/js/stompjs/stomp.min.js"></script>

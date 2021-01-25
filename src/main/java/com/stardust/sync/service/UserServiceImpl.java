@@ -1,17 +1,26 @@
 package com.stardust.sync.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.stardust.sync.core.Constants;
+import com.stardust.sync.model.BillingProperties;
 import com.stardust.sync.model.MeterExtended;
 import com.stardust.sync.model.Role;
 import com.stardust.sync.model.User;
 import com.stardust.sync.repository.RoleRepository;
 import com.stardust.sync.repository.UserRepository;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -23,6 +32,8 @@ import java.util.Map;
 
 @Service
 public class UserServiceImpl implements UserService {
+	private static final Logger         LOGGER  = LoggerFactory.getLogger(UserServiceImpl.class);
+	
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -174,6 +185,29 @@ public class UserServiceImpl implements UserService {
 		User usrOut = findByUsername(authentication.getName());
 		usrOut.setPassword(null);
 		return usrOut;
+	}
+
+	@Override
+	public void resetPassword(Authentication authentication, String data) {
+		if((authentication.getAuthorities().toString().contains("ROLE_SUPERADMIN")||authentication.getAuthorities().toString().contains("ROLE_ADMIN"))) {
+			ObjectMapper mapper = new ObjectMapper();
+			try {
+				String decoded = URLDecoder.decode(data, "UTF-8");
+				@SuppressWarnings("unchecked")
+				HashMap<String,String> result = mapper.readValue(decoded, HashMap.class);
+				
+				String username = result.get("username");
+		   		String password = result.get("password");
+		   		User usr = findByUsername(username);
+		   		usr.setPassword(bCryptPasswordEncoder.encode(password));
+		   		userRepository.save(usr);
+				
+			} catch (JsonProcessingException | UnsupportedEncodingException e) {
+				// TODO Auto-generated catch block
+				LOGGER.error("Error parsing json string "+e);
+			}
+		}
+		
 	}
 	
 }

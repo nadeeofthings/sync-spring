@@ -134,7 +134,7 @@
       }
 
       // register item in internal array and map
-      self.itemsArray.push(number_format(item,2,".",","));
+      self.itemsArray.push(item);
 
       // add a tag element
 

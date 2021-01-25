@@ -3,12 +3,15 @@ package com.stardust.sync.service;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.EntityNotFoundException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.stardust.sync.core.Constants;
+import com.stardust.sync.model.Activity;
 import com.stardust.sync.model.Alert;
 import com.stardust.sync.model.User;
 import com.stardust.sync.repository.AlertRepository;
@@ -27,28 +30,32 @@ public class AlertService {
     private NotificationDispatcherService notificationDispatcherService;
 	
 	public void warn(String message) {
-		Alert alert = new Alert(message, Constants.ALERT_WARN, new Date());
-		userService.updateAlertCount();
+		Alert alert = new Alert(message, Constants.ALERT_WARN, new Date(), Constants.ALERT_STATUS_PENDING);
+		//userService.updateAlertCount();
 		notificationDispatcherService.dispatch(alert);
 		alertRepository.save(alert);
 	}
 	public void error(String message) {
-		Alert alert = new Alert(message, Constants.ALERT_DANGER, new Date());
-		userService.updateAlertCount();
+		Alert alert = new Alert(message, Constants.ALERT_DANGER, new Date(), Constants.ALERT_STATUS_PENDING);
+		//userService.updateAlertCount();
 		notificationDispatcherService.dispatch(alert);
 		alertRepository.save(alert);
 	}
 	public void info(String message) {
-		Alert alert = new Alert(message, Constants.ALERT_INFO, new Date());
-		userService.updateAlertCount();
+		Alert alert = new Alert(message, Constants.ALERT_INFO, new Date(), Constants.ALERT_STATUS_ACK);
+		//userService.updateAlertCount();
 		notificationDispatcherService.dispatch(alert);
 		alertRepository.save(alert);
 	}
 	public void success(String message) {
-		Alert alert = new Alert(message, Constants.ALERT_SUCCESS, new Date());
-		userService.updateAlertCount();
+		Alert alert = new Alert(message, Constants.ALERT_SUCCESS, new Date(), Constants.ALERT_STATUS_ACK);
+		//userService.updateAlertCount();
 		notificationDispatcherService.dispatch(alert);
 		alertRepository.save(alert);
+	}
+	
+	public List<Alert> findAllByOderByTimeStamp() {
+		return alertRepository.findAllByOrderByTimeStampDesc();
 	}
 	
 	public List<Alert> findTop3OrderByTimeStampDesc (){
@@ -58,4 +65,19 @@ public class AlertService {
 	public List<Alert> findAll (){
 		return alertRepository.findAll();
 	}
+	
+	private Alert fildById(long id){
+		return alertRepository.findById(id)
+				.orElseThrow(() -> new EntityNotFoundException());
+	}
+	
+	public void acknowledgeAlert(long id) {
+		Alert alrt = fildById(id);
+		alrt.setStatus(Constants.ALERT_STATUS_ACK);
+		alertRepository.save(alrt);
+	}
+	public long getAlertCount() {
+		return alertRepository.countByStatus(Constants.ALERT_STATUS_PENDING);
+	}
+
 }

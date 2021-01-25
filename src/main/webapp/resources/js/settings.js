@@ -3,7 +3,15 @@ var customerList= "";
 
 $(document).ready(function(){
 	//TODO CODE
-
+	console.log( );
+	if($('#name').hasClass('is-invalid') ||
+		 $('#address').hasClass('is-invalid') ||
+		 $('#email').hasClass('is-invalid') ||
+		 $('#business_email').hasClass('is-invalid') ||
+		 $('#phone').hasClass('is-invalid') ||
+		 $('#business_phone').hasClass('is-invalid')){
+		$('#customerTab').tab('show')
+	}
     redirect_tab();
 	loadTables();
 	$('#userTable tbody').on('click', 'tr', function () {
@@ -302,6 +310,54 @@ $(document).ready(function(){
 		}
 	      });
 
+
+	  $("#newPassword").on("click", function(){
+	  	isValid=true;
+	  		if( $("#NewPassword").val().length < 8){
+		   		$("#NewPassword").addClass( "is-invalid" );
+		   		$("#NewPassword").parent().find(".error").replaceWith($("<div>", {"class": "invalid-feedback"}).text(""));
+		   		isValid=false;
+		   	}else{
+
+		   		$("#NewPassword").removeClass( "is-invalid" );
+		   		$("#NewPassword").parent().find(".error").replaceWith($("<div>", {"class": "error"}));
+		   	}
+	  		if( isValid && !$("#NewPassword").val() == $("#ConfNewPassword").val()){
+	  			$("#ConfNewPassword").addClass( "is-invalid" );
+		   		$("#ConfNewPassword").parent().find(".error").replaceWith($("<div>", {"class": "invalid-feedback"}).text("Passwords don't match"));
+		   		isValid=false;
+	  		}else{
+		   		$("#ConfNewPassword").removeClass( "is-invalid" );
+		   		$("#ConfNewPassword").parent().find(".error").replaceWith($("<div>", {"class": "error"}));
+		   	}
+
+		   	if(isValid){
+		   		var obj = {"password":$("#NewPassword").val(),"username":$("#Memail").html()};
+				var istringa = JSON.stringify(obj);
+		   		$.ajax({
+					type: "POST",
+					url: contextPath+'/rest/resetPassword',
+					data: istringa,
+					success: function(data) {
+						iziToast.success({
+				          position: 'topRight', // bottomRight, bottomLeft, topRight, topLeft, topCenter, bottomCenter, center
+				          transitionIn: 'bounceInLeft',
+				          title: 'Success', 
+				          message: "Password reset successful" });
+						 $("#NewPassword").val("");
+		    			 $("#ConfNewPassword").val("");
+					    
+			        },
+					error: function(jqXHR, exception) {
+						//window.location.href = contextPath;
+					}
+				      });
+		   	}
+
+
+
+	  });
+
 	  //SYSTEM CONFIG
 	  load_sys_config();
 	  $("#sysConfig").on("click", function(){
@@ -333,6 +389,11 @@ $(document).ready(function(){
 					url: contextPath+'/rest/setSystemConfig',
 					data: istringa,
 					success: function(data) {
+						iziToast.success({
+				          position: 'topRight', // bottomRight, bottomLeft, topRight, topLeft, topCenter, bottomCenter, center
+				          transitionIn: 'bounceInLeft',
+				          title: 'Success', 
+				          message: "System configuration successfully updated" });
 						 $("#peakStart").val(data[2].configValue);
 		    			 $("#offPeakStart").val(data[1].configValue);
 					    
@@ -433,6 +494,11 @@ $(document).ready(function(){
 					url: contextPath+'/rest/setBillPropsMK1',
 					data: istringa,
 					success: function(data) {
+						iziToast.success({
+				          position: 'topRight', // bottomRight, bottomLeft, topRight, topLeft, topCenter, bottomCenter, center
+				          transitionIn: 'bounceInLeft',
+				          title: 'Success', 
+				          message: "Billing properties successfully updated" });
 					    load_billPropsMK1();
 			        },
 					error: function(jqXHR, exception) {
@@ -458,6 +524,11 @@ $(document).ready(function(){
 								url: contextPath+'/rest/setElecRatesOffPeak',
 								data: JSON.stringify($("#elecOffPeak").tagsinput('items')),
 								success: function(data) {
+									iziToast.success({
+							          position: 'topRight', // bottomRight, bottomLeft, topRight, topLeft, topCenter, bottomCenter, center
+							          transitionIn: 'bounceInLeft',
+							          title: 'Success', 
+							          message: "Electricity rates successfully updated" });
 								    load_elecRates();
 						        },
 								error: function(jqXHR, exception) {
@@ -487,6 +558,11 @@ $(document).ready(function(){
 								url: contextPath+'/rest/setAirconRatesOffPeak',
 								data: JSON.stringify($("#airconOffPeak").tagsinput('items')),
 								success: function(data) {
+									iziToast.success({
+							          position: 'topRight', // bottomRight, bottomLeft, topRight, topLeft, topCenter, bottomCenter, center
+							          transitionIn: 'bounceInLeft',
+							          title: 'Success', 
+							          message: "Air conditioning rates successfully updated" });
 								    load_airconRates();
 						        },
 								error: function(jqXHR, exception) {
@@ -515,6 +591,11 @@ $(document).ready(function(){
 								url: contextPath+'/rest/setAirconDiscounts',
 								data: JSON.stringify($("#airconDisc").tagsinput('items')),
 								success: function(data) {
+									iziToast.success({
+							          position: 'topRight', // bottomRight, bottomLeft, topRight, topLeft, topCenter, bottomCenter, center
+							          transitionIn: 'bounceInLeft',
+							          title: 'Success', 
+							          message: "Discounts successfully updated" });
 								    load_discounts();
 						        },
 								error: function(jqXHR, exception) {
@@ -543,6 +624,11 @@ $(document).ready(function(){
 								url: contextPath+'/rest/setAirconPenalties',
 								data: JSON.stringify($("#airconPen").tagsinput('items')),
 								success: function(data) {
+									iziToast.success({
+							          position: 'topRight', // bottomRight, bottomLeft, topRight, topLeft, topCenter, bottomCenter, center
+							          transitionIn: 'bounceInLeft',
+							          title: 'Success', 
+							          message: "Penalties successfully updated" });
 								    load_peanlties();
 						        },
 								error: function(jqXHR, exception) {
@@ -917,9 +1003,9 @@ function load_billPropsMK1(){
 }
 
 function redirect_tab(){
-	var url_string =window.location.href;
-	var url = new URL(url_string);
-	if(url.searchParams.get("tab")=="customer"){
+	var url_string =window.location.search;
+	var urlParams = new URLSearchParams(url_string);
+	if(url_string.includes("tag=customer")){
 		$('#customerTab').tab('show')
 	}
 }

@@ -175,7 +175,7 @@ public class UserController {
 		
 		activityService.log("New customer: "+customerForm.getName()+" created", authentication.getName());
 		model.addAttribute("customerForm", new Customer());
-		notificationDispatcherService.dispatch(new Alert("New customer added to the system", Constants.ALERT_SUCCESS, new Date()));
+		notificationDispatcherService.dispatch(new Alert("New customer added to the system", Constants.ALERT_SUCCESS, new Date(), Constants.ALERT_STATUS_ACK));
 		return "redirect:/settings?tag=customer";
 	}
 	

@@ -17,15 +17,17 @@ public class Alert {
 	private String message;
 	private int level;
 	private Date timeStamp;
+	private int status;
 	
 	
 	public Alert() {}
 	
-	public Alert(String message, int level, Date timeStamp) {
+	public Alert(String message, int level, Date timeStamp, int status) {
 		super();
 		this.message = message;
 		this.level = level;
 		this.timeStamp = timeStamp;
+		this.status = status;
 	}
 	public Long getId() {
 		return id;
@@ -52,6 +54,12 @@ public class Alert {
 		this.timeStamp = timeStamp;
 	}
 
-	
+	public int getStatus() {
+		return status;
+	}
+
+	public void setStatus(int status) {
+		this.status = status;
+	}
 	
 }

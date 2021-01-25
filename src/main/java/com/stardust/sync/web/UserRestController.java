@@ -190,8 +190,8 @@ public class UserRestController {
 	}
 	
 	@GetMapping(value = "rest/alertCount")
-    public long getAlertCount(Authentication authentication) {
-		return userService.getAlertCountByUsername(authentication.getName());
+    public long getAlertCount() {
+		return alertService.getAlertCount();
 		
 	}
 	
@@ -209,7 +209,7 @@ public class UserRestController {
 	
 	@GetMapping(value = "rest/getAllAlerts")
     public List<Alert> getAllAlerts() {
-		return alertService.findAll();
+		return alertService.findAllByOderByTimeStamp();
 		
 	}
 	
@@ -375,9 +375,22 @@ public class UserRestController {
 		activityService.log("Air conditioning bill penalties updated", authentication.getName());
 		return billingPropertiesService.getBillingProperties("BTU");
 	}
+    @PostMapping(value = "rest/resetPassword")
+    public int resetPassword(Authentication authentication,@RequestBody  String data) {
+		userService.resetPassword(authentication, data);
+		
+		activityService.log("User password changed", authentication.getName());
+		return 1;
+	}
     @GetMapping(value = "rest/getActivities")
     public List<Activity> getActivities(Authentication authentication) {
     	return activityService.getActivities(authentication);
 	}
+    @GetMapping(value = "rest/acknowledgeAlert")
+    public int acknowledgeAlert(long id) {
+    	alertService.acknowledgeAlert(id);
+    	return 1;
+	}
+    
     
 }

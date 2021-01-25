@@ -35,5 +35,7 @@ public interface UserService {
 	User getProfile(Authentication authentication);
 
 	User findById(Long id);
+
+	void resetPassword(Authentication authentication, String data);
 	
 }

@@ -376,7 +376,7 @@ public class MeterService {
 				meters.add(new Meter(mConfiguration.getId(), mConfiguration.getUnit(), mConfiguration.getMeter(),
 						lastMeterList.getValue() - firstMeterList.getValue(), mConfiguration.getExt(), firstDateOfPreviousMonth,
 						false));
-				System.out.println(mConfiguration.getId() + "" + (lastMeterList.getValue() - firstMeterList.getValue()));
+				//System.out.println(mConfiguration.getId() + "" + (lastMeterList.getValue() - firstMeterList.getValue()));
 
 			} else {
 				meters.add(new Meter(mConfiguration.getId(), mConfiguration.getUnit(), mConfiguration.getMeter(), 0.0, mConfiguration.getExt(),
@@ -430,7 +430,7 @@ public class MeterService {
 				meters.add(new Meter(mConfiguration.getId(), mConfiguration.getUnit(), mConfiguration.getMeter(),
 						lastMeterList.getValue() - firstMeterList.getValue(), mConfiguration.getExt(), firstDateOfPreviousMonth,
 						false));
-				System.out.println(mConfiguration.getId() + "" + (lastMeterList.getValue() - firstMeterList.getValue()));
+				//System.out.println(mConfiguration.getId() + "" + (lastMeterList.getValue() - firstMeterList.getValue()));
 
 			} else {
 				meters.add(new Meter(mConfiguration.getId(), mConfiguration.getUnit(), mConfiguration.getMeter(), 0.0, mConfiguration.getExt(),

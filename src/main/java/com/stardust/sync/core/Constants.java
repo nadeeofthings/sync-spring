@@ -27,6 +27,9 @@ public class Constants {
     public static final String  CONFIG_KEY_PEAK_START_CONFIG_DEFAULT   = "8:00";
     public static final String  CONFIG_KEY_PEAK_END_CONFIG_DEFAULT   = "17:00";
     
+    public static final int ALERT_STATUS_PENDING = 1;
+    public static final int ALERT_STATUS_ACK = 0;
+    
     public static final int ALERT_WARN = 2;
     public static final int ALERT_DANGER = 3;
 	public static final int ALERT_INFO = 1;

@@ -696,6 +696,24 @@ transform:scale(1.05);
 									   </td>
 									</tr>
 								</security:authorize>
+								<security:authorize access="hasAnyRole('ROLE_SUPERADMIN', 'ROLE_ADMIN')">
+									<tr>
+										<th class="align-top">Reset Password</th>
+										<td class="align-middle">
+										<form>
+											  <div class="form-group">
+				                              <input type="password" class="form-control form-control-sm"  id="NewPassword" placeholder="New Password">
+				                              <div class="error invisible"></div>
+				                              </div>
+				                              <div class="form-group">
+				                              <input type="password" class="form-control form-control-sm"  id="ConfNewPassword" placeholder="Conform Password">
+											  <div class="error invisible"></div>
+											  </div>
+											  <button type="button" id="newPassword" class="btn btn-info btn-sm btn-block">Save</button>
+										</form>
+									   </td>
+									</tr>
+								</security:authorize>
 								<tr>
 									<th class="align-middle"></th>
 									<td class="align-middle"></td>

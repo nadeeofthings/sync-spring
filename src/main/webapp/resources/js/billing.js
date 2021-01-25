@@ -121,15 +121,15 @@ $(document).ready(function(){
 							.append($("<div>", {"class": "row"}).append($("<div>", {"class": "col-sm"})
 									.append($("<p>", {"class": "text-left"}).html(floorText))
 									.append($("<p>", {"class": "text-left"}).html("From: <b>"+EFR+"</b>"))
-									.append($("<p>", {"class": "text-left"}).html("Peak Rate: <b>LKR "+ERP+"</b>"))
-									.append($("<p>", {"class": "text-left"}).html("Previously Paid: <b>LKR "+EPP+"</b>"))
-									.append($("<p>", {"class": "text-left"}).html("Discount: <b>"+EDI+"%"+"</b>"))
+									.append($("<p>", {"class": "text-left"}).html("Peak Rate: <b>LKR "+number_format(ERP, 2, ".", "")+"</b>"))
+									.append($("<p>", {"class": "text-left"}).html("Previously Paid: <b>LKR "+number_format(EPP, 2, ".", "")+"</b>"))
+									.append($("<p>", {"class": "text-left"}).html("Discount: <b>"+number_format(EDI, 2, ".", "")+"%"+"</b>"))
 								).append($("<div>", {"class": "col-sm"})
 									.append($("<p>", {"class": "text-left"}).html(officeText))
 									.append($("<p>", {"class": "text-left"}).html("To: <b>"+ETO+"</b>"))
-									.append($("<p>", {"class": "text-left"}).html("Off Peak Rate: <b>LKR "+ERO+"</b>"))
-									.append($("<p>", {"class": "text-left"}).html("Penalty: <b>"+EPE+"%"+"</b>"))
-									.append($("<p>", {"class": "text-left"}).html("Adjustment: <b>LKR "+EADJ+"</b>"))
+									.append($("<p>", {"class": "text-left"}).html("Off Peak Rate: <b>LKR "+number_format(ERO, 2, ".", "")+"</b>"))
+									.append($("<p>", {"class": "text-left"}).html("Penalty: <b>"+number_format(EPE, 2, ".", "")+"%"+"</b>"))
+									.append($("<p>", {"class": "text-left"}).html("Adjustment: <b>LKR "+number_format(EADJ, 2, ".", "")+"</b>"))
 								)).append($("<div>", {"class": "row"}).append($("<p>", {"class": "text-left font-italic text-danger"}).html("*Bill generation cannot be reversed. Please make sure the details are correct")));
 							
 
@@ -201,15 +201,15 @@ $(document).ready(function(){
 							.append($("<div>", {"class": "row"}).append($("<div>", {"class": "col-sm"})
 									.append($("<p>", {"class": "text-left"}).html(floorText))
 									.append($("<p>", {"class": "text-left"}).html("From: <b>"+dFrom+"</b>"))
-									.append($("<p>", {"class": "text-left"}).html("Peak Rate: <b>LKR "+ARP+"</b>"))
-									.append($("<p>", {"class": "text-left"}).html("Previously Paid: <b>LKR "+APP+"</b>"))
-									.append($("<p>", {"class": "text-left"}).html("Discount: <b>"+ADI+"%"+"</b>"))
+									.append($("<p>", {"class": "text-left"}).html("Peak Rate: <b>LKR "+number_format(ARP, 2, ".", "")+"</b>"))
+									.append($("<p>", {"class": "text-left"}).html("Previously Paid: <b>LKR "+number_format(APP, 2, ".", "")+"</b>"))
+									.append($("<p>", {"class": "text-left"}).html("Discount: <b>"+number_format(ADI, 2, ".", "")+"%"+"</b>"))
 								).append($("<div>", {"class": "col-sm"})
 									.append($("<p>", {"class": "text-left"}).html(officeText))
 									.append($("<p>", {"class": "text-left"}).html("To: <b>"+dTo+"</b>"))
-									.append($("<p>", {"class": "text-left"}).html("Off Peak Rate: <b>LKR "+ARO+"</b>"))
-									.append($("<p>", {"class": "text-left"}).html("Penalty: <b>"+APE+"%"+"</b>"))
-									.append($("<p>", {"class": "text-left"}).html("Adjustment: <b>LKR "+AADJ+"</b>"))
+									.append($("<p>", {"class": "text-left"}).html("Off Peak Rate: <b>LKR "+number_format(ARO, 2, ".", "")+"</b>"))
+									.append($("<p>", {"class": "text-left"}).html("Penalty: <b>"+number_format(APE, 2, ".", "")+"%"+"</b>"))
+									.append($("<p>", {"class": "text-left"}).html("Adjustment: <b>LKR "+number_format(AADJ, 2, ".", "")+"</b>"))
 								)).append($("<div>", {"class": "row"}).append($("<p>", {"class": "text-left font-italic text-danger"}).html("*Bill generation cannot be reversed. Please make sure the details are correct")));
 							
 
