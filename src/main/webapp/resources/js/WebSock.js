@@ -61,8 +61,9 @@ function alertDOMGenerate(message, level, timestamp) {
 	}
 let stompClient;
 $('document').ready(function(){
+	refreshAlertCount();
 	    
-	$('#alertsDropdown').on('show.bs.dropdown', function () {
+/*	$('#alertsDropdown').on('show.bs.dropdown', function () {
 			$.ajax({
                 	type: "GET",
                 	//dataType: 'json',
@@ -75,32 +76,8 @@ $('document').ready(function(){
 						window.location.href = contextPath;
 					}
                 }); 
-		});
-	$.ajax({
-                	type: "GET",
-                    url: contextPath+'/rest/alertCount',
-                    dataType: 'json',
-                    success: function(data) {
-                       // $("#refresh").html(data);
-                       if(data == 0){
-                       	document.getElementById("alertCount").style.display= 'none';
-                       	document.getElementById("alertCount").innerHTML = 0;
-                       } else {
-                       	document.getElementById("alertCount").innerHTML = data;
-                       }
-                       
-                    },
-                    complete: function() {
+		});  */
 
-                        //alert("refresh");
-                        // 
-                        // Schedule the next request when the current one's complete
-                        //setTimeout(loadValues, 5000);
-                    },
-					error: function(jqXHR, exception) {
-						window.location.href = contextPath;
-					}
-                });
     $.ajax({
                 	type: "GET",
                     url: contextPath+'/rest/getTop3Alerts',
@@ -135,7 +112,7 @@ $('document').ready(function(){
 			
 	        stompClient.subscribe('/user/notification/item', function (response) {
 	          var data = JSON. parse(response.body);
-	          var alertCount = parseInt(document.getElementById("alertCount").innerHTML)
+	          /*var alertCount = parseInt(document.getElementById("alertCount").innerHTML)
 	          if(!isNaN(alertCount)){
 	          	document.getElementById("alertCount").style.display= '';
 	          	document.getElementById("alertCount").innerHTML = alertCount+1;
@@ -143,7 +120,7 @@ $('document').ready(function(){
 	          	alertCount = 1;
 	          	document.getElementById("alertCount").innerHTML = 1;
 	          	document.getElementById("alertCount").style.display= '';
-	          }
+	          }*/
 	          
 	          if(data.level == 1){
 		          iziToast.info({
@@ -152,12 +129,14 @@ $('document').ready(function(){
 		          title: 'FYI', 
 		          message: data.message });
 	          } else if(data.level == 2){
+	          	  refreshAlertCount();
 		          iziToast.warning({
 		          position: 'topRight', // bottomRight, bottomLeft, topRight, topLeft, topCenter, bottomCenter, center
 		          transitionIn: 'bounceInLeft',
 		          title: 'Warning', 
 		          message: data.message });
 	          }else if(data.level == 3){
+	          	 refreshAlertCount();
 		          iziToast.error({
 		          position: 'topRight', // bottomRight, bottomLeft, topRight, topLeft, topCenter, bottomCenter, center
 		          transitionIn: 'bounceInLeft',
@@ -188,3 +167,31 @@ $('document').ready(function(){
 
 	    
 });
+
+function refreshAlertCount(){
+		$.ajax({
+                	type: "GET",
+                    url: contextPath+'/rest/alertCount',
+                    dataType: 'json',
+                    success: function(data) {
+                       // $("#refresh").html(data);
+                       if(data == 0){
+                       	document.getElementById("alertCount").style.display= 'none';
+                       	document.getElementById("alertCount").innerHTML = 0;
+                       } else {
+                       	document.getElementById("alertCount").innerHTML = data;
+                       }
+                       
+                    },
+                    complete: function() {
+
+                        //alert("refresh");
+                        // 
+                        // Schedule the next request when the current one's complete
+                        //setTimeout(loadValues, 5000);
+                    },
+					error: function(jqXHR, exception) {
+						window.location.href = contextPath;
+					}
+                });
+}
