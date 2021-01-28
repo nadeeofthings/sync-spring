@@ -387,8 +387,9 @@ public class UserRestController {
     	return activityService.getActivities(authentication);
 	}
     @GetMapping(value = "rest/acknowledgeAlert")
-    public int acknowledgeAlert(long id) {
-    	alertService.acknowledgeAlert(id);
+    public int acknowledgeAlert(Authentication authentication, long id) {
+    	
+    	alertService.acknowledgeAlert(authentication, id);
     	return 1;
 	}
     

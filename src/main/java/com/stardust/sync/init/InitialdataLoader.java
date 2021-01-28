@@ -64,52 +64,6 @@ public class InitialdataLoader implements ApplicationListener<ContextRefreshedEv
 		if(alreadySetup)
 			return;
 		
-				 
-		//meterService.capturePeakReadings();
-		
-		/*
-		 * Constants.meters.add(new Meter("Ground", "1", 1, 0, "kWh", new Date(),
-		 * false)); Constants.meters.add(new Meter("Ground", "1", 2, 0, "BTU", new
-		 * Date(), false)); Constants.meters.add(new Meter("Ground", "1", 3, 0, "BTU",
-		 * new Date(), false)); Constants.meters.add(new Meter("Ground", "1", 4, 0,
-		 * "BTU", new Date(), false));
-		 * 
-		 * Constants.meters.add(new Meter("3rd", "1", 1, 0, "kWh", new Date(), false));
-		 * Constants.meters.add(new Meter("3rd", "1", 2, 0, "BTU", new Date(), false));
-		 * Constants.meters.add(new Meter("3rd", "2", 1, 0, "kWh", new Date(), false));
-		 * Constants.meters.add(new Meter("3rd", "2", 2, 0, "BTU", new Date(), false));
-		 * Constants.meters.add(new Meter("3rd", "3", 1, 0, "kWh", new Date(), false));
-		 * Constants.meters.add(new Meter("3rd", "3", 2, 0, "BTU", new Date(), false));
-		 * Constants.meters.add(new Meter("3rd", "4", 1, 0, "kWh", new Date(), false));
-		 * Constants.meters.add(new Meter("3rd", "4", 2, 0, "BTU", new Date(), false));
-		 * 
-		 * Constants.meters.add(new Meter("4th", "1", 1, 0, "kWh", new Date(), false));
-		 * Constants.meters.add(new Meter("4th", "1", 2, 0, "BTU", new Date(), false));
-		 * Constants.meters.add(new Meter("4th", "2", 1, 0, "kWh", new Date(), false));
-		 * Constants.meters.add(new Meter("4th", "2", 2, 0, "BTU", new Date(), false));
-		 * Constants.meters.add(new Meter("4th", "3", 1, 0, "kWh", new Date(), false));
-		 * Constants.meters.add(new Meter("4th", "3", 2, 0, "BTU", new Date(), false));
-		 * Constants.meters.add(new Meter("4th", "4", 1, 0, "kWh", new Date(), false));
-		 * Constants.meters.add(new Meter("4th", "4", 2, 0, "BTU", new Date(), false));
-		 * 
-		 * Constants.meters.add(new Meter("5th", "1", 1, 0, "kWh", new Date(), false));
-		 * Constants.meters.add(new Meter("5th", "1", 2, 0, "BTU", new Date(), false));
-		 * Constants.meters.add(new Meter("5th", "2", 1, 0, "kWh", new Date(), false));
-		 * Constants.meters.add(new Meter("5th", "2", 2, 0, "BTU", new Date(), false));
-		 * Constants.meters.add(new Meter("5th", "3", 1, 0, "kWh", new Date(), false));
-		 * Constants.meters.add(new Meter("5th", "3", 2, 0, "BTU", new Date(), false));
-		 * Constants.meters.add(new Meter("5th", "4", 1, 0, "kWh", new Date(), false));
-		 * Constants.meters.add(new Meter("5th", "4", 2, 0, "BTU", new Date(), false));
-		 * 
-		 * Constants.meters.add(new Meter("6th", "1", 1, 0, "kWh", new Date(), false));
-		 * Constants.meters.add(new Meter("6th", "1", 2, 0, "BTU", new Date(), false));
-		 * Constants.meters.add(new Meter("6th", "2", 1, 0, "kWh", new Date(), false));
-		 * Constants.meters.add(new Meter("6th", "2", 2, 0, "BTU", new Date(), false));
-		 * Constants.meters.add(new Meter("6th", "3", 1, 0, "kWh", new Date(), false));
-		 * Constants.meters.add(new Meter("6th", "3", 2, 0, "BTU", new Date(), false));
-		 * Constants.meters.add(new Meter("6th", "4", 1, 0, "kWh", new Date(), false));
-		 * Constants.meters.add(new Meter("6th", "4", 2, 0, "BTU", new Date(), false));
-		 */
 		
 		createRoleIfNotFound("ROLE_SUPERADMIN");
 		createRoleIfNotFound("ROLE_ADMIN");
