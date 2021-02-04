@@ -114,7 +114,7 @@ public class GeneratePdfBill {
 	        }
             
             BigDecimal totalUseage = peakBill.add(offPeakBill);
-            BigDecimal totalBill = totalUseage.add(new BigDecimal(billProps.get(Constants.CONFIG_KEY_SERVICE_CHARGE)));
+            BigDecimal totalBill = totalUseage.add(billLatest.getServiceCharge());
             
             BigDecimal discount = (totalBill.multiply(billLatest.getDiscount())).divide(new BigDecimal("100.00"));
             BigDecimal adjustmentsDiscounts = discount.add(billLatest.getAdjustments());
@@ -122,8 +122,8 @@ public class GeneratePdfBill {
             BigDecimal penalties = (totalBill.multiply(billLatest.getPenalty())).divide(new BigDecimal("100.00"));
             
             BigDecimal currentBill = totalBill.subtract(adjustmentsDiscounts).add(penalties);
-            BigDecimal nbTax = (currentBill.multiply(new BigDecimal(billProps.get(Constants.CONFIG_KEY_NBTAX)))).divide(new BigDecimal("100.00"));
-            BigDecimal vaTax = (currentBill.multiply(new BigDecimal(billProps.get(Constants.CONFIG_KEY_VATAX)))).divide(new BigDecimal("100.00"));		
+            BigDecimal nbTax = (currentBill.multiply(billLatest.getNbTax())).divide(new BigDecimal("100.00"));
+            BigDecimal vaTax = (currentBill.multiply(billLatest.getVaTax())).divide(new BigDecimal("100.00"));		
             BigDecimal totalPayableForThisBillingPeriod = currentBill.add(nbTax).add(vaTax);
             
             BigDecimal previousBalance = billLatest.getBalance().add(billLatest.getPayment()).subtract(totalPayableForThisBillingPeriod);
@@ -131,8 +131,6 @@ public class GeneratePdfBill {
             if (previousBalance.compareTo(BigDecimal.ONE)< 0)
             	previousBalance = new BigDecimal("0.00");
             
-            
-            Text prefix = new Text("10x-3").setFont(calibriRegular).setFontColor(myColor).setFontSize(5);
             //T&C
             Rectangle rect = new Rectangle(53, 175.5f, 493.5f, 72);
             canvas.rectangle(rect);
@@ -199,7 +197,7 @@ public class GeneratePdfBill {
             canvas.rectangle(rect);
             //canvas.stroke();
             childCanvas = new Canvas(canvas, pdfDoc, rect);
-            title = new Text(billProps.get(Constants.CONFIG_KEY_SERVICE_CHARGE)).setFont(calibriRegular).setFontColor(myColor).setFontSize(9);
+            title = new Text(billLatest.getServiceCharge().toString()).setFont(calibriRegular).setFontColor(myColor).setFontSize(9);
             p = new Paragraph().add(title).setTextAlignment(TextAlignment.RIGHT);
             childCanvas.add(p);
             childCanvas.close();
@@ -259,7 +257,7 @@ public class GeneratePdfBill {
             canvas.rectangle(rect);
             //canvas.stroke();
             childCanvas = new Canvas(canvas, pdfDoc, rect);
-            title = new Text(String.format("%.2f", nbTax)).setFont(calibriRegular).setFontColor(myColor).setFontSize(9);
+            title = new Text(String.format("%.2f", vaTax)).setFont(calibriRegular).setFontColor(myColor).setFontSize(9);
             p = new Paragraph().add(title).setTextAlignment(TextAlignment.RIGHT);
             childCanvas.add(p);
             childCanvas.close();
@@ -269,7 +267,7 @@ public class GeneratePdfBill {
             canvas.rectangle(rect);
             //canvas.stroke();
             childCanvas = new Canvas(canvas, pdfDoc, rect);
-            title = new Text(String.format("%.2f", vaTax)).setFont(calibriRegular).setFontColor(myColor).setFontSize(9);
+            title = new Text(String.format("%.2f", nbTax )).setFont(calibriRegular).setFontColor(myColor).setFontSize(9);
             p = new Paragraph().add(title).setTextAlignment(TextAlignment.RIGHT);
             childCanvas.add(p);
             childCanvas.close();
@@ -506,7 +504,7 @@ public class GeneratePdfBill {
           //Invo due date
             Calendar cal = Calendar.getInstance();
     		cal.setTime(billLatest.getTimestamp());
-    		cal.add(Calendar.DATE, Integer.parseInt(billProps.get(Constants.CONFIG_KEY_DUE_DAYS_PERIOD)));
+    		cal.add(Calendar.DATE, billLatest.getDueDaysPeriod().intValue());
     		
             canvas.beginText().setFontAndSize(
     				calibriRegular, 9) 

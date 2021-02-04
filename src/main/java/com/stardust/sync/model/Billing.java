@@ -49,14 +49,24 @@ public class Billing {
     private BigDecimal balance;
     @Column(precision = 20, scale = 2)
     private BigDecimal payment;
+    @Column(precision = 20, scale = 2)
+    private BigDecimal serviceCharge;
+    @Column(precision = 20, scale = 2)
+    private BigDecimal nbTax;
+    @Column(precision = 20, scale = 2)
+    private BigDecimal vaTax;
+    @Column(precision = 20, scale = 2)
+    private BigDecimal dueDaysPeriod;
     private int enable;
     
     public Billing() {}
 
+
+
 	public Billing(String id, String unit, int meter, String ext, Date fromDate, Date toDate, Date timestamp,
 			BigDecimal peakUseage, BigDecimal offPeakUseage, BigDecimal peakrate, BigDecimal offPeakRate,
 			BigDecimal penalty, BigDecimal discount, BigDecimal adjustments, BigDecimal balance, BigDecimal payment,
-			int enable) {
+			BigDecimal serviceCharge, BigDecimal nbTax, BigDecimal vaTax, BigDecimal dueDaysPeriod, int enable) {
 		super();
 		this.id = id;
 		this.unit = unit;
@@ -74,8 +84,14 @@ public class Billing {
 		this.adjustments = adjustments;
 		this.balance = balance;
 		this.payment = payment;
+		this.serviceCharge = serviceCharge;
+		this.nbTax = nbTax;
+		this.vaTax = vaTax;
+		this.dueDaysPeriod = dueDaysPeriod;
 		this.enable = enable;
 	}
+
+
 
 	public long getBillId() {
 		return billId;
@@ -211,6 +227,38 @@ public class Billing {
 
 	public void setPayment(BigDecimal payment) {
 		this.payment = payment;
+	}
+
+	public BigDecimal getServiceCharge() {
+		return serviceCharge;
+	}
+
+	public void setServiceCharge(BigDecimal serviceCharge) {
+		this.serviceCharge = serviceCharge;
+	}
+
+	public BigDecimal getNbTax() {
+		return nbTax;
+	}
+
+	public void setNbTax(BigDecimal nbTax) {
+		this.nbTax = nbTax;
+	}
+
+	public BigDecimal getVaTax() {
+		return vaTax;
+	}
+
+	public void setVaTax(BigDecimal vaTax) {
+		this.vaTax = vaTax;
+	}
+
+	public BigDecimal getDueDaysPeriod() {
+		return dueDaysPeriod;
+	}
+
+	public void setDueDaysPeriod(BigDecimal dueDaysPeriod) {
+		this.dueDaysPeriod = dueDaysPeriod;
 	}
 
 	public int getEnable() {

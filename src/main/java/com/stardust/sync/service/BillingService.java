@@ -83,21 +83,26 @@ public class BillingService {
             BigDecimal peakBill = peakRate.multiply(peakUseage);
             BigDecimal offPeakBill = offPeakRate.multiply(offPeakUseage);
             
+            BigDecimal serviceCharge = new BigDecimal(billProps.get(Constants.CONFIG_KEY_SERVICE_CHARGE));
+            BigDecimal var_nbTax = new BigDecimal(billProps.get(Constants.CONFIG_KEY_NBTAX));
+            BigDecimal var_vaTax = new BigDecimal(billProps.get(Constants.CONFIG_KEY_VATAX));	
+            BigDecimal dueDaysPeriod = new BigDecimal(billProps.get(Constants.CONFIG_KEY_DUE_DAYS_PERIOD));
+            
             if(ext.equalsIgnoreCase("BTU")) {
             	peakBill = peakBill.divide(new BigDecimal("10000"));
             	offPeakBill = offPeakBill.divide(new BigDecimal("10000"));
 	        }
             
             BigDecimal totalUseage = peakBill.add(offPeakBill);
-            BigDecimal totalBill = totalUseage.add(new BigDecimal(billProps.get(Constants.CONFIG_KEY_SERVICE_CHARGE)));
+            BigDecimal totalBill = totalUseage.add(serviceCharge);
             
             BigDecimal discount = (totalBill.multiply(new BigDecimal(edi))).divide(new BigDecimal("100.00"));
             BigDecimal penalties = (totalBill.multiply(new BigDecimal(epe))).divide(new BigDecimal("100.00"));
             
             BigDecimal adjustmentsDiscounts = discount.add(new BigDecimal(eadj));
             BigDecimal currentBill = totalBill.subtract(adjustmentsDiscounts).add(penalties);
-            BigDecimal nbTax = (currentBill.multiply(new BigDecimal(billProps.get(Constants.CONFIG_KEY_NBTAX)))).divide(new BigDecimal("100.00"));
-            BigDecimal vaTax = (currentBill.multiply(new BigDecimal(billProps.get(Constants.CONFIG_KEY_VATAX)))).divide(new BigDecimal("100.00"));	
+            BigDecimal nbTax = (currentBill.multiply(var_nbTax)).divide(new BigDecimal("100.00"));
+            BigDecimal vaTax = (currentBill.multiply(var_vaTax)).divide(new BigDecimal("100.00"));	
             
             BigDecimal totalPayableForThisBillingPeriod = currentBill.add(nbTax).add(vaTax);
             BigDecimal totalPayable = ((billPrevious != null) ? billPrevious.getBalance() : new BigDecimal("0.00"))
@@ -110,11 +115,11 @@ public class BillingService {
 	    	if(efl.equalsIgnoreCase("Ground")) {
 	    		bill = new Billing(efl,  "1", Integer.parseInt(eof), ext, fromDate, toDate, new Date(), peakUseage, 
 		        		offPeakUseage, peakRate, offPeakRate, new BigDecimal(epe), new BigDecimal(edi), new BigDecimal(eadj), 
-		        		totalPayable, new BigDecimal(epp), Constants.FLAG_ENABLED);
+		        		totalPayable, new BigDecimal(epp), serviceCharge, var_nbTax, var_vaTax, dueDaysPeriod, Constants.FLAG_ENABLED);
 	    	}else {
 	    		bill = new Billing(efl, eof, ((ext.equalsIgnoreCase("kWh")) ? 1 : 2), ext, fromDate, toDate, new Date(), peakUseage, 
 		        		offPeakUseage, peakRate, offPeakRate, new BigDecimal(epe), new BigDecimal(edi), new BigDecimal(eadj), 
-		        		totalPayable, new BigDecimal(epp), Constants.FLAG_ENABLED);
+		        		totalPayable, new BigDecimal(epp), serviceCharge, var_nbTax, var_vaTax, dueDaysPeriod, Constants.FLAG_ENABLED);
 	    	}
 	         
 	        
